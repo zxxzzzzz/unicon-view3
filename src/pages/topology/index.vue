@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full ">
-    <div class="w-20%">
+    <div class="w-25%">
       <div class="flex p-2">
         <CheckboxGroup :options="options" />
         <Tag color="pink" class="ml-2">10</Tag>
@@ -9,13 +9,13 @@
         MTIE:+
         <Tag color="pink" class="ml-2">10</Tag>
       </div>
-      <div class="h-30% p-2" id="timeLineChart">
+      <div class="h-30% m-2 " id="timeLineChart">
 
       </div>
-      <div class="h-30% p-2" id="hzLineChart">
+      <div class="h-30% m-2  " id="hzLineChart">
 
       </div>
-      <div class="h-30% p-2" id="tdevLineChart">
+      <div class="h-30% m-2  " id="tdevLineChart">
 
       </div>
     </div>
@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import Topology from '@/components/topology/index.vue';
-import { Button, CheckboxGroup, Tag,RangePicker,Table,TableProps } from 'ant-design-vue';
+import { Button, CheckboxGroup, Tag, RangePicker, Table, TableProps } from 'ant-design-vue';
 import cytoscape from 'cytoscape';
 import { openWindow } from '@/utils';
 import { ref } from 'vue';
@@ -63,11 +63,11 @@ enum EdgeType {
 }
 
 // 基于准备好的dom，初始化echarts实例
-const columns:TableProps['columns'] = [
-  {title:'名称'},
-  {title:'站点'},
-  {title:'位置'},
-] 
+const columns: TableProps['columns'] = [
+  { title: '名称' },
+  { title: '站点' },
+  { title: '位置' },
+]
 
 onMounted(() => {
   var myChart = echarts.init(document.getElementById('timeLineChart'), null);
