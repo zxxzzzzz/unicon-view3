@@ -2,7 +2,18 @@
 .vite-ssg-dist
 .vite-ssg-temp
 *.local
+<<<<<<< HEAD
 *.zip
+=======
+<<<<<<< HEAD
+*.zip
+=======
+<<<<<<< HEAD
+*.zip
+=======
+>>>>>>> dfca7a9 (part)
+>>>>>>> 1074d20 (update part)
+>>>>>>> 72c34dd (update part)
 dist
 dist-ssr
 node_modules

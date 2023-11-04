@@ -81,9 +81,24 @@ export const initLink = (cy: cytoscape.Core) => {
   cy.on('zoom pan', function () {
     removeHandle();
   });
+<<<<<<< HEAD
   cy.on('remove', 'node',function () {
     removeHandle();
   });
+=======
+<<<<<<< HEAD
+  cy.on('remove', 'node',function () {
+    removeHandle();
+  });
+=======
+<<<<<<< HEAD
+  cy.on('remove', 'node',function () {
+    removeHandle();
+  });
+=======
+>>>>>>> dfca7a9 (part)
+>>>>>>> 1074d20 (update part)
+>>>>>>> 72c34dd (update part)
 
   window.addEventListener('mouseup', function (e) {
     stop();
@@ -245,7 +260,19 @@ export const initNodeDelete = (cy: cytoscape.Core) => {
     }
   }
 
+<<<<<<< HEAD
   cy.on('cxttap', 'node', function (e) {
+=======
+<<<<<<< HEAD
+  cy.on('cxttap', 'node', function (e) {
+=======
+<<<<<<< HEAD
+  cy.on('cxttap', 'node', function (e) {
+=======
+  cy.on('select', 'node', function (e) {
+>>>>>>> dfca7a9 (part)
+>>>>>>> 1074d20 (update part)
+>>>>>>> 72c34dd (update part)
     setHandleOn(e.target);
   });
   cy.on('unselect', 'node', function (e) {

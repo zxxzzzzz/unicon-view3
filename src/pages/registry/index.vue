@@ -18,6 +18,16 @@
     </div>
   </div>
 </template>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<!-- 注册 -->
+>>>>>>> dfca7a9 (part)
+>>>>>>> 1074d20 (update part)
+>>>>>>> 72c34dd (update part)
 <script setup lang="ts">
 import { Input, Button } from 'ant-design-vue'
 import { useRouter } from 'vue-router';
