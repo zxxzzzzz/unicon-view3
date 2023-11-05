@@ -81,9 +81,6 @@ export const initLink = (cy: cytoscape.Core) => {
   cy.on('zoom pan', function () {
     removeHandle();
   });
-  cy.on('remove', 'node',function () {
-    removeHandle();
-  });
 
   window.addEventListener('mouseup', function (e) {
     stop();
@@ -245,7 +242,7 @@ export const initNodeDelete = (cy: cytoscape.Core) => {
     }
   }
 
-  cy.on('cxttap', 'node', function (e) {
+  cy.on('select', 'node', function (e) {
     setHandleOn(e.target);
   });
   cy.on('unselect', 'node', function (e) {

@@ -253,11 +253,9 @@ export const pieOptions = {
       type: 'pie',
       radius: '50%',
       data: [
-        { value: 1048, name: 'Search Engine' },
-        { value: 735, name: 'Direct' },
-        { value: 580, name: 'Email' },
-        { value: 484, name: 'Union Ads' },
-        { value: 300, name: 'Video Ads' }
+        { value: 1048, name: '第一级' },
+        { value: 735, name: '第二级' },
+        { value: 580, name: '第三级' },
       ],
       emphasis: {
         itemStyle: {
@@ -294,7 +292,7 @@ export const bar2Option = {
   },
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: ['node1', 'node2', 'node3', 'node4', 'node5', 'node6', 'node7']
   },
   yAxis: {
     type: 'value'

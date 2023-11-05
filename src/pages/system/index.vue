@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2">
+  <div class="p-2 bg-[rgba(214,218,234,1)]">
     <Tabs v-model:activeKey="state.currentTabName">
       <TabPane key="系统" tab="系统">
         <Table :columns="alarmColumns"></Table>
@@ -9,7 +9,11 @@
       </TabPane>
     </Tabs>
   </div>
+  <div class=" bg-[rgba(214,218,234,1)]" style="width: 100%;height: 370px;">
+
+  </div>
 </template>
+<!-- 系统管理页 -->
 
 <script setup lang="ts">
 import { Tabs, TabPane, Table, TableProps } from 'ant-design-vue';
@@ -22,76 +26,46 @@ const state = ref({
 
 const alarmColumns: TableProps['columns'] = [
   {
-    title: 'devId',
+    title: '告警IP',
     dataIndex: 'devId',
     key: 'devId',
   },
   {
-    title: 'devName',
+    title: '告警模块',
     dataIndex: 'devName',
     key: 'devName',
   },
   {
-    title: 'alarmLevel',
+    title: '告警描述',
     dataIndex: 'alarmLevel',
     key: 'alarmLevel',
   },
   {
-    title: 'alarmModule',
+    title: '告警时间',
     dataIndex: 'alarmModule',
     key: 'alarmModule',
   },
   {
-    title: 'alarmDesc',
+    title: '清除时间',
     dataIndex: 'alarmDesc',
     key: 'alarmDesc',
-  },
-  {
-    title: 'alarmState',
-    dataIndex: 'alarmState',
-    key: 'alarmState',
-  },
-  {
-    title: 'alarmTime',
-    dataIndex: 'alarmTime',
-    key: 'alarmTime',
-  },
-  {
-    title: 'confirmTime',
-    dataIndex: 'confirmTime',
-    key: 'confirmTime',
-  },
-  {
-    title: 'clearTime',
-    dataIndex: 'clearTime',
-    key: 'clearTime',
   },
 ]
 const systemColumns: TableProps['columns'] = [
   {
-    title: 'alarmModule',
+    title: '日志ip',
     dataIndex: 'alarmModule',
     key: 'alarmModule',
   },
   {
-    title: 'alarmDesc',
+    title: '日志类型',
     dataIndex: 'alarmDesc',
     key: 'alarmDesc',
   },
   {
-    title: 'alarmTime',
+    title: '日志内容',
     dataIndex: 'alarmTime',
     key: 'alarmTime',
-  },
-  {
-    title: 'alarmModule',
-    dataIndex: 'alarmModule',
-    key: 'alarmModule',
-  },
-  {
-    title: 'clearTime',
-    dataIndex: 'clearTime',
-    key: 'clearTime',
   },
 ]
 

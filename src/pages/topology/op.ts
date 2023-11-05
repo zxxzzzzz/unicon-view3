@@ -4,14 +4,14 @@ export const timeOption = {
   },
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: ['0','6','12','18','24']
   },
   yAxis: {
     type: 'value'
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: [820, 932, 1290, 1330, 1320],
       type: 'line',
       smooth: true
     }
@@ -23,14 +23,14 @@ export const hzOption = {
   },
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: ['0','6','12','18','24']
   },
   yAxis: {
     type: 'value'
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: [820, 932, 1290, 1330, 1320],
       type: 'line',
       smooth: true
     }
@@ -42,14 +42,14 @@ export const tdevOption = {
   },
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: ['10','10²','10³','10⁴','10⁵']
   },
   yAxis: {
     type: 'value'
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: [820, 932, 1290, 1330, 1320],
       type: 'line',
       smooth: true
     }

@@ -18,6 +18,7 @@
     </div>
   </div>
 </template>
+<!-- 注册 -->
 <script setup lang="ts">
 import { Input, Button } from 'ant-design-vue'
 import { useRouter } from 'vue-router';

@@ -1,3 +1,4 @@
+<!-- 告警管理 -->
 <template>
   <div class="w-full h-full bg-cover bg-no-repeat flex bg-[rgba(214,218,234,1)]">
     <div class=" w-50%">
@@ -36,12 +37,14 @@
       </div>
       <div class="flex">
         <Button type="primary">下载</Button>
-        <Select :options="options1" class="w-10rem ml-2"></Select>
-        
+        <div class="w-35% ml-a">
+          <RangePicker />
+        </div>
       </div>
       <Table :columns="columns"></Table>
     </div>
   </div>
+  
 </template>
 
 <script setup lang="ts">
@@ -49,12 +52,17 @@
 import * as echarts from 'echarts';
 import { Table, Card, Statistic, TableProps, Button, Select,SelectProps } from 'ant-design-vue';
 import { lineOptions, rectOptions, louOptions, pieOptions, barOption, bar2Option } from './options';
-
+import { RangePicker} from 'ant-design-vue';
 // 基于准备好的dom，初始化echarts实例
 const columns: TableProps['columns'] = [
-  { title: '名称' },
-  { title: '站点' },
-  { title: '位置' },
+  {title: 'nodeld'},
+  {title: '告警模块'},
+  {title: '告警描述'},
+  {title: '告警等级'},
+  {title: '告警时间'},
+  {title: '确认时间'},
+  {title: '清楚时间'},
+  {title: '告警状态'},
 ]
 
 const options1 = ref<SelectProps['options']>([

@@ -3,21 +3,32 @@
   "private": true,
   "packageManager": "pnpm@8.6.7",
   "scripts": {
-    "build": "vite-ssg build",
+    "build": "vite build",
     "dev": "vite --port 3333 --open",
+    "lint": "eslint .",
     "preview": "vite preview",
     "preview-https": "serve dist",
     "test": "vitest",
     "test:e2e": "cypress open",
     "test:unit": "vitest",
     "typecheck": "vue-tsc --noEmit",
-    "up": "taze major -I"
+    "up": "taze major -I",
+    "postinstall": "npx simple-git-hooks",
+    "sizecheck": "npx vite-bundle-visualizer"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
+    "@iconify-json/tabler": "^1.1.94",
+    "@types/cytoscape-popper": "^2.0.1",
     "@unhead/vue": "^1.1.30",
     "@unocss/reset": "^0.53.5",
     "@vueuse/core": "^10.2.1",
     "@vueuse/head": "^1.1.26",
+    "ant-design-vue": "4.0.6",
+    "cytoscape": "^3.26.0",
+    "cytoscape-edgehandles": "^4.0.1",
+    "cytoscape-popper": "^2.0.0",
+    "echarts": "^5.4.3",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.4",
     "vue": "^3.3.4",
@@ -29,6 +40,8 @@
     "@antfu/eslint-config": "^0.39.7",
     "@iconify-json/carbon": "^1.1.18",
     "@intlify/unplugin-vue-i18n": "^0.12.2",
+    "@types/cytoscape": "^3.19.11",
+    "@types/cytoscape-edgehandles": "^4.0.1",
     "@types/markdown-it-link-attributes": "^3.0.1",
     "@types/node": "^20.6.0",
     "@types/nprogress": "^0.2.0",
@@ -65,9 +78,15 @@
     "vite-plugin-vue-layouts": "^0.8.0",
     "vite-plugin-vue-markdown": "^0.23.5",
     "vite-plugin-webfont-dl": "^3.7.6",
-    "vite-ssg": "^0.23.0",
+    "vite-ssg": "0.23.3",
     "vite-ssg-sitemap": "^0.5.1",
     "vitest": "^0.33.0",
     "vue-tsc": "^1.8.4"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
   }
 }

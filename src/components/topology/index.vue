@@ -1,7 +1,7 @@
 <template>
   <div class="h-[calc(100%-2px)]">
     <div ref="canvas" class="h-full border border-dark-50"
-      style="background: linear-gradient(rgba(214, 218, 234, 1) 33%, rgba(194, 200, 224, 1) 33% 66%, rgba(159, 168, 205, 1) 66%)">
+      style="background: linear-gradient(rgba(214, 218, 234, 1) 33%, rgba(214, 218, 234, 1) 33%, rgba(214, 218, 234, 1) 33%)">
     </div>
     <!-- <Legend class="right-0 absolute mr-2 mt-2 top-0" /> -->
   </div>
