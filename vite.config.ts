@@ -152,16 +152,7 @@ export default defineConfig({
     // TODO: workaround until they support native ESM
     noExternal: ['workbox-window', /vue-i18n/],
   },
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
   server:{
     host:'0.0.0.0',
   }
->>>>>>> dfca7a9 (part)
->>>>>>> 1074d20 (update part)
->>>>>>> 72c34dd (update part)
 })
