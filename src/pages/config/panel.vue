@@ -1,13 +1,4 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 
->>>>>>> dfca7a9 (part)
->>>>>>> 1074d20 (update part)
->>>>>>> 72c34dd (update part)
 <template>
   <div class="flex">
     <div class="w-10rem mr-2rem">

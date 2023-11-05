@@ -3,38 +3,6 @@
     <Layout>
       <LayoutHeader>
         <div class="flex items-center justify-end">
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1074d20 (update part)
->>>>>>> 72c34dd (update part)
-          <Dropdown trigger="click">
-            <div class="flex items-center cursor-pointer">
-              <Avatar :size="64">
-                <template #icon>
-                  <UserOutlined />
-                </template>
-              </Avatar>
-              <div class="text-white text-1.2rem">zxx</div>
-            </div>
-            <template #overlay>
-              <Menu>
-                <MenuItem>
-                <div @click="handleUserClick">用户信息</div>
-                </MenuItem>
-                <MenuItem>
-                <div>登出</div>
-                </MenuItem>
-              </Menu>
-            </template>
-          </Dropdown>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-=======
           <div class="flex items-center cursor-pointer" @click="handleUserClick">
             <Avatar :size="64">
               <template #icon>
@@ -43,9 +11,6 @@
             </Avatar>
           <div class="text-white text-1.2rem">zxx</div>
           </div>
->>>>>>> dfca7a9 (part)
->>>>>>> 1074d20 (update part)
->>>>>>> 72c34dd (update part)
         </div>
       </LayoutHeader>
       <Layout>
@@ -54,19 +19,7 @@
             :items="items"></Menu>
         </LayoutSider>
         <LayoutContent>
-<<<<<<< HEAD
-          <div class="h-[calc(100vh-64px)] bg-[rgba(214,218,234,1)]">
-=======
-<<<<<<< HEAD
-          <div class="h-[calc(100vh-64px)] bg-[rgba(214,218,234,1)]">
-=======
-<<<<<<< HEAD
-          <div class="h-[calc(100vh-64px)] bg-[rgba(214,218,234,1)]">
-=======
           <div class="h-[calc(100vh-64px)]">
->>>>>>> dfca7a9 (part)
->>>>>>> 1074d20 (update part)
->>>>>>> 72c34dd (update part)
             <RouterView></RouterView>
           </div>
         </LayoutContent>
@@ -77,19 +30,7 @@
 </template>
 
 <script setup lang="ts">
-<<<<<<< HEAD
-import { Layout, LayoutContent, LayoutHeader, LayoutSider, Menu, Avatar, Dropdown, MenuItem } from 'ant-design-vue';
-=======
-<<<<<<< HEAD
-import { Layout, LayoutContent, LayoutHeader, LayoutSider, Menu, Avatar, Dropdown, MenuItem } from 'ant-design-vue';
-=======
-<<<<<<< HEAD
-import { Layout, LayoutContent, LayoutHeader, LayoutSider, Menu, Avatar, Dropdown, MenuItem } from 'ant-design-vue';
-=======
 import { Layout, LayoutContent, LayoutHeader, LayoutSider, Menu, Avatar, } from 'ant-design-vue';
->>>>>>> dfca7a9 (part)
->>>>>>> 1074d20 (update part)
->>>>>>> 72c34dd (update part)
 import { UserOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -139,23 +80,8 @@ const items = reactive([
   },
 ]);
 
-<<<<<<< HEAD
-const handleUserClick = () => {
-  router.push('/setting')
-=======
-<<<<<<< HEAD
-const handleUserClick = () => {
-  router.push('/setting')
-=======
-<<<<<<< HEAD
-const handleUserClick = () => {
-  router.push('/setting')
-=======
 const handleUserClick = ()=>{
   alert("111")
->>>>>>> dfca7a9 (part)
->>>>>>> 1074d20 (update part)
->>>>>>> 72c34dd (update part)
 }
 
 </script>
