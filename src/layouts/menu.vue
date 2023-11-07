@@ -3,14 +3,26 @@
     <Layout>
       <LayoutHeader>
         <div class="flex items-center justify-end">
-          <div class="flex items-center cursor-pointer" @click="handleUserClick">
-            <Avatar :size="64">
-              <template #icon>
-                <UserOutlined />
-              </template>
-            </Avatar>
-          <div class="text-white text-1.2rem">zxx</div>
-          </div>
+          <Dropdown trigger="click">
+            <div class="flex items-center cursor-pointer">
+              <Avatar :size="64">
+                <template #icon>
+                  <UserOutlined />
+                </template>
+              </Avatar>
+              <div class="text-white text-1.2rem">zxx</div>
+            </div>
+            <template #overlay>
+              <Menu>
+                <MenuItem>
+                <div @click="handleUserClick">用户信息</div>
+                </MenuItem>
+                <MenuItem>
+                <div>登出</div>
+                </MenuItem>
+              </Menu>
+            </template>
+          </Dropdown>
         </div>
       </LayoutHeader>
       <Layout>
@@ -19,7 +31,7 @@
             :items="items"></Menu>
         </LayoutSider>
         <LayoutContent>
-          <div class="h-[calc(100vh-64px)]">
+          <div class="h-[calc(100vh-64px)] bg-[rgba(214,218,234,1)]">
             <RouterView></RouterView>
           </div>
         </LayoutContent>
@@ -30,10 +42,9 @@
 </template>
 
 <script setup lang="ts">
-import { Layout, LayoutContent, LayoutHeader, LayoutSider, Menu, Avatar, } from 'ant-design-vue';
+import { Layout, LayoutContent, LayoutHeader, LayoutSider, Menu, Avatar, Dropdown, MenuItem } from 'ant-design-vue';
 import { UserOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
-
 const route = useRoute()
 const router = useRouter()
 const state = reactive({
@@ -79,11 +90,7 @@ const items = reactive([
     title: '系统管理',
   },
 ]);
-
-const handleUserClick = ()=>{
-  alert("111")
+const handleUserClick = () => {
+  router.push('/setting')
 }
-
 </script>
-
-

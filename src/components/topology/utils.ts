@@ -81,7 +81,9 @@ export const initLink = (cy: cytoscape.Core) => {
   cy.on('zoom pan', function () {
     removeHandle();
   });
-
+  cy.on('remove', 'node', function () {
+    removeHandle();
+  });
   window.addEventListener('mouseup', function (e) {
     stop();
   });
@@ -119,8 +121,8 @@ export const initEdgeDelete = (cy: cytoscape.Core) => {
         })
         const arrow = document.createElement('div')
         arrow.style.backgroundColor = 'white'
-        arrow.style.width='1rem'
-        arrow.style.height='0.6rem'
+        arrow.style.width = '1rem'
+        arrow.style.height = '0.6rem'
         arrow.style.clipPath = 'polygon(0 0, 0% 100%, 100% 50%)'
         arrow.style.position = 'absolute'
         arrow.style.right = '-0.8rem'
@@ -205,8 +207,8 @@ export const initNodeDelete = (cy: cytoscape.Core) => {
         })
         const arrow = document.createElement('div')
         arrow.style.backgroundColor = 'white'
-        arrow.style.width='1rem'
-        arrow.style.height='0.6rem'
+        arrow.style.width = '1rem'
+        arrow.style.height = '0.6rem'
         arrow.style.clipPath = 'polygon(0 0, 0% 100%, 100% 50%)'
         arrow.style.position = 'absolute'
         arrow.style.right = '-0.8rem'
@@ -242,7 +244,7 @@ export const initNodeDelete = (cy: cytoscape.Core) => {
     }
   }
 
-  cy.on('select', 'node', function (e) {
+  cy.on('cxttap', 'node', function (e) {
     setHandleOn(e.target);
   });
   cy.on('unselect', 'node', function (e) {
