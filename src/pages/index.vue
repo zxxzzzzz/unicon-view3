@@ -25,6 +25,7 @@
 <script setup lang="ts">
 import { Input, Button } from 'ant-design-vue'
 import { useRouter } from 'vue-router';
+import { login } from '@/api/index';
 
 const router = useRouter()
 
@@ -32,8 +33,15 @@ const state = ref({
   username: '',
   password: ''
 })
-const handleLogin = () => {
-  router.push({ path: '/topology' })
+const handleLogin = async () => {
+  console.log('login');
+  try {
+    const { data } = await login({ userName: state.value.username, password: state.value.password })
+    console.log(data);
+  } catch (error) {
+
+  }
+  // router.push({ path: '/topology' })
 }
 const handleRegistry = () => {
   router.push({ path: '/registry' })
