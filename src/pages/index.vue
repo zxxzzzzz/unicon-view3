@@ -34,14 +34,12 @@ const state = ref({
   password: ''
 })
 const handleLogin = async () => {
-  console.log('login');
   try {
-    const { data } = await login({ userName: state.value.username, password: state.value.password })
-    console.log(data);
+    await login({ userName: state.value.username, password: state.value.password })
+    router.push({ path: '/topology' })
   } catch (error) {
-
+    console.log(error, 'error');
   }
-  // router.push({ path: '/topology' })
 }
 const handleRegistry = () => {
   router.push({ path: '/registry' })
