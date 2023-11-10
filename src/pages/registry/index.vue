@@ -30,6 +30,7 @@ const state = ref({
   username: '',
   password: ''
 })
+
 const handleRegistry = () => {
   router.push({ path: '/config' })
 }

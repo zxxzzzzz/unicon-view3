@@ -199,7 +199,7 @@ export const initNodeDelete = (cy: cytoscape.Core) => {
         popperDiv.style.boxShadow = '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)'
         popperDiv.style.borderRadius = '8px'
         const deleteDom = document.createElement('div')
-        deleteDom.innerHTML = '删除'
+        deleteDom.innerHTML = '添加'
         deleteDom.classList.add('w-5rem', 'py-1', 'px-2')
         deleteDom.addEventListener('click', () => {
           removeHandle()
