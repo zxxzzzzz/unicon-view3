@@ -18,7 +18,10 @@
                 <div @click="handleUserClick">用户信息</div>
                 </MenuItem>
                 <MenuItem>
-                <div>登出</div>
+                <div @click="appearUser">权限管理</div>
+                </MenuItem>
+                <MenuItem>
+                <div @click="returnLogin">登出</div>
                 </MenuItem>
               </Menu>
             </template>
@@ -92,5 +95,11 @@ const items = reactive([
 ]);
 const handleUserClick = () => {
   router.push('/setting')
+}
+const appearUser=()=>{
+  alert("正在开发中")
+}
+const returnLogin=()=>{
+  router.push('/')
 }
 </script>

@@ -6,9 +6,13 @@
         <div class="w-[6rem]">用户名</div>
         <Input class="w-[20rem]" v-model:value="state.username" />
       </div>
-      <div class="flex">
+      <div class="flex mb-[1rem]">
         <div class="w-[6rem]">密码</div>
         <Input class="w-[20rem]" v-model:value="state.password" type="password" />
+      </div>
+      <div class="flex">
+        <div class="w-[6rem]">省份</div>
+        <Input class="w-[20rem]" v-model:value="state.address"/>
       </div>
       <div class="mt-[1rem] flex justify-end ml-20rem">
         <div>
@@ -23,16 +27,23 @@
 import { Input, Button } from 'ant-design-vue'
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { registry } from '@/api/registry';
 
 const router = useRouter()
 
 const state = ref({
   username: '',
-  password: ''
+  password: '',
+  address:''
 })
-
-const handleRegistry = () => {
-  router.push({ path: '/config' })
+const handleRegistry = async () => {
+  try {
+    await registry({ userName: state.value.username, password: state.value.password,address:state.value.address })
+    alert("注册成功")
+    router.push({ path: '/' })
+  } catch (error) {
+    console.log(error, 'error');
+  }
 }
 // const { t } = useI18n() b
 </script>

@@ -36,6 +36,7 @@
           <div class="w-10rem">ClockClass</div>
           <div><Input></Input></div>
         </div>
+        <button @click="">确定</button>
       </div>
       <div v-if="state.currentTabName === TabName.板卡">
         <div class="flex">
@@ -62,6 +63,7 @@
           <div class="w-10rem">clockSource</div>
           <div><Input></Input></div>
         </div>
+        <button @click="">确定</button>
       </div>
       <div v-if="state.currentTabName === TabName.端口">
         <Tabs v-model:activeKey="state.currentPortTabName">
@@ -69,12 +71,14 @@
           <TabPane :key="PortTabName.SMA_2" tab="SMA_2" force-render>Content of Tab Pane 2</TabPane>
           <TabPane :key="PortTabName.SMA_3" tab="SMA_3">Content of Tab Pane 3</TabPane>
         </Tabs>
+        <button @click="">确定</button>
       </div>
       <div v-if="state.currentTabName === TabName.频率">
         <Tabs v-model:activeKey="state.currentFrequencyTabName">
           <TabPane :key="FrequencyTabName.输入" tab="输入">Content of Tab Pane 1</TabPane>
           <TabPane :key="FrequencyTabName.输出" tab="输出" force-render>Content of Tab Pane 2</TabPane>
         </Tabs>
+        <button @click="">确定</button>
       </div>
       <div v-if="state.currentTabName === TabName.时间">
         <Tabs v-model:activeKey="state.currentTimeTabName">
@@ -82,6 +86,7 @@
           <TabPane :key="TimeTabName.输出" tab="输出" force-render>Content of Tab Pane 2</TabPane>
           <TabPane :key="TimeTabName.输出1" tab="输出1">Content of Tab Pane 3</TabPane>
         </Tabs>
+        <button @click="">确定</button>
       </div>
     </div>
   </div>

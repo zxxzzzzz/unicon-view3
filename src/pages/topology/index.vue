@@ -29,9 +29,9 @@
 
       </div>
       <div class="h-31% p-2 mt-2" style="border:1px solid rgb(109, 101, 101)" id="tdevLineChart">
-    </div>
-    </div>
 
+    </div>
+    </div>
     </div>
   </div>
 </template>

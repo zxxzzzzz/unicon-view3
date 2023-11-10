@@ -18,9 +18,9 @@
     };
     const userList = ref<UserItem[]>([]);
     
-    
     const columns: TableProps<UserItem>['columns'] = [
-      { dataIndex: 'userName', title: '用户名称' },
+      { dataIndex: 'username' , title: '用户名称' },
+      { dataIndex: 'password', title: '密码' },
       {
         dataIndex: 'position',
         title: '地点',
