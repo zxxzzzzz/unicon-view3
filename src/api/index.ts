@@ -8,35 +8,59 @@ const useMyFetch = createFetch({
     async beforeFetch({ options }) {
       // const myToken = await getMyToken()
       // options.headers.Authorization = `Bearer ${myToken}`
-      return { options }
+      return { options };
     },
     onFetchError(ctx) {
       if (!ctx.data) {
-        message.error('网络错误')
-        return ctx
+        message.error('网络错误');
+        return ctx;
       }
-      const data = typeof ctx.data === 'string' ? JSON.parse(ctx.data) : ctx.data
+      const data =
+        typeof ctx.data === 'string' ? JSON.parse(ctx.data) : ctx.data;
       if (data && data?.body?.code !== 200) {
-        const msg = data?.body?.message
-        message.error(msg || '网络错误')
-        return ctx
+        const msg = data?.body?.message;
+        message.error(msg || '网络错误');
+        return ctx;
       }
-      return ctx
-    }
-
+      return ctx;
+    },
   },
   fetchOptions: {
     mode: 'cors',
   },
-})
+});
 
+export const login = async (data: { userName: string; password: string }) => {
+  const args = useMyFetch('/UserLogin').post(data);
+  await args.execute(true);
+  return args;
+};
 
-export const login = async (data: {
-  "userName": string,
-  "password": string
-}
-) => {
-  const args = useMyFetch('/UserLogin').post(data)
-  await args.execute(true)
-  return args
-}
+export const registry = async (data: {
+  userName: string;
+  password: string;
+  address: string;
+}) => {
+  const args = useMyFetch('/NewUser').post(data);
+  await args.execute(true);
+  return args;
+};
+
+export const getTopography = async (data: {
+  //token
+}) => {
+  const args = useMyFetch('/GetTopography').post(data);
+  await args.execute(true);
+  return args;
+};
+
+export const UserInformation = async (data: {}) => {
+  const args = useMyFetch('/GetUserInformation').post(data);
+  await args.execute(true);
+  return args;
+};
+export const loginOut = async (data: { userName: string; endTime: string }) => {
+  const args = useMyFetch('/UserLeave').post(data);
+  await args.execute(true);
+  return args;
+};

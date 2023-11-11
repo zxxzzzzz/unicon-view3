@@ -29,6 +29,8 @@ const emits = defineEmits<{
   (event: 'drag', node: cytoscape.CollectionReturnValue): void;
   (event: 'dragfree', node: cytoscape.CollectionReturnValue): void;
   (event: 'dblclick', node: cytoscape.CollectionReturnValue): void;
+  (event: 'delete', node: cytoscape.CollectionReturnValue): void;
+  (event: 'config', node: cytoscape.CollectionReturnValue): void;
 }>();
 const formatType = (s: string) => {
   return s.replace(/[()-]+/g, '');
@@ -173,6 +175,14 @@ watch(
           cy.on('select ', 'node', (evt) => {
             var node = evt.target;
             emits('select', node);
+          });
+          cy.on('delete ', 'node', (evt) => {
+            var node = evt.target;
+            emits('delete', node);
+          });
+          cy.on('config ', 'node', (evt) => {
+            var node = evt.target;
+            emits('config', node);
           });
           cy.on('select ', 'edge', (evt) => {
             const node = evt.target;

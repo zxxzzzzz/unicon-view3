@@ -23,5 +23,5 @@ export default defineConfig({
     transformerDirectives(),
     transformerVariantGroup(),
   ],
-  safelist: ['prose','m-auto','text-left','h-1rem','w-5rem','bg-white','text-white', 'ml-1rem','border-b-gray','border-b','p-2','py-4', 'px-2'],
+  safelist: ['prose','m-auto','text-left','h-1rem','w-5rem','bg-white','text-white', 'ml-1rem','border-b-gray','border-b','p-2','py-4', 'py-2', 'px-2'],
 })

@@ -24,15 +24,24 @@
 </template>
 <script setup lang="ts">
 import { Input, Button } from 'ant-design-vue'
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { login } from '@/api/index';
+import { onMounted } from 'vue';
 
 const router = useRouter()
+const route = useRoute()
 
 const state = ref({
   username: '',
   password: ''
 })
+onMounted(() => {
+  if (route.params.userName) {
+    state.value.username = route.params.userName as string
+    state.value.password = route.params.password as string
+  }
+})
+
 const handleLogin = async () => {
   try {
     await login({ userName: state.value.username, password: state.value.password })
