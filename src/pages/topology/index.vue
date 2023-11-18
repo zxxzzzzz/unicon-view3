@@ -35,6 +35,7 @@ import { openWindow } from '@/utils';
 import { ref } from 'vue';
 import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
+import { getAllDev,getDevConfigParam } from '@/api/index';
 
 enum NodeType {
   a,
@@ -44,6 +45,9 @@ enum EdgeType {
   a,
   b,
 }
+
+// const { data } = getAllDev();
+const { data } = getDevConfigParam();
 
 // 基于准备好的dom，初始化echarts实例
 onMounted(() => {

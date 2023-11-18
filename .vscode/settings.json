@@ -4,5 +4,8 @@
     "*.css": "postcss"
   },
   "editor.formatOnSave": false,
-  "prettier.singleQuote": true
+  "prettier.singleQuote": true,
+  "i18n-ally.localesPaths": [
+    "locales"
+  ]
 }

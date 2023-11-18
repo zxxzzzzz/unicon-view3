@@ -28,7 +28,7 @@
 import { Input, Button, Cascader, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { registry } from '@/api/registry';
+import { registry } from '@/api/index';
 import { cityList } from './cityList';
 
 const router = useRouter()
@@ -54,7 +54,7 @@ const handleRegistry = async () => {
     return
   }
   try {
-    await registry({ userName: state.value.username, password: state.value.password, address: state.value.address?.[1] })
+    const res = await registry({ userName: state.value.username, password: state.value.password, address: state.value.address })
     message.success("注册成功")
     router.push({ path: '/',params:{ userName: state.value.username, password: state.value.password} })
   } catch (error) {

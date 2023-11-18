@@ -44,7 +44,9 @@ onMounted(() => {
 
 const handleLogin = async () => {
   try {
-    await login({ userName: state.value.username, password: state.value.password })
+    const {data} = await login({ userName: state.value.username, password: state.value.password })
+    globalStore.value.token = data.value?.result?.token || ''
+    globalStore.value.userName = state.value.username
     router.push({ path: '/topology' })
   } catch (error) {
     console.log(error, 'error');

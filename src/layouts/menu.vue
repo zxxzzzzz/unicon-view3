@@ -10,14 +10,14 @@
                   <UserOutlined />
                 </template>
               </Avatar>
-              <div class="text-white text-1.2rem">zxx</div>
+              <div class="text-white text-1.2rem">{{ globalStore.userName }}</div>
             </div>
             <template #overlay>
               <Menu>
                 <MenuItem>
                   <div @click="handleUserClick">用户信息</div>
                 </MenuItem>
-                <MenuItem v-if="global.authority === 'level1'">
+                <MenuItem v-if="currentAuthority === '1'">
                   <div @click="appearUser">权限管理</div>
                 </MenuItem>
                 <MenuItem>
@@ -30,13 +30,7 @@
       </LayoutHeader>
       <Layout>
         <LayoutSider>
-          <Menu
-            v-model:selectedKeys="state.selectedKeys"
-            mode="inline"
-            theme="dark"
-            :inline-collapsed="state.collapsed"
-            :items="items"
-          ></Menu>
+          <Menu v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark" :inline-collapsed="state.collapsed" :items="items"></Menu>
         </LayoutSider>
         <LayoutContent>
           <div class="h-[calc(100vh-64px)] bg-[rgba(214,218,234,1)]">
@@ -50,16 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  Layout,
-  LayoutContent,
-  LayoutHeader,
-  LayoutSider,
-  Menu,
-  Avatar,
-  Dropdown,
-  MenuItem,
-} from 'ant-design-vue';
+import { Layout, LayoutContent, LayoutHeader, LayoutSider, Menu, Avatar, Dropdown, MenuItem } from 'ant-design-vue';
 import { UserOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { globalStore } from '@/stores/index';
@@ -71,6 +56,9 @@ const router = useRouter();
 const state = reactive({
   collapsed: false,
   selectedKeys: ['配置管理'],
+});
+const currentAuthority = computed(() => {
+  return globalStore.value.userInfoList.find((u) => u.userName === globalStore.value.userName)?.authority;
 });
 watch(
   () => route.path,
