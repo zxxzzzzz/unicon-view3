@@ -33,26 +33,26 @@ const userList = computed(() => {
   return globalStore.value.userInfoList;
 });
 
-const { data: loginData } = getUserLogin();
-const { data: operationData } = getUserOperation();
+const { data: loginData } = getUserLogin({userName:globalStore.value.userName});
+const { data: operationData } = getUserOperation({userName:globalStore.value.userName});
 
 const loginList = computed(() => {
   if (!loginData.value) {
     return [];
   }
   console.log((loginData.value as any));
-  return (loginData.value as any)?.result?.userList;
+  return (loginData.value as any)?.body?.result?.userList;
 });
 const operationList = computed(() => {
   if (!operationData.value) {
     return [];
   }
-  return (operationData.value as any)?.result?.userList;
+  return (operationData.value as any)?.body?.result?.userList;
 });
 
 onMounted(async () => {
-  const { data } = await getUserInformation();
-  globalStore.value.userInfoList = data.value?.result?.userList || [];
+  const { data } = await getUserInformation({userName:globalStore.value.userName});
+  globalStore.value.userInfoList = data.value?.body?.result?.userList || [];
 });
 
 const columns: TableProps<UserItem>['columns'] = [
@@ -67,7 +67,7 @@ const columns: TableProps<UserItem>['columns'] = [
     title: '角色',
     customRender({ record, index }) {
       const t = ['-', '一', '二', '三'][parseInt(record.authority)];
-      return h('div', t ? `等级${['一', '二', '三'][parseInt(record.authority)]}` : '-');
+      return h('div', t ? `等级${['-','一', '二', '三'][parseInt(record.authority)]}` : '-');
     },
   },
   {

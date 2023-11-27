@@ -19,21 +19,21 @@ const router = createRouter({
   history: createWebHistory(),
   routes, // `routes: routes` 的缩写
 });
-router.beforeEach(async (to, from, next) => {
-  if (!globalStore.value.userInfoList?.length) {
-    try {
-      const { data } = await getUserInformation();
-      globalStore.value.userInfoList = data.value?.result?.userList || [];
-    } catch (error) {
+// router.beforeEach(async (to, from, next) => {
+//   if (!globalStore.value.userInfoList?.length) {
+//     try {
+//       const { data } = await getUserInformation();
+//       globalStore.value.userInfoList = data.value?.result?.userList || [];
+//     } catch (error) {
       
-    }
-  }
-  if (to.path !== '/' && !globalStore.value.token) {
-    next('/');
-    return;
-  }
-  next();
-});
+//     }
+//   }
+//   if (to.path !== '/' && !globalStore.value.token) {
+//     next('/');
+//     return;
+//   }
+//   next();
+// });
 
 const app = createApp(App);
 app.use(router);
