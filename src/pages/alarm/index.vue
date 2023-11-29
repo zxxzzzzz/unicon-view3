@@ -48,7 +48,7 @@ import * as echarts from 'echarts';
 import { Table, Card, Statistic, TableProps, Button, Select, SelectProps } from 'ant-design-vue';
 import { lineOptions, rectOptions, louOptions, pieOptions, barOption, bar2Option } from './options';
 import { RangePicker } from 'ant-design-vue';
-import { getSystemAlarm,getAlarmCalc,getAlarmParam } from '@/api/index';
+import { getSystemAlarm, getAlarmCalc, getAlarmParam } from '@/api/index';
 import { computed } from 'vue';
 import type { Dayjs } from 'dayjs';
 // import {  } from 'ant-design-vue';
@@ -58,12 +58,15 @@ import type { Dayjs } from 'dayjs';
 // const { data: alarmData } = getAlarmCalc({startTime:'2023-11-01', endTime:'2023-11-18'});
 type RangeValue = [Dayjs, Dayjs];
 const dateRange = ref<RangeValue>();
-const handlealarmtime =()=>{
-  console.log(dateRange.value);
-  getAlarmParam({startTime:'2023-11-01', endTime:'2023-11-18'});
-}
+const handlealarmtime = () => {
+  if (dateRange.value) {
+    const timeList = dateRange.value.map((v) => v.format('YYYY-MM-DD HH:mm'));
+    console.log(timeList);
+    getAlarmParam({ startTime: '2023-11-01', endTime: '2023-11-18' });
+  }
+};
 const alarmList = computed(() => {
-  return []
+  return [];
   // if(!alarmData) return []
   // return alarmData.value.result?.alarmList as any[]
 });
@@ -78,7 +81,6 @@ const columns: TableProps['columns'] = [
   { title: '告警时间' },
   { title: '确认时间' },
   { title: '清除时间' },
-
 ];
 
 const options1 = ref<SelectProps['options']>([
