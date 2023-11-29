@@ -10,7 +10,7 @@ const useMyFetch = createFetch({
       // const myToken = await getMyToken()
       if (globalStore.value.token) {
         // @ts-ignore
-        options.headers['Authorization'] = `Bearer ${globalStore.value.token}}`;
+        options.headers['Authorization'] = `${globalStore.value.token}`;
       }
       return { options };
     },
@@ -44,8 +44,8 @@ export const registry = async (data: { userName: string; password: string; addre
   await args.execute(true);
   return args;
 };
-export const getUserInformation = async () => {
-  const args = useMyFetch('/GetUserInformation').post().json();
+export const getUserInformation = async (data:{userName: string;}) => {
+  const args = useMyFetch('/GetUserInformation').post(data).json();
   await args.execute(true);
   return args;
 };
@@ -69,18 +69,18 @@ export const getTopography = async (data: {
   return args;
 };
 
-export const UserInformation = async (data: {}) => {
+export const UserInformation = async (data: {userName:string}) => {
   const args = useMyFetch('/GetUserInformation').post(data);
   await args.execute(true);
   return args;
 };
-export const getUserLogin = () => {
-  const args = useMyFetch('/GetUserLogin').post().json();
+export const getUserLogin = (data:{userName:string}) => {
+  const args = useMyFetch('/GetUserLogin').post(data).json();
   args.execute(true);
   return args;
 };
-export const getDevConfigParam = () => {
-  const args = useMyFetch('/GetDevConfigParam').post().json();
+export const getDevConfigParam = (data:{token:string}) => {
+  const args = useMyFetch('/GetDevConfigParam').post(data).json();
   args.execute(true);
   return args;
 };
@@ -99,8 +99,8 @@ export const getSystemAlarm = () => {
   args.execute(true);
   return args;
 };
-export const getUserOperation = () => {
-  const args = useMyFetch('/GetUserOperation').post().json();
+export const getUserOperation = (data:{userName:string}) => {
+  const args = useMyFetch('/GetUserOperation').post(data).json();
   args.execute(true);
   return args;
 };

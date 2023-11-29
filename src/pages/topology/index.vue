@@ -99,7 +99,7 @@ const handleNodeDelete = (node: cytoscape.NodeSingular) => {
 };
 
 const handleNodeConfig = () => {
-  openWindow('/config/panel');
+  openWindow('/config/panel?token=${globalStore.value.token}');
 };
 const handleDataDownload = () => {
   //指向下载的一个地址

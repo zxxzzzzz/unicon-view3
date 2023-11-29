@@ -36,6 +36,7 @@
         <div class="w-35% ml-a">
           <RangePicker />
         </div>
+        <Button type="primary" @click="handlealarmtime">确认</Button>
       </div>
       <Table :columns="columns" :data-source="alarmList"></Table>
     </div>
@@ -49,11 +50,14 @@ import { lineOptions, rectOptions, louOptions, pieOptions, barOption, bar2Option
 import { RangePicker } from 'ant-design-vue';
 import { getSystemAlarm,getAlarmCalc,getAlarmParam } from '@/api/index';
 import { computed } from 'vue';
+// import {  } from 'ant-design-vue';
 // 基于准备好的dom，初始化echarts实例
 
 // const { data: alarmData } = getSystemAlarm();
 // const { data: alarmData } = getAlarmCalc({startTime:'2023-11-01', endTime:'2023-11-18'});
-const { data: alarmData } = getAlarmParam({startTime:'2023-11-01', endTime:'2023-11-18'});
+const handlealarmtime =()=>{
+  getAlarmParam({startTime:'2023-11-01', endTime:'2023-11-18'});
+}
 const alarmList = computed(() => {
   return []
   // if(!alarmData) return []
@@ -61,14 +65,16 @@ const alarmList = computed(() => {
 });
 
 const columns: TableProps['columns'] = [
-  { title: 'nodeld' },
-  { title: '告警模块' },
-  { title: '告警描述' },
+  { title: '告警Id' },
+  { title: '网元Id' },
   { title: '告警等级' },
+  { title: '告警源' },
+  { title: '告警描述' },
+  { title: '告警状态' },
   { title: '告警时间' },
   { title: '确认时间' },
-  { title: '清楚时间' },
-  { title: '告警状态' },
+  { title: '清除时间' },
+
 ];
 
 const options1 = ref<SelectProps['options']>([

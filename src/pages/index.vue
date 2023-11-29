@@ -28,7 +28,6 @@ import { useRouter, useRoute } from 'vue-router';
 import { login } from '@/api/index';
 import { onMounted } from 'vue';
 
-console.log(12)
 const router = useRouter()
 const route = useRoute()
 
@@ -46,8 +45,8 @@ onMounted(() => {
 const handleLogin = async () => {
   try {
     const {data} = await login({ userName: state.value.username, password: state.value.password })
-    globalStore.value.token = data.value?.body?.result?.token || ''
-    globalStore.value.userName = state.value.username
+    globalStore.value.token = data.value?.body?.result?.token || ''    
+    globalStore.value.userName = state.value.username 
     router.push({ path: '/topology' })
   } catch (error) {
     console.log(error, 'error');

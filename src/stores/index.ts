@@ -9,12 +9,3 @@ export const globalStore = ref({
     userName: string;
   }[],
 });
-
-const _g = window.sessionStorage.getItem('global');
-if (_g) {
-  globalStore.value = JSON.parse(_g);
-}
-
-watch(globalStore, () => {
-  window.sessionStorage.setItem('global', JSON.stringify(globalStore.value));
-});

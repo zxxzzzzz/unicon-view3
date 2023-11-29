@@ -94,6 +94,14 @@
 
 <script setup lang="ts">
 import { Input, Tabs, TabPane } from 'ant-design-vue';
+import { getAllDev,getDevConfigParam } from '@/api/index';
+import { useToken } from 'ant-design-vue/es/theme/internal';
+onMounted(() => {
+  globalStore.value.token=token;
+});
+const { data } = getDevConfigParam({token:globalStore.value.token});
+
+
 enum TabName {
   网元,
   板卡,
