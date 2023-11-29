@@ -34,7 +34,7 @@
       <div class="flex">
         <Button type="primary">下载</Button>
         <div class="w-35% ml-a">
-          <RangePicker />
+          <RangePicker v-model:value="value2" show-time />
         </div>
         <Button type="primary" @click="handlealarmtime">确认</Button>
       </div>
@@ -50,12 +50,15 @@ import { lineOptions, rectOptions, louOptions, pieOptions, barOption, bar2Option
 import { RangePicker } from 'ant-design-vue';
 import { getSystemAlarm,getAlarmCalc,getAlarmParam } from '@/api/index';
 import { computed } from 'vue';
+import type { Dayjs } from 'dayjs';
 // import {  } from 'ant-design-vue';
 // 基于准备好的dom，初始化echarts实例
 
 // const { data: alarmData } = getSystemAlarm();
 // const { data: alarmData } = getAlarmCalc({startTime:'2023-11-01', endTime:'2023-11-18'});
 const handlealarmtime =()=>{
+  type RangeValue = [Dayjs, Dayjs];
+  const value1 = ref<RangeValue>();
   getAlarmParam({startTime:'2023-11-01', endTime:'2023-11-18'});
 }
 const alarmList = computed(() => {
