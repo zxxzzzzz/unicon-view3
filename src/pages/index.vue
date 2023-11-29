@@ -27,7 +27,7 @@ import { Input, Button } from 'ant-design-vue'
 import { useRouter, useRoute } from 'vue-router';
 import { login } from '@/api/index';
 import { onMounted } from 'vue';
-
+console.log(12)
 const router = useRouter()
 const route = useRoute()
 
