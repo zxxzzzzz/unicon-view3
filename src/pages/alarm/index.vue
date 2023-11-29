@@ -34,7 +34,7 @@
       <div class="flex">
         <Button type="primary">下载</Button>
         <div class="w-35% ml-a">
-          <RangePicker v-model:value="value2" show-time />
+          <RangePicker v-model:value="dateRange" show-time />
         </div>
         <Button type="primary" @click="handlealarmtime">确认</Button>
       </div>
@@ -56,9 +56,10 @@ import type { Dayjs } from 'dayjs';
 
 // const { data: alarmData } = getSystemAlarm();
 // const { data: alarmData } = getAlarmCalc({startTime:'2023-11-01', endTime:'2023-11-18'});
+type RangeValue = [Dayjs, Dayjs];
+const dateRange = ref<RangeValue>();
 const handlealarmtime =()=>{
-  type RangeValue = [Dayjs, Dayjs];
-  const value1 = ref<RangeValue>();
+  console.log(dateRange.value);
   getAlarmParam({startTime:'2023-11-01', endTime:'2023-11-18'});
 }
 const alarmList = computed(() => {
