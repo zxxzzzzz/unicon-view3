@@ -2,7 +2,7 @@
 <template>
   <div class="w-full h-full bg-cover bg-no-repeat flex bg-[rgba(214,218,234,1)]">
     <div class="w-50%">
-      <div id="errorPieChart" class="border border-solid border-gray my-2 h-33%"></div>
+      <div id="errorPieChart" :columns="alarmColumns" :data-source="alarmList" class="border border-solid border-gray my-2 h-33%"></div>
       <div id="errorBarChart" class="border border-solid border-gray my-2 h-33%"></div>
       <div id="errorTimeBarChart" class="border border-solid border-gray mt-2 h-34%"></div>
     </div>
@@ -59,6 +59,7 @@ import { time } from 'console';
 type RangeValue = [Dayjs, Dayjs];
 const dateRange = ref<RangeValue>();
 const {data:alarmData} = getAlarmParam({startTime:'2023-11-01', endTime:'2023-11-18'});
+const {data:AlarmCalc} = getAlarmCalc({startTime:'2023-11-01', endTime:'2023-11-18'});
 const alarmList = computed(() => {
   if (!alarmData.value) {
     return [];
@@ -69,7 +70,7 @@ const alarmList = computed(() => {
 const handlealarmtime = async ()  => {
   if (dateRange.value) {
     const timeList = dateRange.value.map((v) => v.format('YYYY-MM-DD HH:mm'));
-    getAlarmCalc({startTime:timeList[0], endTime:timeList[1]});
+    // getAlarmCalc({startTime:timeList[0], endTime:timeList[1]});
     alarmData.value = await getAlarmParam({ startTime: timeList[0], endTime: timeList[1] });
     if (!alarmData.value) {
       return [];
@@ -110,9 +111,19 @@ const options1 = ref<SelectProps['options']>([
     label: 'Yiminghe',
   },
 ]);
+// const alarmColumns: TableProps['columns'] = [
+//   { dataIndex: 'mo', title: 'Mon' },
+//   { dataIndex: 'tu', title: 'Tue' },
+//   { dataIndex: 'we', title: 'Wed' },
+//   { dataIndex: 'th', title: 'Thu' },
+//   { dataIndex: 'fr', title: 'Fri' },
+//   { dataIndex: 'sa', title: 'Sat' },
+//   { dataIndex: 'su', title: 'Sun' }
 
+// ];
 onMounted(() => {
   var myChart = echarts.init(document.getElementById('errorBarChart'), null);
+  // barOption.series[0].data=[88,22,35,68,98,56,10];
   myChart.setOption(barOption);
   var myChart = echarts.init(document.getElementById('errorTimeBarChart'), null);
   myChart.setOption(bar2Option);
