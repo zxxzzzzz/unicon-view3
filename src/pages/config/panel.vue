@@ -96,10 +96,8 @@
 import { Input, Tabs, TabPane } from 'ant-design-vue';
 import { getAllDev,getDevConfigParam } from '@/api/index';
 import { useToken } from 'ant-design-vue/es/theme/internal';
-onMounted(() => {
-  globalStore.value.token=token;
-});
-const { data } = getDevConfigParam({token:globalStore.value.token});
+
+const { data } = getDevConfigParam();
 
 
 enum TabName {
@@ -124,6 +122,7 @@ enum TimeTabName {
   输出,
   输出1,
 }
+
 const state = ref<{
   currentTabName: TabName,
   currentPortTabName: PortTabName,

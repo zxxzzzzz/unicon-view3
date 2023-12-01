@@ -79,8 +79,8 @@ export const getUserLogin = (data:{userName:string}) => {
   args.execute(true);
   return args;
 };
-export const getDevConfigParam = (data:{token:string}) => {
-  const args = useMyFetch('/GetDevConfigParam').post(data).json();
+export const getDevConfigParam = () => {
+  const args = useMyFetch('/GetDevConfigParam').post().json();
   args.execute(true);
   return args;
 };
@@ -104,8 +104,8 @@ export const getUserOperation = (data:{userName:string}) => {
   args.execute(true);
   return args;
 };
-export const getAllDev = () => {
-  const args = useMyFetch('/GetAllDev').post().json();
+export const getAllDev = (data:{userName:string}) => {
+  const args = useMyFetch('/GetAllDev').post(data).json();
   args.execute(true);
   return args;
 };

@@ -46,7 +46,7 @@ enum EdgeType {
   b,
 }
 
-// const { data } = getAllDev();
+const { datadev } = getAllDev({userName:globalStore.value.userName});
 const { data } = getDevConfigParam();
 
 // 基于准备好的dom，初始化echarts实例

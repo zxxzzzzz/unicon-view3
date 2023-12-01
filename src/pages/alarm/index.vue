@@ -51,36 +51,44 @@ import { RangePicker } from 'ant-design-vue';
 import { getSystemAlarm, getAlarmCalc, getAlarmParam } from '@/api/index';
 import { computed } from 'vue';
 import type { Dayjs } from 'dayjs';
+import { time } from 'console';
 // import {  } from 'ant-design-vue';
 // 基于准备好的dom，初始化echarts实例
 
 // const { data: alarmData } = getSystemAlarm();
-// const { data: alarmData } = getAlarmCalc({startTime:'2023-11-01', endTime:'2023-11-18'});
 type RangeValue = [Dayjs, Dayjs];
 const dateRange = ref<RangeValue>();
-const handlealarmtime = () => {
+const {data:alarmData} = getAlarmParam({startTime:'2023-11-01', endTime:'2023-11-18'});
+const alarmList = computed(() => {
+  if (!alarmData.value) {
+    return [];
+  }
+  // console.log(alarmData.value as any);
+  return (alarmData.value as any)?.data?.value?.body?.result?.alarmList;
+});
+const handlealarmtime = async ()  => {
   if (dateRange.value) {
     const timeList = dateRange.value.map((v) => v.format('YYYY-MM-DD HH:mm'));
-    console.log(timeList);
-    getAlarmParam({ startTime: '2023-11-01', endTime: '2023-11-18' });
+    getAlarmCalc({startTime:timeList[0], endTime:timeList[1]});
+    alarmData.value = await getAlarmParam({ startTime: timeList[0], endTime: timeList[1] });
+    if (!alarmData.value) {
+      return [];
+    }
+    return (alarmData.value as any)?.data?.value?.body?.result?.alarmList;
   }
 };
-const alarmList = computed(() => {
-  return [];
-  // if(!alarmData) return []
-  // return alarmData.value.result?.alarmList as any[]
-});
+
 
 const columns: TableProps['columns'] = [
-  { title: '告警Id' },
-  { title: '网元Id' },
-  { title: '告警等级' },
-  { title: '告警源' },
-  { title: '告警描述' },
-  { title: '告警状态' },
-  { title: '告警时间' },
-  { title: '确认时间' },
-  { title: '清除时间' },
+  {dataIndex:"id", title: '告警Id' },
+  {dataIndex:"devId", title: '网元Id' },
+  {dataIndex:"alarmLevel", title: '告警等级' },
+  {dataIndex:"alarmModule", title: '告警源' },
+  {dataIndex:"alarmDesc", title: '告警描述' },
+  {dataIndex:"alarmState", title: '告警状态' },
+  {dataIndex:"alarmTime", title: '告警时间' },
+  {dataIndex:"confirmTime", title: '确认时间' },
+  {dataIndex:"clearTime", title: '清除时间' },
 ];
 
 const options1 = ref<SelectProps['options']>([
