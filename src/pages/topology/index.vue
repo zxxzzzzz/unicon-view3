@@ -7,7 +7,7 @@
         <Button type="primary" class="mt-[1rem] bg-blue" @click="handleCreateNode">新建节点</Button>
       </div>
       <div class="h-[calc(100%-1rem)] overflow-hidden">
-        <Topology :nodes="state.nodes" :edges="state.edges" @dblclick="handleDoubleClick" @delete="handleNodeDelete" @config="handleNodeConfig"></Topology>
+        <Topology :nodes="devList" :edges="state.edges" @dblclick="handleDoubleClick" @delete="handleNodeDelete" @config="handleNodeConfig"></Topology>
       </div>
     </div>
     <div class="h-100% w-1px bg-black" />
@@ -35,7 +35,7 @@ import { openWindow } from '@/utils';
 import { ref } from 'vue';
 import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
-import { getAllDev,getDevConfigParam } from '@/api/index';
+import { getAllDev, getDevConfigParam } from '@/api/index';
 
 enum NodeType {
   a,
@@ -46,8 +46,18 @@ enum EdgeType {
   b,
 }
 
-const { datadev } = getAllDev({userName:globalStore.value.userName});
+const {  data: dataDev } = getAllDev({ userName: globalStore.value.userName });
 const { data } = getDevConfigParam();
+
+
+const devList = computed(() => {
+  return (dataDev.value?.body?.result?.devList || []).map((item:any) => {
+    return {
+      position:{x:parseFloat(item.posX), y:parseFloat(item.posY)},
+      data: item
+    }
+  })
+})
 
 // 基于准备好的dom，初始化echarts实例
 onMounted(() => {
@@ -99,7 +109,7 @@ const handleNodeDelete = (node: cytoscape.NodeSingular) => {
 };
 
 const handleNodeConfig = () => {
-  openWindow('/config/panel?token=${globalStore.value.token}');
+  openWindow('/config/panel');
 };
 const handleDataDownload = () => {
   //指向下载的一个地址

@@ -95,9 +95,12 @@
 <script setup lang="ts">
 import { Input, Tabs, TabPane } from 'ant-design-vue';
 import { getAllDev,getDevConfigParam } from '@/api/index';
-import { useToken } from 'ant-design-vue/es/theme/internal';
+import {globalStore} from '@/stores/index';
 
 const { data } = getDevConfigParam();
+
+
+
 
 
 enum TabName {

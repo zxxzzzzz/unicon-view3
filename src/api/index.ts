@@ -12,6 +12,11 @@ const useMyFetch = createFetch({
         // @ts-ignore
         options.headers['Authorization'] = `${globalStore.value.token}`;
       }
+      const session = window.sessionStorage.getItem('global');
+      if (session && !globalStore.value.token) {
+        const token = JSON.parse(session).token;
+        options.headers['Authorization'] = `${token}`;
+      }
       return { options };
     },
     onFetchError(ctx) {
@@ -44,7 +49,7 @@ export const registry = async (data: { userName: string; password: string; addre
   await args.execute(true);
   return args;
 };
-export const getUserInformation = async (data:{userName: string;}) => {
+export const getUserInformation = async (data: { userName: string }) => {
   const args = useMyFetch('/GetUserInformation').post(data).json();
   await args.execute(true);
   return args;
@@ -69,12 +74,12 @@ export const getTopography = async (data: {
   return args;
 };
 
-export const UserInformation = async (data: {userName:string}) => {
+export const UserInformation = async (data: { userName: string }) => {
   const args = useMyFetch('/GetUserInformation').post(data);
   await args.execute(true);
   return args;
 };
-export const getUserLogin = (data:{userName:string}) => {
+export const getUserLogin = (data: { userName: string }) => {
   const args = useMyFetch('/GetUserLogin').post(data).json();
   args.execute(true);
   return args;
@@ -84,12 +89,12 @@ export const getDevConfigParam = () => {
   args.execute(true);
   return args;
 };
-export const getAlarmCalc  = (data:{startTime:string,endTime:string}) => {
+export const getAlarmCalc = (data: { startTime: string; endTime: string }) => {
   const args = useMyFetch('/AlarmCalc ').post(data).json();
   args.execute(true);
   return args;
 };
-export const getAlarmParam  = (data:{startTime:string,endTime:string}) => {
+export const getAlarmParam = (data: { startTime: string; endTime: string }) => {
   const args = useMyFetch('/GetAlarmParam ').post(data).json();
   args.execute(true);
   return args;
@@ -99,12 +104,12 @@ export const getSystemAlarm = () => {
   args.execute(true);
   return args;
 };
-export const getUserOperation = (data:{userName:string}) => {
+export const getUserOperation = (data: { userName: string }) => {
   const args = useMyFetch('/GetUserOperation').post(data).json();
   args.execute(true);
   return args;
 };
-export const getAllDev = (data:{userName:string}) => {
+export const getAllDev = (data: { userName: string }) => {
   const args = useMyFetch('/GetAllDev').post(data).json();
   args.execute(true);
   return args;
@@ -114,3 +119,12 @@ export const loginOut = async (data: { userName: string; endTime: string }) => {
   await args.execute(true);
   return args;
 };
+
+
+export const delay = (n:number) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(true)
+    }, n);
+  })
+}

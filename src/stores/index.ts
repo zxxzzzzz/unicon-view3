@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 export const globalStore = ref({
   authority: '',
   userName: '',
@@ -14,7 +14,11 @@ const _g = window.sessionStorage.getItem('global');
 if (_g) {
   globalStore.value = JSON.parse(_g);
 }
-
-watch(globalStore, () => {
-  window.sessionStorage.setItem('global', JSON.stringify(globalStore.value));
-});
+console.log('sssssssssssss');
+watch(
+  globalStore,
+  () => {
+    window.sessionStorage.setItem('global', JSON.stringify(globalStore.value));
+  },
+  { deep: true },
+);

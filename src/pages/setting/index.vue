@@ -24,7 +24,7 @@ import Edit from './component/edit.vue';
 // defineProps<{  }>();
 type UserItem = {
   authority: string;
-  position: [string, string][];
+  position: string;
   userName: string;
 };
 const activeKey = ref('1');
@@ -33,14 +33,14 @@ const userList = computed(() => {
   return globalStore.value.userInfoList;
 });
 
-const { data: loginData } = getUserLogin({userName:globalStore.value.userName});
-const { data: operationData } = getUserOperation({userName:globalStore.value.userName});
+const { data: loginData } = getUserLogin({ userName: globalStore.value.userName });
+const { data: operationData } = getUserOperation({ userName: globalStore.value.userName });
 
 const loginList = computed(() => {
   if (!loginData.value) {
     return [];
   }
-  console.log((loginData.value as any));
+  console.log(loginData.value as any);
   return (loginData.value as any)?.body?.result?.userList;
 });
 const operationList = computed(() => {
@@ -51,7 +51,7 @@ const operationList = computed(() => {
 });
 
 onMounted(async () => {
-  const { data } = await getUserInformation({userName:globalStore.value.userName});
+  const { data } = await getUserInformation({ userName: globalStore.value.userName });
   globalStore.value.userInfoList = data.value?.body?.result?.userList || [];
 });
 
@@ -67,12 +67,12 @@ const columns: TableProps<UserItem>['columns'] = [
     title: '角色',
     customRender({ record, index }) {
       const t = ['-', '一', '二', '三'][parseInt(record.authority)];
-      return h('div', t ? `等级${['-','一', '二', '三'][parseInt(record.authority)]}` : '-');
+      return h('div', t ? `等级${['-', '一', '二', '三'][parseInt(record.authority)]}` : '-');
     },
   },
   {
     title: '操作',
-    customRender() {
+    customRender({ record }) {
       return [
         h(
           Button,
@@ -85,6 +85,9 @@ const columns: TableProps<UserItem>['columns'] = [
                 icon: null,
                 content: () => {
                   return h(Edit, {
+                    userName: record.userName,
+                    authority: record.authority,
+                    position: record.position.split('/'),
                     async onChange(data) {
                       try {
                         await setUserAuthority({

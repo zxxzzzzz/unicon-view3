@@ -14,7 +14,7 @@
     </div>
     <div class="flex my-2">
       <div class="w-4rem">权限</div>
-      <Select class="w-full" v-model:value="state.authority"></Select>
+      <Select class="w-full" v-model:value="state.authority" :options="auOptions"></Select>
     </div>
   </div>
 </template>
@@ -23,6 +23,13 @@
 import { Input, Select, Cascader } from 'ant-design-vue';
 import { cityList } from '@/pages/registry/cityList';
 import { computed, ref } from 'vue';
+
+const props = defineProps<
+{
+  userName:string
+  position:string[]
+  authority:string
+}>()
 
 const emit = defineEmits<{
   (
@@ -38,9 +45,14 @@ const emit = defineEmits<{
 const state = ref({
   userName: '',
   password: '',
-  position: [],
+  position: [] as string[],
   authority: '',
 });
+onMounted(() => {
+  state.value.userName = props.userName || ''
+  state.value.authority = props.authority || ''
+  state.value.position = props.position || []
+})
 const cityOptions = computed(() => {
   return cityList.map((city) => {
     return {
@@ -50,6 +62,11 @@ const cityOptions = computed(() => {
     };
   });
 });
+const auOptions = [
+  {label:'等级一',value:'1'},
+  {label:'等级二',value:'2'},
+  {label:'等级三',value:'3'},
+]
 </script>
 
 <style scoped></style>

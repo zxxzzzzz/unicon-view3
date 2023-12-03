@@ -1,8 +1,7 @@
 <!-- 登录页 -->
 <template>
   <div class="flex h-[100vh]">
-    <div class="w-[50vw] bg-blue">
-    </div>
+    <div class="w-[50vw] bg-blue"></div>
     <div class="w-[50vw] flex flex-col justify-center items-center">
       <div class="flex mb-[1rem]">
         <div class="w-[6rem]">用户名</div>
@@ -23,38 +22,39 @@
   </div>
 </template>
 <script setup lang="ts">
-import { Input, Button } from 'ant-design-vue'
+import { Input, Button } from 'ant-design-vue';
 import { useRouter, useRoute } from 'vue-router';
 import { login } from '@/api/index';
 import { onMounted } from 'vue';
+import { globalStore } from '@/stores/index';
 
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
 const state = ref({
   username: '',
-  password: ''
-})
+  password: '',
+});
+
 onMounted(() => {
   if (route.params.userName) {
-    state.value.username = route.params.userName as string
-    state.value.password = route.params.password as string
+    state.value.username = route.params.userName as string;
+    state.value.password = route.params.password as string;
   }
-})
+});
 
 const handleLogin = async () => {
   try {
-    const {data} = await login({ userName: state.value.username, password: state.value.password })
-    globalStore.value.token = data.value?.body?.result?.token || ''    
-    globalStore.value.userName = state.value.username 
-    router.push({ path: '/topology' })
+    const { data } = await login({ userName: state.value.username, password: state.value.password });
+    globalStore.value = { ...globalStore.value, token: data.value?.body?.result?.token || '', userName: state.value.username };
+    router.push({ path: '/topology' });
   } catch (error) {
     console.log(error, 'error');
   }
-}
+};
 const handleRegistry = () => {
-  router.push({ path: '/registry' })
-}
+  router.push({ path: '/registry' });
+};
 // const { t } = useI18n()
 </script>
 

@@ -241,8 +241,6 @@ export const louOptions = {
     }
   ]
 };
-const {data:AlarmCalc} = getAlarmCalc({startTime:'2023-11-01', endTime:'2023-11-18'});
-// const {data:aa} = AlarmCalc.value?.body?.result?.alarmTimeRate;
 export const pieOptions = {
   title:{
     text:'异常分级'
