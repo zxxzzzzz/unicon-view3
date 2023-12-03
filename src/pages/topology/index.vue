@@ -35,7 +35,7 @@ import { openWindow } from '@/utils';
 import { ref } from 'vue';
 import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
-import { getAllDev, getDevConfigParam } from '@/api/index';
+import { getAllDev, getDevConfigParam, getTopography } from '@/api/index';
 
 enum NodeType {
   a,
@@ -46,7 +46,7 @@ enum EdgeType {
   b,
 }
 
-const {  data: dataDev } = getAllDev({ userName: globalStore.value.userName });
+const {  data: dataDev } = getTopography({ userName: globalStore.value.userName });
 const { data } = getDevConfigParam();
 
 

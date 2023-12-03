@@ -9,20 +9,20 @@
       </TabPane>
     </Tabs>
   </div>
-  <div class=" bg-[rgba(214,218,234,1)]" style="width: 100%;height: 370px;">
-
-  </div>
+  <div class="bg-[rgba(214,218,234,1)]" style="width: 100%; height: 370px"></div>
 </template>
 <!-- 系统管理页 -->
 
 <script setup lang="ts">
 import { Tabs, TabPane, Table, TableProps } from 'ant-design-vue';
 import { ref } from 'vue';
+import { getSystemAlarm } from '@/api/index';
 
 const state = ref({
-  currentTabName: '系统'
-})
+  currentTabName: '系统',
+});
 
+const { data: alarmData } = getSystemAlarm();
 
 const alarmColumns: TableProps['columns'] = [
   {
@@ -50,7 +50,7 @@ const alarmColumns: TableProps['columns'] = [
     dataIndex: 'alarmDesc',
     key: 'alarmDesc',
   },
-]
+];
 const systemColumns: TableProps['columns'] = [
   {
     title: '日志ip',
@@ -67,14 +67,12 @@ const systemColumns: TableProps['columns'] = [
     dataIndex: 'alarmTime',
     key: 'alarmTime',
   },
-]
-
-
+];
 </script>
 
 <style scoped></style>
 <route lang="yaml">
-  meta:
-    layout: menu
-    menuName: 系统管理
+meta:
+  layout: menu
+  menuName: 系统管理
 </route>

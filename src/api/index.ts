@@ -66,11 +66,11 @@ export const setUserAuthority = async (data: {
   return args;
 };
 
-export const getTopography = async (data: {
+export const getTopography = (data: {
   //token
 }) => {
   const args = useMyFetch('/GetTopography').post(data);
-  await args.execute(true);
+  args.execute(true);
   return args;
 };
 
