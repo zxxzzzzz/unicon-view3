@@ -13,7 +13,7 @@ import { message } from 'ant-design-vue';
 import img from './img';
 import edgehandles from 'cytoscape-edgehandles';
 import Popper from 'cytoscape-popper';
-import { initEdgeDelete, initLink,initNodeDelete } from './utils';
+import { initEdgeDelete, initLink,initNodeDelete, useDevPop } from './utils';
 
 cytoscape.use(Popper);
 cytoscape.use(edgehandles);
@@ -171,7 +171,7 @@ watch(
           message.error((error as Error).message, 10);
         }
         if (cy) {
-          destroyHandleList = [initLink(cy), initEdgeDelete(cy), initNodeDelete(cy)]
+          destroyHandleList = [initLink(cy), initEdgeDelete(cy), initNodeDelete(cy), useDevPop(cy)]
           cy.on('select ', 'node', (evt) => {
             var node = evt.target;
             emits('select', node);

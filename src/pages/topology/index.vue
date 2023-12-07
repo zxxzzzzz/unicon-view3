@@ -7,7 +7,7 @@
         <Button type="primary" class="mt-[1rem] bg-blue" @click="handleCreateNode">新建节点</Button>
       </div>
       <div class="h-[calc(100%-1rem)] overflow-hidden">
-        <Topology :nodes="devList" :edges="state.edges" @dblclick="handleDoubleClick" @delete="handleNodeDelete" @config="handleNodeConfig"></Topology>
+        <Topology :nodes="state.nodes" :edges="state.edges" @dblclick="handleDoubleClick" @delete="handleNodeDelete" @config="handleNodeConfig"></Topology>
       </div>
     </div>
     <div class="h-100% w-1px bg-black" />
@@ -46,16 +46,24 @@ enum EdgeType {
   b,
 }
 
-const {  data: dataDev } = getTopography({ userName: globalStore.value.userName });
-const { data } = getDevConfigParam();
-
-
-const devList = computed(() => {
-  return (dataDev.value?.body?.result?.devList || []).map((item:any) => {
+onMounted(async () => {
+  const { data: dataDev } = await getTopography({ userName: globalStore.value.userName });
+  state.value.nodes = ((dataDev.value as any)?.result?.DeviceList || []).map((item: any) => {
     return {
-      position:{x:parseFloat(item.posX), y:parseFloat(item.posY)},
-      data: item
-    }
+      position: { x:item.posX, y: item.posY },
+      data: {
+        id: item.object,
+      },
+    };
+  })
+  state.value.edges = ((dataDev.value as any)?.result?.ListList || []).map((item: any) => {
+    return {
+      data: {
+        id: item.object,
+        source:item.Dev1,
+        target:item.ConnectDev2
+      },
+    };
   })
 })
 
@@ -108,8 +116,9 @@ const handleNodeDelete = (node: cytoscape.NodeSingular) => {
   node.remove();
 };
 
-const handleNodeConfig = () => {
-  openWindow('/config/panel');
+const handleNodeConfig = (node:any) => {
+  const data = node.data();
+  openWindow(`/config/panel?id=${data.id}`);
 };
 const handleDataDownload = () => {
   //指向下载的一个地址

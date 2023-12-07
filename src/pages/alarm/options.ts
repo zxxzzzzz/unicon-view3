@@ -273,23 +273,6 @@ export const barOption = {
   title:{
     text:'一周异常'
   },
-  // dataset: {
-  //   // 用 dimensions 指定了维度的顺序。直角坐标系中，如果 X 轴 type 为 category，
-  //   // 默认把第一个维度映射到 X 轴上，后面维度映射到 Y 轴上。
-  //   // 如果不指定 dimensions，也可以通过指定 series.encode
-  //   // 完成映射，参见后文。
-  //   dimensions: ['product', '等级一', '等级二', '等级三'],
-  //   source: [
-  //     { product: 'Mon', '等级一': 43.3, '等级二': 85.8, '等级三': 93.7 },
-  //     { product: 'Tue', '等级一': 83.1, '等级二': 73.4, '等级三': 55.1 },
-  //     { product: 'Wed', '等级一': 86.4, '等级二': 65.2, '等级三': 82.5 },
-  //     { product: 'Thu', '等级一': 72.4, '等级二': 53.9, '等级三': 39.1 },
-  //     { product: 'Fri', '等级一': 72.4, '等级二': 53.9, '等级三': 39.1 },
-  //     { product: 'Sat', '等级一': 72.4, '等级二': 53.9, '等级三': 39.1 },
-  //     { product: 'Sun', '等级一': 72.4, '等级二': 53.9, '等级三': 39.1 }
-  //   ]
-  // },
-
   xAxis: {
     type: 'category',
     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']

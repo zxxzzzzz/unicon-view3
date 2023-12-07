@@ -63,16 +63,54 @@ const alarmCalc = ref<any>({});
 
 onMounted(async () => {
   const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
-  alarmList.value = res.data.value?.body?.result?.alarmList || [];
+  alarmList.value = res.data.value?.result?.alarmList || [];
   await delay(500);
-  const res2 = await getAlarmCalc({ startTime: '2023-11-01', endTime: '2023-11-18' });
-  alarmCalc.value = res2.data.value?.body?.result || {};
+  const res2 = await getAlarmCalc({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
+  alarmCalc.value = res2.data.value?.result || {};
 });
 
 const handleAlarmTime = async () => {
   const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
   alarmList.value = res.data.value?.body?.result?.alarmList || [];
 };
+
+watch(alarmCalc, () => {
+  var myChart = echarts.init(document.getElementById('errorBarChart'), null);
+  console.log(alarmCalc, 'alarmCalc?.weekAlarmTime');
+  const timeList = [
+    alarmCalc.value?.weekAlarmTime?.mo,
+    alarmCalc.value?.weekAlarmTime?.tu,
+    alarmCalc.value?.weekAlarmTime?.we,
+    alarmCalc.value?.weekAlarmTime?.th,
+    alarmCalc.value?.weekAlarmTime?.fr,
+    alarmCalc.value?.weekAlarmTime?.sa,
+    alarmCalc.value?.weekAlarmTime?.su,
+  ].map((item) => {
+    return (item || '').split(':');
+  });
+  const lv1 = timeList.map((e) => e?.[0] || 0);
+  const lv2 = timeList.map((e) => e?.[1] || 0);
+  const lv3 = timeList.map((e) => e?.[2] || 0);
+  barOption.series = [
+    {
+      type: 'bar',
+      name: '等级一',
+      data: lv1,
+    },
+    {
+      type: 'bar',
+      name: '等级二',
+      data: lv2,
+    },
+    {
+      type: 'bar',
+      name: '等级三',
+      data: lv3,
+    },
+  ];
+  console.log(barOption);
+  myChart.setOption(barOption);
+});
 
 // {
 //   "alarmDesc": "safafsfwesd",
@@ -140,9 +178,6 @@ const options1 = ref<SelectProps['options']>([
 
 // ];
 onMounted(() => {
-  var myChart = echarts.init(document.getElementById('errorBarChart'), null);
-  // barOption.series[0].data=[88,22,35,68,98,56,10];
-  myChart.setOption(barOption);
   var myChart = echarts.init(document.getElementById('errorTimeBarChart'), null);
   myChart.setOption(bar2Option);
   // var myChart = echarts.init(document.getElementById('louChart'), null);
