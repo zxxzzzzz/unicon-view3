@@ -68,177 +68,15 @@ onMounted(async () => {
   const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
   alarmList.value = res.data.value?.result?.alarmList || [];
   await delay(500);
-  const res2 = await getAlarmCalc({ startTime: dateRange.value[0].format('2023-12-1'), endTime: dateRange.value[1].format('2023-12-2') });
-  alarmCalc.value = res2.data.value?.result || {};
+  const res2 = await getAlarmCalc({ startTime: '2023-11-01', endTime: '2023-11-18' });
+  alarmCalc.value = res2.data.value?.body?.result || {};
 });
 
 const handleAlarmTime = async () => {
   const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
-  alarmList.value = res.data.value?.result?.alarmList || [];
-  const res2 = await getAlarmCalc({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
-  alarmCalc.value = res2.data.value?.result || {};
+  alarmList.value = res.data.value?.body?.result?.alarmList || [];
 };
 
-watch(alarmCalc, () => {
-  var myChart = echarts.init(document.getElementById('errorBarChart'), null);
-  const timeList = [
-    alarmCalc.value?.weekAlarmTime?.mo,
-    alarmCalc.value?.weekAlarmTime?.tu,
-    alarmCalc.value?.weekAlarmTime?.we,
-    alarmCalc.value?.weekAlarmTime?.th,
-    alarmCalc.value?.weekAlarmTime?.fr,
-    alarmCalc.value?.weekAlarmTime?.sa,
-    alarmCalc.value?.weekAlarmTime?.su,
-  ].map((item) => {
-    return (item || '').split(':');
-  });
-  const lv1 = timeList.map((e) => e?.[0] || 0);
-  const lv2 = timeList.map((e) => e?.[1] || 0);
-  const lv3 = timeList.map((e) => e?.[2] || 0);
-  barOption.series = [
-    {
-      type: 'bar',
-      name: '等级一',
-      data: lv1,
-    },
-    {
-      type: 'bar',
-      name: '等级二',
-      data: lv2,
-    },
-    {
-      type: 'bar',
-      name: '等级三',
-      data: lv3,
-    },
-  ];
-  console.log(barOption);
-  myChart.setOption(barOption);
-});
-
-watch(alarmCalc, () => {
-  var myChart = echarts.init(document.getElementById('errorPieChart'), null);
-  const timeList = [
-    alarmCalc.value?.alarmTimeRate,
-  ].map((item) => {
-    return (item || '').split(':');
-  });
-  // const lv1 = timeList.map((e) => e?.[0] || 0);
-  const lv1 = timeList.map((e) => e?.[0] || 0)[0];
-  const lv2 = timeList.map((e) => e?.[1] || 0)[1];
-  const lv3 = timeList.map((e) => e?.[2] || 0)[2];
-  pieOptions.series = [
-    {
-      name: 'Access From',
-      type: 'pie',
-      radius: '50%',
-      data:[
-          {value:lv1,name:'等级一'},
-          {value:lv2,name:'等级二'},
-          {value:lv3,name:'等级三'},
-    ],
-    emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
-        }
-      }
-    },
-    // {
-    //   type: 'pie',
-    //   name:'等级二',
-    //   radius: '50%',
-    //   data:[
-    //       {value:lv1,name:'等级一'},
-    //       {value:lv2,name:'等级二'},
-    //       {value:lv3,name:'等级三'} 
-    // ],
-    // emphasis: {
-    //     itemStyle: {
-    //       shadowBlur: 10,
-    //       shadowOffsetX: 0,
-    //       shadowColor: 'rgba(0, 0, 0, 0.5)'
-    //     }
-    //   }
-    // },
-    // {
-    //   type: 'pie',
-    //   name:'等级三',
-    //   radius: '50%',
-    //   data:[
-    //       {value:lv1,name:'等级一'},
-    //       {value:lv2,name:'等级二'},
-    //       {value:lv3,name:'等级三'} 
-    // ],
-    // emphasis: {
-    //     itemStyle: {
-    //       shadowBlur: 10,
-    //       shadowOffsetX: 0,
-    //       shadowColor: 'rgba(0, 0, 0, 0.5)'
-    //     }
-    //   }
-    // },
-  ];
-  console.log(pieOptions);
-  myChart.setOption(pieOptions);
-});
-
-
-
-// watch(alarmCalc, () => {
-//   var myChart = echarts.init(document.getElementById('errorTimeBarChart'), null);
-//   const lv11=[];
-//   const lv22=[];
-//   const lv33=[];
-//   for(var i =0;i<alarmCalc.value.devAlarmTime.length;i++){
-//   const timeList = [
-//     alarmCalc.value?.devAlarmTime[i].time
-//   ].map((item) => {
-//     return (item || '').split(':');
-//   });
-//   //等级一
-//   const lv1 = timeList.map((e) => e?.[0] || 0);
-//   lv11.push(timeList[i][0][0]);
-//   //等级二
-//   const lv2 = timeList.map((e) => e?.[1] || 0);
-//   lv22.push(timeList[i][0][1]);
-//   //等级三
-//   const lv3 = timeList.map((e) => e?.[2] || 0);
-//   lv33.push(timeList[i][0][2])
-//   console.log(i);
-  
-//   console.log("==========");
-//   console.log(timeList);
-  
-//   console.log(lv1);
-//   console.log(lv2);
-//   console.log(lv3);
-
-// }
-
-//   bar2Option.series = [
-//     {
-//       type: 'bar',
-//       name: '等级一',
-//       data: lv11[0],
-//     },
-//     {
-//       type: 'bar',
-//       name: '等级二',
-//       data: lv22[1],
-//     },
-//     {
-//       type: 'bar',
-//       name: '等级三',
-//       data: lv33[2],
-//     },
-//   ];
-  
-  
-//   console.log(bar2Option);
-//   myChart.setOption(bar2Option);
-// });
 // {
 //   "alarmDesc": "safafsfwesd",
 //   "alarmLevel": "1",
@@ -304,14 +142,17 @@ const options1 = ref<SelectProps['options']>([
 //   { dataIndex: 'su', title: 'Sun' }
 
 // ];
-// onMounted(() => {
-//   var myChart = echarts.init(document.getElementById('errorTimeBarChart'), null);
-//   myChart.setOption(bar2Option);
-//   // var myChart = echarts.init(document.getElementById('louChart'), null);
-//   // myChart.setOption(louOptions)
-//   var myChart = echarts.init(document.getElementById('errorPieChart'), null);
-//   myChart.setOption(pieOptions);
-// });
+onMounted(() => {
+  var myChart = echarts.init(document.getElementById('errorBarChart'), null);
+  // barOption.series[0].data=[88,22,35,68,98,56,10];
+  myChart.setOption(barOption);
+  var myChart = echarts.init(document.getElementById('errorTimeBarChart'), null);
+  myChart.setOption(bar2Option);
+  // var myChart = echarts.init(document.getElementById('louChart'), null);
+  // myChart.setOption(louOptions)
+  var myChart = echarts.init(document.getElementById('errorPieChart'), null);
+  myChart.setOption(pieOptions);
+});
 </script>
 
 <style scoped></style>
