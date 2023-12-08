@@ -1,6 +1,9 @@
 import cytoscape from 'cytoscape';
 import Popper from 'cytoscape-popper';
 import Pop from './pop.vue';
+import DevPop from './devPop.vue';
+import { getAllDev } from '@/api/index';
+import { globalStore } from '@/stores/index';
 import { render } from 'vue';
 
 export const initLink = (cy: cytoscape.Core) => {
@@ -200,11 +203,11 @@ export const initNodeDelete = (cy: cytoscape.Core) => {
           h(Pop, {
             onDelete() {
               removeHandle();
-              node.emit('delete')
+              node.emit('delete');
             },
             onConfig() {
               removeHandle();
-              node.emit('config')
+              node.emit('config');
             },
           }),
           _popperDiv,
@@ -262,6 +265,81 @@ export const initNodeDelete = (cy: cytoscape.Core) => {
 
   window.addEventListener('mouseup', function (e) {
     stop();
+  });
+  return removeHandle;
+};
+
+export const useDevPop = (cy: cytoscape.Core) => {
+  var popper: ReturnType<Popper.getPopperInstance<HTMLDivElement>> | null;
+  var popperDiv: HTMLDivElement | null;
+
+  async function setHandleOn(node: cytoscape.NodeSingular) {
+    removeHandle(); // rm old handle
+    const id = node.data().id;
+    const { data } = await getAllDev({ userName: globalStore.value.userName });
+    const dev = (data.value?.result?.devList || []).find((item: any) => {
+      return item.id == id;
+    });
+    if (!dev) {
+      return;
+    }
+    popper = node.popper({
+      content: () => {
+        const _popperDiv = document.createElement('div');
+        render(
+          h(DevPop, {
+            ...dev,
+          }),
+          _popperDiv,
+        );
+        popperDiv = _popperDiv;
+        document.body.appendChild(popperDiv);
+        return _popperDiv;
+      },
+      popper: {
+        strategy: 'absolute',
+        placement: 'top',
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: [80, -50],
+            },
+          },
+        ],
+      },
+    });
+  }
+
+  function removeHandle() {
+    if (popper) {
+      popper.destroy();
+      popper = null;
+    }
+    if (popperDiv) {
+      document.body.removeChild(popperDiv);
+      popperDiv = null;
+    }
+  }
+
+  cy.on('select', 'node', function (e) {
+    setHandleOn(e.target);
+  });
+  cy.on('unselect', 'node', function (e) {
+    removeHandle();
+  });
+
+  cy.on('grab', 'node', function () {
+    removeHandle();
+  });
+
+  cy.on('tap', function (e) {
+    if (e.target === cy) {
+      removeHandle();
+    }
+  });
+  cy.on('zoom pan', function () {
+    removeHandle();
   });
   return removeHandle;
 };

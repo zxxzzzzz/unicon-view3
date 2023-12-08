@@ -26,7 +26,7 @@ const useMyFetch = createFetch({
       }
       const data = typeof ctx.data === 'string' ? JSON.parse(ctx.data) : ctx.data;
       if (data && data?.body?.code !== 200) {
-        const msg = data?.body?.message;
+        const msg = data?.body?.message;  
         message.error(msg || '网络错误');
         return ctx;
       }
@@ -69,7 +69,7 @@ export const setUserAuthority = async (data: {
 export const getTopography = (data: {
   //token
 }) => {
-  const args = useMyFetch('/GetTopography').post(data);
+  const args = useMyFetch('/GetTopography').post(data).json()
   args.execute(true);
   return args;
 };
@@ -86,6 +86,11 @@ export const getUserLogin = (data: { userName: string }) => {
 };
 export const getDevConfigParam = () => {
   const args = useMyFetch('/GetDevConfigParam').post().json();
+  args.execute(true);
+  return args;
+};
+export const getDevCurConfig = () => {
+  const args = useMyFetch('/GetDevCurConfig').post().json();
   args.execute(true);
   return args;
 };

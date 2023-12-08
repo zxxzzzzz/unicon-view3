@@ -41,23 +41,22 @@ const loginList = computed(() => {
     return [];
   }
   console.log(loginData.value as any);
-  return (loginData.value as any)?.body?.result?.userList;
+  return (loginData.value as any)?.result?.userList;
 });
 const operationList = computed(() => {
   if (!operationData.value) {
     return [];
   }
-  return (operationData.value as any)?.body?.result?.userList;
+  return (operationData.value as any)?.result?.userList;
 });
 
 onMounted(async () => {
   const { data } = await getUserInformation({ userName: globalStore.value.userName });
-  globalStore.value.userInfoList = data.value?.body?.result?.userList || [];
+  globalStore.value.userInfoList = data.value?.result?.userList || [];
 });
 
 const columns: TableProps<UserItem>['columns'] = [
   { dataIndex: 'userName', title: '用户名称' },
-  { dataIndex: 'password', title: '密码' },
   {
     dataIndex: 'position',
     title: '地点',
@@ -115,7 +114,6 @@ const columns: TableProps<UserItem>['columns'] = [
 
 const loginColumns: TableProps<UserItem>['columns'] = [
   { dataIndex: 'userName', title: '用户名称' },
-  { dataIndex: 'password', title: '密码' },
   { dataIndex: 'startTime', title: '开始时间' },
   { dataIndex: 'endTime', title: '结束时间' },
 ];
