@@ -23,6 +23,7 @@ const useMyFetch = createFetch({
       return { options };
     },
     onFetchError(ctx) {
+      console.log(ctx);
       if (!ctx.data) {
         message.error('网络错误');
         return ctx;
@@ -93,7 +94,7 @@ export const getDevConfigParam = () => {
   return args;
 };
 
-export const setDevPortConfig = (data: {
+export const setDevPortConfig = async (data: {
   nodeId: number;
   type: 'dev'|'module'|'port'|'freq'|'time'; //配置模块类型(dev,module,port,freq,time)
   name: string; //配置的模块
@@ -103,7 +104,7 @@ export const setDevPortConfig = (data: {
   }[];
 }) => {
   const args = useMyFetch('/SetDevPortConfig').post(data).json();
-  args.execute(true);
+  await args.execute(true);
   return args;
 };
 export const getDevCurConfig = () => {

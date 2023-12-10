@@ -34,7 +34,7 @@
               <div class="w-10rem">{{ item.title }}</div>
               <div>
                 <Select v-model:value="moduleListState[index][item.title]" v-if="item.type === 'select'" class="w-186px" :options="item.options"></Select>
-                <Input v-else class="w-186px" v-model:value="moduleListState[index][item.title]"></Input>
+                <Input v-else class="w-186px" v-model:value.number="moduleListState[index][item.title]"></Input>
               </div>
             </div>
             <Button @click="handleSetModule(index)">确定</Button>
@@ -48,7 +48,7 @@
               <div class="w-10rem">{{ item.title }}</div>
               <div>
                 <Select v-model:value="portListState[index][item.title]" v-if="item.type === 'select'" class="w-186px" :options="item.options"></Select>
-                <Input v-else class="w-186px" v-model:value="portListState[index][item.title]"></Input>
+                <Input v-else class="w-186px" v-model:value.number="portListState[index][item.title]"></Input>
               </div>
             </div>
             <Button @click="handleSetPort(index)">确定</Button>
@@ -62,7 +62,7 @@
               <div class="w-10rem">{{ item.title }}</div>
               <div>
                 <Select v-model:value="freqListState[index][item.title]" v-if="item.type === 'select'" class="w-186px" :options="item.options"></Select>
-                <Input v-else class="w-186px" v-model:value="freqListState[index][item.title]"></Input>
+                <Input v-else class="w-186px" v-model:value.number="freqListState[index][item.title]"></Input>
               </div>
             </div>
             <Button @click="handleSetFreq(index)">确定</Button>
@@ -76,7 +76,7 @@
               <div class="w-10rem">{{ item.title }}</div>
               <div>
                 <Select v-model:value="timeListState[index][item.title]" v-if="item.type === 'select'" class="w-186px" :options="item.options"></Select>
-                <Input v-else class="w-186px" v-model:value="timeListState[index][item.title]"></Input>
+                <Input v-else class="w-186px" v-model:value.number="timeListState[index][item.title]"></Input>
               </div>
             </div>
             <Button @click="handleSetTime(index)">确定</Button>
@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { Input, Tabs, TabPane, Select, Button } from 'ant-design-vue';
+import { Input, Tabs, TabPane, Select, Button,message } from 'ant-design-vue';
 import { getDevCurConfig, getDevConfigParam, setDevPortConfig } from '@/api/index';
 import { useRoute } from 'vue-router';
 
@@ -233,9 +233,8 @@ const handleTabClick = (tabName: TabName) => {
   tabState.value.currentTabName = tabName;
 };
 
-const handleSetModule = (index: number) => {
-  console.log(moduleListState.value[index]);
-  setDevPortConfig({
+const handleSetModule = async (index: number) => {
+  await setDevPortConfig({
     nodeId: parseInt(route.query.id as string),
     type: 'module',
     name: tabState.value.currentModuleTabName,
@@ -246,11 +245,12 @@ const handleSetModule = (index: number) => {
       };
     }),
   });
+  message.success('修改成功')
 };
-const handleSetPort = (index: number) => {
-  setDevPortConfig({
+const handleSetPort = async (index: number) => {
+  await setDevPortConfig({
     nodeId: parseInt(route.query.id as string),
-    type: 'module',
+    type: 'port',
     name: tabState.value.currentPortTabName,
     paramList: Object.entries(portListState.value[index] as any).map(([key, value]) => {
       return {
@@ -259,11 +259,12 @@ const handleSetPort = (index: number) => {
       };
     }),
   });
+  message.success('修改成功')
 };
-const handleSetFreq = (index: number) => {
-  setDevPortConfig({
+const handleSetFreq = async (index: number) => {
+  await setDevPortConfig({
     nodeId: parseInt(route.query.id as string),
-    type: 'module',
+    type: 'freq',
     name: tabState.value.currentFrequencyTabName,
     paramList: Object.entries(freqListState.value[index] as any).map(([key, value]) => {
       return {
@@ -272,11 +273,12 @@ const handleSetFreq = (index: number) => {
       };
     }),
   });
+  message.success('修改成功')
 };
-const handleSetTime = (index: number) => {
-  setDevPortConfig({
+const handleSetTime = async (index: number) => {
+  await setDevPortConfig({
     nodeId: parseInt(route.query.id as string),
-    type: 'module',
+    type: 'time',
     name: tabState.value.currentTimeTabName,
     paramList: Object.entries(timeListState.value[index] as any).map(([key, value]) => {
       return {
@@ -285,6 +287,7 @@ const handleSetTime = (index: number) => {
       };
     }),
   });
+  message.success('修改成功')
 };
 </script>
 
