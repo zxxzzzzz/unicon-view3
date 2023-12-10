@@ -1,8 +1,6 @@
 <template>
   <div class="h-[calc(100%-2px)]">
-    <div ref="canvas" class="h-full border border-dark-50"
-      style="background: linear-gradient(rgba(214, 218, 234, 1) 33%, rgba(214, 218, 234, 1) 33%, rgba(214, 218, 234, 1) 33%)">
-    </div>
+    <div ref="canvas" class="h-full border border-dark-50" style="background: linear-gradient(rgba(214, 218, 234, 1) 33%, rgba(214, 218, 234, 1) 33%, rgba(214, 218, 234, 1) 33%)"></div>
     <!-- <Legend class="right-0 absolute mr-2 mt-2 top-0" /> -->
   </div>
 </template>
@@ -13,13 +11,13 @@ import { message } from 'ant-design-vue';
 import img from './img';
 import edgehandles from 'cytoscape-edgehandles';
 import Popper from 'cytoscape-popper';
-import { initEdgeDelete, initLink,initNodeDelete, useDevPop } from './utils';
+import { initEdgeDelete, initLink, initNodeDelete, useDevPop } from './utils';
 
 cytoscape.use(Popper);
 cytoscape.use(edgehandles);
 // import Legend from './legend.vue';
 
-const props = defineProps<{ nodes: cytoscape.NodeDefinition[], edges: cytoscape.EdgeDefinition[] }>();
+const props = defineProps<{ nodes: cytoscape.NodeDefinition[]; edges: cytoscape.EdgeDefinition[] }>();
 const canvas = ref<HTMLDivElement>();
 const emits = defineEmits<{
   (event: 'cxttap', node: cytoscape.CollectionReturnValue): void;
@@ -31,18 +29,16 @@ const emits = defineEmits<{
   (event: 'dblclick', node: cytoscape.CollectionReturnValue): void;
   (event: 'delete', node: cytoscape.CollectionReturnValue): void;
   (event: 'config', node: cytoscape.CollectionReturnValue): void;
+  (event: 'link', data:{sourceNode:cytoscape.CollectionReturnValue, targetNode:cytoscape.CollectionReturnValue}): void;
 }>();
 const formatType = (s: string) => {
   return s.replace(/[()-]+/g, '');
 };
 
-let destroyHandleList: (() => void)[] = []
+let destroyHandleList: (() => void)[] = [];
 onUnmounted(() => {
-  destroyHandleList.forEach(func => func())
-})
-
-
-
+  destroyHandleList.forEach((func) => func());
+});
 
 let cy: cytoscape.Core | undefined = undefined;
 watch(
@@ -51,7 +47,7 @@ watch(
     nextTick(() => {
       if (canvas.value) {
         try {
-          destroyHandleList.forEach(func => func())
+          destroyHandleList.forEach((func) => func());
           cy = cytoscape({
             container: canvas.value, // container to render in
             // @ts-ignore
@@ -66,8 +62,8 @@ watch(
               {
                 selector: '.eh-ghost-edge.eh-preview-active',
                 style: {
-                  'opacity': 0
-                }
+                  opacity: 0,
+                },
               },
               {
                 selector: 'node',
@@ -79,13 +75,13 @@ watch(
                 selector: 'node.eh-handle',
                 style: {
                   'background-color': 'red',
-                  'width': 12,
-                  'height': 12,
-                  'shape': 'ellipse',
+                  width: 12,
+                  height: 12,
+                  shape: 'ellipse',
                   'overlay-opacity': 0,
                   'border-width': 12, // makes the handle easier to hit
-                  'border-opacity': 0
-                }
+                  'border-opacity': 0,
+                },
               },
               {
                 selector: 'node.ATN950B',
@@ -171,7 +167,7 @@ watch(
           message.error((error as Error).message, 10);
         }
         if (cy) {
-          destroyHandleList = [initLink(cy), initEdgeDelete(cy), initNodeDelete(cy), useDevPop(cy)]
+          destroyHandleList = [initLink(cy), initEdgeDelete(cy), initNodeDelete(cy), useDevPop(cy)];
           cy.on('select ', 'node', (evt) => {
             var node = evt.target;
             emits('select', node);
@@ -215,6 +211,10 @@ watch(
           cy.on('dblclick', 'node', function (evt) {
             var node = evt.target;
             emits('dblclick', node);
+          });
+          // @ts-ignore
+          cy.on('ehcomplete', function (event, sourceNode, targetNode, addedEdge) {
+            emits('link', { sourceNode, targetNode });
           });
         }
       }

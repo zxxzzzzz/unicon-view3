@@ -7,7 +7,7 @@
         <Button type="primary" class="mt-[1rem] bg-blue" @click="handleCreateNode">新建节点</Button>
       </div>
       <div class="h-[calc(100%-1rem)] overflow-hidden">
-        <Topology :nodes="state.nodes" :edges="state.edges" @delete="handleNodeDelete" @config="handleNodeConfig"></Topology>
+        <Topology :nodes="state.nodes" :edges="state.edges" @delete="handleNodeDelete" @config="handleNodeConfig" @link="handleLink"></Topology>
       </div>
     </div>
     <div class="h-100% w-1px bg-black" />
@@ -29,13 +29,13 @@
 
 <script setup lang="ts">
 import Topology from '@/components/topology/index.vue';
-import { Button, CheckboxGroup, Tag, Modal } from 'ant-design-vue';
+import { Button, CheckboxGroup, Tag, Modal, message } from 'ant-design-vue';
 import cytoscape from 'cytoscape';
 import { openWindow } from '@/utils';
 import { ref } from 'vue';
 import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
-import { getTopography, updateDev } from '@/api/index';
+import { getTopography, updateDev, updateLink } from '@/api/index';
 import NodePop from './nodePop.vue';
 
 enum NodeType {
@@ -123,6 +123,24 @@ const handleNodeConfig = (node: any) => {
 const handleDataDownload = () => {
   //指向下载的一个地址
   alert('数据下载中');
+};
+//@ts-ignore
+const handleLink = async ({ sourceNode, targetNode }) => {
+  setTimeout(async () => {
+    try {
+      await updateLink({
+       type: 'add',
+       Dev1: parseInt(sourceNode.data('id')) ,
+       ConnectDev2: parseInt(targetNode.data('id')),
+       object: '12',
+       linkType: '12',
+     });
+     message.success('更新成功')
+      
+    } catch (error) {
+      
+    }
+  }, 1);
 };
 </script>
 

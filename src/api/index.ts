@@ -96,7 +96,7 @@ export const getDevConfigParam = () => {
 
 export const setDevPortConfig = async (data: {
   nodeId: number;
-  type: 'dev'|'module'|'port'|'freq'|'time'; //配置模块类型(dev,module,port,freq,time)
+  type: 'dev' | 'module' | 'port' | 'freq' | 'time'; //配置模块类型(dev,module,port,freq,time)
   name: string; //配置的模块
   paramList: {
     paramName: string; //配置的参数名字
@@ -149,6 +149,12 @@ export const getAllDev = () => {
 };
 export const updateDev = (data: { type: string; nodeId: string; duty: string; location: string[]; status: string; ip: string }) => {
   const args = useMyFetch('/UpdateDev').post(data).json();
+  args.execute(true);
+  return args;
+};
+
+export const updateLink = (data: { type: 'add' | 'delete'; object: string; linkType: string; Dev1: number; ConnectDev2: number }) => {
+  const args = useMyFetch('/UpdateLink').post(data).json();
   args.execute(true);
   return args;
 };

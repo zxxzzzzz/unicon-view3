@@ -98,7 +98,7 @@ export const initLink = (cy: cytoscape.Core) => {
     started = true;
   });
 
-  cy.on('ehstop', function () {
+  cy.on('ehstop', function (e) {
     started = false;
   });
   return removeHandle;
