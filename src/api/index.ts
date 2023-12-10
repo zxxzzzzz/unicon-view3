@@ -92,6 +92,20 @@ export const getDevConfigParam = () => {
   args.execute(true);
   return args;
 };
+
+export const setDevPortConfig = (data: {
+  nodeId: number;
+  type: 'dev'|'module'|'port'|'freq'|'time'; //配置模块类型(dev,module,port,freq,time)
+  name: string; //配置的模块
+  paramList: {
+    paramName: string; //配置的参数名字
+    value: string; //值
+  }[];
+}) => {
+  const args = useMyFetch('/SetDevPortConfig').post(data).json();
+  args.execute(true);
+  return args;
+};
 export const getDevCurConfig = () => {
   const args = useMyFetch('/GetDevCurConfig').post().json();
   args.execute(true);
