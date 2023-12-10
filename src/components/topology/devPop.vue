@@ -1,37 +1,29 @@
 <template>
   <div>
     <div class="bg-white rounded-8px relative" :style="{ boxShadow: '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)' }">
-      <div class="w-5rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
-        <div>创建时间</div>
-        <div>{{ props.createdTime }}</div>
+      <div class="w-15rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
+        <div class="w-6rem">创建时间</div>
+        <div>{{ state.createdTime }}</div>
       </div>
-      <div class="w-5rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
-        <div>hwVersion</div>
-        <div>{{ props.hwVersion }}</div>
+      <div class="w-15rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
+        <div class="w-6rem">ip:</div>
+        <div>{{ state.ip }}</div>
       </div>
-      <div class="w-5rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
-        <div>ip</div>
-        <div>{{ props.ip }}</div>
+      <div class="w-15rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
+        <div class="w-6rem">地点:</div>
+        <div>{{ state.location }}</div>
       </div>
-      <div class="w-5rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
-        <div>地点</div>
-        <div>{{ props.location }}</div>
+      <div class="w-15rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
+        <div class="w-6rem">state:</div>
+        <div>{{ devState }}</div>
       </div>
-      <div class="w-5rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
-        <div>坐标</div>
-        <div>X:{{ props.posX }} Y:{{ props.posY }}</div>
+      <div class="w-15rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
+        <div class="w-6rem">hwVersion:</div>
+        <div>{{ state.hwVersion }}</div>
       </div>
-      <div class="w-5rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
-        <div>starus</div>
-        <div>{{ props.starus }}</div>
-      </div>
-      <div class="w-5rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
-        <div>swVersion</div>
-        <div>{{ props.swVersion }}</div>
-      </div>
-      <div class="w-5rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
-        <div>更新时间</div>
-        <div>{{ props.updatedTime }}</div>
+      <div class="w-15rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
+        <div class="w-6rem">swVersion:</div>
+        <div>{{ state.swVersion }}</div>
       </div>
       <div class="absolute w-1rem h-1rem -left-1rem top-[calc(50%-0.5rem)] bg-white" :style="{ clipPath: 'polygon(100% 0, 0% 50% , 100% 100% )' }"></div>
     </div>
@@ -39,19 +31,41 @@
 </template>
 
 <script setup lang="ts">
+import { getAllDev } from '@/api';
+import {devCurConfig} from '@/stores';
+
 const props = defineProps<{
-  createdTime: string;
-  hwVersion: string;
   id: string;
-  ip: string;
-  location: string;
-  posX: string;
-  posY: string;
-  starus: string;
-  swVersion: string;
-  updatedTime: string;
 }>();
 
+const state = ref({
+  createdTime: '',
+  hwVersion: '',
+  id: '',
+  ip: '',
+  location: '',
+  posX: '',
+  posY: '',
+  state: '',
+  swVersion: '',
+  updatedTime: '',
+});
+
+const devState = computed(() => {
+  return devCurConfig.value.find((item:any) => item.nodeId == props.id)?.state || state.value.state
+})
+
+onMounted(async () => {
+  setTimeout(async () => {
+    const { data } = await getAllDev();
+    const dev = (data.value?.result?.devList || []).find((item: any) => {
+      return props.id == item.nodeId;
+    });
+    if (dev) {
+      state.value = dev;
+    }
+  }, 300);
+});
 </script>
 
 <style scoped></style>

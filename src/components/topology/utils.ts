@@ -276,19 +276,13 @@ export const useDevPop = (cy: cytoscape.Core) => {
   async function setHandleOn(node: cytoscape.NodeSingular) {
     removeHandle(); // rm old handle
     const id = node.data().id;
-    const { data } = await getAllDev({ userName: globalStore.value.userName });
-    const dev = (data.value?.result?.devList || []).find((item: any) => {
-      return item.id == id;
-    });
-    if (!dev) {
-      return;
-    }
+    
     popper = node.popper({
       content: () => {
         const _popperDiv = document.createElement('div');
         render(
           h(DevPop, {
-            ...dev,
+            id
           }),
           _popperDiv,
         );

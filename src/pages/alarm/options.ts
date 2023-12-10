@@ -1,4 +1,3 @@
-import { getAlarmCalc } from "~/api";
 
 export const rectOptions = {
   tooltip: {
@@ -277,6 +276,9 @@ export const barOption = {
     type: 'category',
     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   },
+  tooltip: {
+    trigger: 'item'
+  },
   yAxis: {
     type: 'value'
   },
@@ -302,11 +304,12 @@ export const bar2Option = {
   title:{
     text:'故障时间'
   },
+  tooltip: {
+    trigger: 'item'
+  },
   xAxis: {
     type: 'category',
-    // data: ['node1', 'node2', 'node3', 'node4', 'node5', 'node6', 'node7']
     data: ['1', '2', '3']
-    // data:[]
   },
   yAxis: {
     type: 'value'

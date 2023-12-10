@@ -7,7 +7,7 @@
         <Button type="primary" class="mt-[1rem] bg-blue" @click="handleCreateNode">新建节点</Button>
       </div>
       <div class="h-[calc(100%-1rem)] overflow-hidden">
-        <Topology :nodes="state.nodes" :edges="state.edges" @dblclick="handleDoubleClick" @delete="handleNodeDelete" @config="handleNodeConfig"></Topology>
+        <Topology :nodes="state.nodes" :edges="state.edges" @delete="handleNodeDelete" @config="handleNodeConfig"></Topology>
       </div>
     </div>
     <div class="h-100% w-1px bg-black" />
@@ -29,13 +29,14 @@
 
 <script setup lang="ts">
 import Topology from '@/components/topology/index.vue';
-import { Button, CheckboxGroup, Tag, RangePicker, Table, TableProps } from 'ant-design-vue';
+import { Button, CheckboxGroup, Tag, Modal } from 'ant-design-vue';
 import cytoscape from 'cytoscape';
 import { openWindow } from '@/utils';
 import { ref } from 'vue';
 import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
-import { getAllDev, getDevConfigParam, getTopography } from '@/api/index';
+import { getTopography, updateDev } from '@/api/index';
+import NodePop from './nodePop.vue';
 
 enum NodeType {
   a,
@@ -46,26 +47,30 @@ enum EdgeType {
   b,
 }
 
-onMounted(async () => {
+const updateTopography = async () => {
   const { data: dataDev } = await getTopography({ userName: globalStore.value.userName });
-  state.value.nodes = ((dataDev.value as any)?.result?.DeviceList || []).map((item: any) => {
+  state.value.nodes = ((dataDev.value as any)?.result?.deviceList || []).map((item: any) => {
     return {
-      position: { x:item.posX, y: item.posY },
+      position: { x: item.posX, y: item.posY },
       data: {
         id: item.object,
       },
     };
-  })
-  state.value.edges = ((dataDev.value as any)?.result?.ListList || []).map((item: any) => {
+  });
+  state.value.edges = ((dataDev.value as any)?.result?.linkList || []).map((item: any) => {
     return {
       data: {
         id: item.object,
-        source:item.Dev1,
-        target:item.ConnectDev2
+        source: item.Dev1,
+        target: item.ConnectDev2,
       },
     };
-  })
-})
+  });
+};
+
+onMounted(async () => {
+  updateTopography();
+});
 
 // 基于准备好的dom，初始化echarts实例
 onMounted(() => {
@@ -83,53 +88,41 @@ const options = [
 ];
 
 const state = ref({
-  nodes: [
-    {
-      position: { x: 100, y: 100 },
-      data: {
-        id: '123',
-      },
-    },
-    {
-      position: { x: 200, y: 300 },
-      data: {
-        id: '1234',
-      },
-    },
-  ] as cytoscape.NodeDefinition[],
+  nodes: [] as cytoscape.NodeDefinition[],
   edges: [],
   currentNodeType: NodeType.a,
   currentEdgeType: EdgeType.a,
 });
 
 const handleCreateNode = () => {
-  const node: cytoscape.NodeDefinition = {
-    position: { x: 100, y: 100 },
-    data: {
-      id: new Date().valueOf().toString(),
+  let state: any = {};
+  Modal.confirm({
+    title: '新建节点',
+    content: () => {
+      return h(NodePop, {
+        onChange(v) {
+          state = v;
+        },
+      });
     },
-  };
-  state.value.nodes = [...state.value.nodes, node];
+    async onOk() {
+      await updateDev({ ...state, nodeId: parseInt(state?.nodeId || '0'), location: (state?.location || []).join('/') });
+      updateTopography();
+    },
+  });
 };
 
 const handleNodeDelete = (node: cytoscape.NodeSingular) => {
   node.remove();
 };
 
-const handleNodeConfig = (node:any) => {
+const handleNodeConfig = (node: any) => {
   const data = node.data();
   openWindow(`/config/panel?id=${data.id}`);
 };
 const handleDataDownload = () => {
   //指向下载的一个地址
   alert('数据下载中');
-};
-
-const handleNodeTypeClick = (v: NodeType) => {
-  state.value.currentNodeType = v;
-};
-const handleEdgeTypeClick = (v: EdgeType) => {
-  state.value.currentEdgeType = v;
 };
 </script>
 

@@ -2,7 +2,7 @@
 <template>
   <div class="w-full h-full bg-cover bg-no-repeat flex bg-[rgba(214,218,234,1)]">
     <div class="w-50%">
-      <div id="errorPieChart" :columns="alarmColumns" :data-source="alarmList" class="border border-solid border-gray my-2 h-33%"></div>
+      <div id="errorPieChart" class="border border-solid border-gray my-2 h-33%"></div>
       <div id="errorBarChart" class="border border-solid border-gray my-2 h-33%"></div>
       <div id="errorTimeBarChart" class="border border-solid border-gray mt-2 h-34%"></div>
     </div>
@@ -38,7 +38,7 @@
         </div>
         <Button type="primary" @click="handleAlarmTime">确认</Button>
       </div>
-      <Table :columns="columns" :data-source="alarmList"></Table>
+      <Table :columns="columns" :data-source="alarmList" :pagination="{ pageSize: 4 }"></Table>
     </div>
   </div>
 </template>
@@ -46,19 +46,12 @@
 <script setup lang="ts">
 import * as echarts from 'echarts';
 import { Table, Card, Statistic, TableProps, Button, Select, SelectProps } from 'ant-design-vue';
-import { lineOptions, rectOptions, louOptions, pieOptions, barOption, bar2Option } from './options';
+import { pieOptions, barOption, bar2Option } from './options';
 import { RangePicker } from 'ant-design-vue';
-import { getSystemAlarm, getAlarmCalc, getAlarmParam, delay } from '@/api/index';
-import { computed } from 'vue';
+import { getAlarmCalc, getAlarmParam, delay, alarmConfirm, alarmClear } from '@/api/index';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import { values } from 'cypress/types/lodash';
-import { data } from 'cypress/types/jquery';
-import { time } from 'console';
-// import {  } from 'ant-design-vue';
-// 基于准备好的dom，初始化echarts实例
 
-// const { data: alarmData } = getSystemAlarm();
 type RangeValue = [Dayjs, Dayjs];
 const dateRange = ref<RangeValue>([dayjs().startOf('M'), dayjs()]);
 const alarmList = ref([]);
@@ -69,25 +62,13 @@ onMounted(async () => {
   alarmList.value = res.data.value?.result?.alarmList || [];
   await delay(500);
   const res2 = await getAlarmCalc({ startTime: '2023-11-01', endTime: '2023-11-18' });
-  alarmCalc.value = res2.data.value?.body?.result || {};
+  alarmCalc.value = res2.data.value?.result || {};
 });
 
 const handleAlarmTime = async () => {
   const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
-  alarmList.value = res.data.value?.body?.result?.alarmList || [];
+  alarmList.value = res.data.value?.result?.alarmList || [];
 };
-
-// {
-//   "alarmDesc": "safafsfwesd",
-//   "alarmLevel": "1",
-//   "alarmModule": "time",
-//   "alarmState": "NeedSolveManual",
-//   "alarmTime": "2023-11-04 16:41:06",
-//   "clearTime": "2023-11-04 16:41:46",
-//   "confirmTime": "0000-00-00 00:00:00",
-//   "devId": "1",
-//   "id": "1"
-// }
 
 const columns: TableProps['columns'] = [
   { dataIndex: 'id', title: '告警Id' },
@@ -101,58 +82,139 @@ const columns: TableProps['columns'] = [
     dataIndex: 'confirmTime',
     title: '确认时间',
     customRender({ record }) {
-      return record?.confirmTime === '0000-00-00 00:00:00' ? h(Button, {}, '确认') : record?.confirmTime;
+      return record?.confirmTime === '0000-00-00 00:00:00'
+        ? h(
+            Button,
+            {
+              async onClick() {
+                await alarmConfirm({ id: record.id, confirmTime: record.confirmTime });
+                const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
+                alarmList.value = res.data.value?.result?.alarmList || [];
+              },
+            },
+            '确认',
+          )
+        : record?.confirmTime;
     },
   },
   {
     dataIndex: 'clearTime',
     title: '清除时间',
     customRender({ record }) {
-      return record?.confirmTime === '0000-00-00 00:00:00' ? h(Button, {}, '清除') : record?.confirmTime;
+      return record?.confirmTime === '0000-00-00 00:00:00'
+        ? h(
+            Button,
+            {
+              async onClick() {
+                await alarmClear({ id: record.id, clearTime: record.clearTime });
+                const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
+                alarmList.value = res.data.value?.result?.alarmList || [];
+              },
+            },
+            '清除',
+          )
+        : record?.confirmTime;
     },
   },
 ];
 
-const options1 = ref<SelectProps['options']>([
-  {
-    value: 'jack',
-    label: 'Jack',
-  },
-  {
-    value: 'lucy',
-    label: 'Lucy',
-  },
-  {
-    value: 'disabled',
-    label: 'Disabled',
-    disabled: true,
-  },
-  {
-    value: 'yiminghe',
-    label: 'Yiminghe',
-  },
-]);
-// const alarmColumns: TableProps['columns'] = [
-//   { dataIndex: 'mo', title: 'Mon' },
-//   { dataIndex: 'tu', title: 'Tue' },
-//   { dataIndex: 'we', title: 'Wed' },
-//   { dataIndex: 'th', title: 'Thu' },
-//   { dataIndex: 'fr', title: 'Fri' },
-//   { dataIndex: 'sa', title: 'Sat' },
-//   { dataIndex: 'su', title: 'Sun' }
-
-// ];
-onMounted(() => {
+watch(alarmCalc, () => {
   var myChart = echarts.init(document.getElementById('errorBarChart'), null);
-  // barOption.series[0].data=[88,22,35,68,98,56,10];
+  const timeList = [
+    alarmCalc.value?.weekAlarmTime?.mo,
+    alarmCalc.value?.weekAlarmTime?.tu,
+    alarmCalc.value?.weekAlarmTime?.we,
+    alarmCalc.value?.weekAlarmTime?.th,
+    alarmCalc.value?.weekAlarmTime?.fr,
+    alarmCalc.value?.weekAlarmTime?.sa,
+    alarmCalc.value?.weekAlarmTime?.su,
+  ].map((item) => {
+    return (item || '').split(':');
+  });
+  const lv1 = timeList.map((e) => e?.[0] || 0);
+  const lv2 = timeList.map((e) => e?.[1] || 0);
+  const lv3 = timeList.map((e) => e?.[2] || 0);
+  barOption.series = [
+    {
+      type: 'bar',
+      name: '等级一',
+      data: lv1,
+    },
+    {
+      type: 'bar',
+      name: '等级二',
+      data: lv2,
+    },
+    {
+      type: 'bar',
+      name: '等级三',
+      data: lv3,
+    },
+  ];
   myChart.setOption(barOption);
-  var myChart = echarts.init(document.getElementById('errorTimeBarChart'), null);
-  myChart.setOption(bar2Option);
-  // var myChart = echarts.init(document.getElementById('louChart'), null);
-  // myChart.setOption(louOptions)
+});
+
+watch(alarmCalc, () => {
   var myChart = echarts.init(document.getElementById('errorPieChart'), null);
+  const timeList = [
+    alarmCalc.value?.weekAlarmTime?.mo,
+    alarmCalc.value?.weekAlarmTime?.tu,
+    alarmCalc.value?.weekAlarmTime?.we,
+    alarmCalc.value?.weekAlarmTime?.th,
+    alarmCalc.value?.weekAlarmTime?.fr,
+    alarmCalc.value?.weekAlarmTime?.sa,
+    alarmCalc.value?.weekAlarmTime?.su,
+  ].map((item) => {
+    return (item || '').split(':');
+  });
+  const lv1 = timeList.map((e) => e?.[0] || 0);
+  const lv2 = timeList.map((e) => e?.[1] || 0);
+  const lv3 = timeList.map((e) => e?.[2] || 0);
+  pieOptions.series[0].data = [
+    { value: lv1.reduce((a, b) => a + b), name: '等级一' },
+    { value: lv2.reduce((a, b) => a + b), name: '等级二' },
+    { value: lv3.reduce((a, b) => a + b), name: '等级三' },
+  ];
   myChart.setOption(pieOptions);
 });
+
+// 故障时间
+watch(alarmCalc, () => {
+  var myChart = echarts.init(document.getElementById('errorTimeBarChart'), null);
+  const xAxis = (alarmCalc.value?.devAlarmTime || [])
+    .map((item: any) => {
+      return item?.devId || '';
+    })
+    .filter((d: any) => d);
+  bar2Option.xAxis.data = xAxis;
+  const lvList = xAxis.map((x: any) => {
+    return (alarmCalc.value?.devAlarmTime || []).find((item: any) => item?.devId === x)?.time?.split?.(':') || [0, 0, 0];
+  });
+  const lv1 = lvList.map((e: any) => e?.[0] || 0);
+  const lv2 = lvList.map((e: any) => e?.[1] || 0);
+  const lv3 = lvList.map((e: any) => e?.[2] || 0);
+  bar2Option.series = [
+    {
+      type: 'bar',
+      name: '等级一',
+      data: lv1,
+    },
+    {
+      type: 'bar',
+      name: '等级二',
+      data: lv2,
+    },
+    {
+      type: 'bar',
+      name: '等级三',
+      data: lv3,
+    },
+  ];
+
+  myChart.setOption(bar2Option);
+});
+
+onMounted(() => {});
 </script>
 
 <style scoped></style>

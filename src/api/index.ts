@@ -7,6 +7,8 @@ const useMyFetch = createFetch({
   options: {
     immediate: false,
     async beforeFetch({ options }) {
+      // @ts-ignore
+      options.headers['origin'] = window.location.origin;
       // const myToken = await getMyToken()
       if (globalStore.value.token) {
         // @ts-ignore
@@ -15,6 +17,7 @@ const useMyFetch = createFetch({
       const session = window.sessionStorage.getItem('global');
       if (session && !globalStore.value.token) {
         const token = JSON.parse(session).token;
+        // @ts-ignore
         options.headers['Authorization'] = `${token}`;
       }
       return { options };
@@ -26,7 +29,7 @@ const useMyFetch = createFetch({
       }
       const data = typeof ctx.data === 'string' ? JSON.parse(ctx.data) : ctx.data;
       if (data && data?.body?.code !== 200) {
-        const msg = data?.body?.message;  
+        const msg = data?.body?.message;
         message.error(msg || '网络错误');
         return ctx;
       }
@@ -69,7 +72,7 @@ export const setUserAuthority = async (data: {
 export const getTopography = (data: {
   //token
 }) => {
-  const args = useMyFetch('/GetTopography').post(data).json()
+  const args = useMyFetch('/GetTopography').post(data).json();
   args.execute(true);
   return args;
 };
@@ -104,6 +107,16 @@ export const getAlarmParam = (data: { startTime: string; endTime: string }) => {
   args.execute(true);
   return args;
 };
+export const alarmConfirm = (data: { id: string; confirmTime: string }) => {
+  const args = useMyFetch('/AlarmConfirm ').post(data).json();
+  args.execute(true);
+  return args;
+};
+export const alarmClear = (data: { id: string; clearTime: string }) => {
+  const args = useMyFetch('/alarmClear ').post(data).json();
+  args.execute(true);
+  return args;
+};
 export const getSystemAlarm = () => {
   const args = useMyFetch('/GetSystemAlarm').post().json();
   args.execute(true);
@@ -114,8 +127,13 @@ export const getUserOperation = (data: { userName: string }) => {
   args.execute(true);
   return args;
 };
-export const getAllDev = (data: { userName: string }) => {
-  const args = useMyFetch('/GetAllDev').post(data).json();
+export const getAllDev = () => {
+  const args = useMyFetch('/GetAllDev').post().json();
+  args.execute(true);
+  return args;
+};
+export const updateDev = (data: { type: string; nodeId: string; duty: string; location: string[]; status: string; ip: string }) => {
+  const args = useMyFetch('/UpdateDev').post(data).json();
   args.execute(true);
   return args;
 };
@@ -125,11 +143,10 @@ export const loginOut = async (data: { userName: string; endTime: string }) => {
   return args;
 };
 
-
-export const delay = (n:number) => {
+export const delay = (n: number) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(true)
+      resolve(true);
     }, n);
-  })
-}
+  });
+};

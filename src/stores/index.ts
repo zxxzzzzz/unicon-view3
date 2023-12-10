@@ -1,4 +1,6 @@
 import { ref, watch } from 'vue';
+import { getDevCurConfig } from '@/api';
+
 export const globalStore = ref({
   authority: '',
   userName: '',
@@ -14,7 +16,6 @@ const _g = window.sessionStorage.getItem('global');
 if (_g) {
   globalStore.value = JSON.parse(_g);
 }
-console.log('sssssssssssss');
 watch(
   globalStore,
   () => {
@@ -22,3 +23,12 @@ watch(
   },
   { deep: true },
 );
+
+setInterval(async () => {
+  if (globalStore.value.token) {
+    const { data: curData } = await getDevCurConfig();
+    devCurConfig.value = curData.value?.result?.devList || [];
+  }
+}, 1000);
+
+export const devCurConfig = ref<any[]>([]);
