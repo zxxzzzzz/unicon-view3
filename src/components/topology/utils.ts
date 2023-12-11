@@ -123,6 +123,7 @@ export const initEdgeDelete = (cy: cytoscape.Core) => {
         deleteDom.addEventListener('click', () => {
           removeHandle();
           node.remove();
+          node.emit('delete')
         });
         const arrow = document.createElement('div');
         arrow.style.backgroundColor = 'white';

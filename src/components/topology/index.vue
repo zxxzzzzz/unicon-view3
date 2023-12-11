@@ -15,7 +15,6 @@ import { initEdgeDelete, initLink, initNodeDelete, useDevPop } from './utils';
 
 cytoscape.use(Popper);
 cytoscape.use(edgehandles);
-// import Legend from './legend.vue';
 
 const props = defineProps<{ nodes: cytoscape.NodeDefinition[]; edges: cytoscape.EdgeDefinition[] }>();
 const canvas = ref<HTMLDivElement>();
@@ -28,8 +27,9 @@ const emits = defineEmits<{
   (event: 'dragfree', node: cytoscape.CollectionReturnValue): void;
   (event: 'dblclick', node: cytoscape.CollectionReturnValue): void;
   (event: 'delete', node: cytoscape.CollectionReturnValue): void;
+  (event: 'deleteEdge', node: cytoscape.CollectionReturnValue): void;
   (event: 'config', node: cytoscape.CollectionReturnValue): void;
-  (event: 'link', data:{sourceNode:cytoscape.CollectionReturnValue, targetNode:cytoscape.CollectionReturnValue}): void;
+  (event: 'link', data: { sourceNode: cytoscape.CollectionReturnValue; targetNode: cytoscape.CollectionReturnValue }): void;
 }>();
 const formatType = (s: string) => {
   return s.replace(/[()-]+/g, '');
@@ -167,6 +167,21 @@ watch(
           message.error((error as Error).message, 10);
         }
         if (cy) {
+          console.log(cy.edgehandles);
+          cy.edgehandles({
+            snap:true,
+            canConnect: function (sourceNode, targetNode) {
+              console.log(12311111111111111111111111111111111);
+              if (sourceNode.same(targetNode)) {
+                return false;
+              }
+              console.log(123, sourceNode.neighborhood(), 234, targetNode);
+              if (sourceNode.neighborhood().contains(targetNode)) {
+                return false;
+              }
+              return true;
+            },
+          });
           destroyHandleList = [initLink(cy), initEdgeDelete(cy), initNodeDelete(cy), useDevPop(cy)];
           cy.on('select ', 'node', (evt) => {
             var node = evt.target;
@@ -183,6 +198,10 @@ watch(
           cy.on('select ', 'edge', (evt) => {
             const node = evt.target;
             emits('select', node);
+          });
+          cy.on('delete ', 'edge', (evt) => {
+            const node = evt.target;
+            emits('deleteEdge', node);
           });
           cy.on('unselect ', 'node', (evt) => {
             var node = evt.target;

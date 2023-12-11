@@ -147,7 +147,7 @@ export const getAllDev = () => {
   args.execute(true);
   return args;
 };
-export const updateDev = (data: { type: string; nodeId: string; duty: string; location: string[]; state: string; ip: string }) => {
+export const updateDev = (data: { type: 'add'|'delete'; nodeId: number; duty: string; location: string[]; state: string; ip: string }) => {
   const args = useMyFetch('/UpdateDev').post(data).json();
   args.execute(true);
   return args;
@@ -163,17 +163,18 @@ export const loginOut = async (data: { userName: string; endTime: string }) => {
   await args.execute(true);
   return args;
 };
-export const setTopography = async (data: { nodeId:number; posX:number; posY:number }) => {
+
+export const setTopography = async (data: { deviceList: { nodeId: number; posX: number; posY: number }[] }) => {
   const args = useMyFetch('/SetTopography').post(data);
-  await args.execute(true);
+  args.execute(true);
   return args;
 };
-export const getData = async (data: {id:number;type:string;flag:number;name:string;startTime:string;endTime:string;}) => {
+export const getData = async (data: { id: number; type: string; flag: number; name: string; startTime: string; endTime: string }) => {
   const args = useMyFetch('/GetData').post(data);
   await args.execute(true);
   return args;
 };
-export const getCsvFile = async (data: { type:string; col:string[]; startTime:string;endTime:string;dataType:string }) => {
+export const getCsvFile = async (data: { type: string; col: string[]; startTime: string; endTime: string; dataType: string }) => {
   const args = useMyFetch('/GetCsvFile').post(data);
   await args.execute(true);
   return args;

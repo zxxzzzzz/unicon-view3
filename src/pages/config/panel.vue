@@ -11,11 +11,11 @@
       <div v-if="tabState.currentTabName === TabName.网元">
         <div class="flex">
           <div class="w-10rem">NodeId</div>
-          <div><Input></Input></div>
+          <div><Input v-model:value="nodeId"></Input></div>
         </div>
         <div class="flex">
           <div class="w-10rem">Duty</div>
-          <div><Select class="w-186px" :options="dutyOptions"></Select></div>
+          <div><Select v-model:value="duty" class="w-186px" :options="dutyOptions"></Select></div>
         </div>
         <button @click="">确定</button>
       </div>
@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { Input, Tabs, TabPane, Select, Button,message } from 'ant-design-vue';
+import { Input, Tabs, TabPane, Select, Button, message } from 'ant-design-vue';
 import { getDevCurConfig, getDevConfigParam, setDevPortConfig } from '@/api/index';
 import { useRoute } from 'vue-router';
 
@@ -176,16 +176,20 @@ const tabState = ref<{
   currentTimeTabName: '',
 });
 
+const duty = ref('');
+const nodeId = ref('');
 const moduleListState = ref<{ [key: string]: any }>({});
 const portListState = ref<{ [key: string]: any }>({});
 const freqListState = ref<{ [key: string]: any }>({});
 const timeListState = ref<{ [key: string]: any }>({});
 
-onMounted(async () => {
+watch(data, async () => {
   const { data: curData } = await getDevCurConfig();
   const d = (curData.value?.result?.devList || []).find((item: any) => {
     return item.nodeId == route.query.id;
   });
+  duty.value = d.duty;
+  nodeId.value = d.nodeId;
   nextTick(() => {
     tabState.value.currentModuleTabName = moduleList.value?.[0]?.tabName || '';
     tabState.value.currentPortTabName = portList.value?.[0]?.tabName || '';
@@ -212,6 +216,18 @@ onMounted(async () => {
         return { ...re, [e.title]: '' };
       }, {});
     });
+    if (d.moduleList) {
+      moduleListState.value = d.moduleList;
+    }
+    if (d.portList) {
+      portListState.value = d.portList;
+    }
+    if (d.freqList) {
+      freqListState.value = d.freqList;
+    }
+    if (d.timeList) {
+      timeListState.value = d.timeList;
+    }
   });
   if (d) {
     tabState.value = {
@@ -237,7 +253,7 @@ const handleSetModule = async (index: number) => {
       };
     }),
   });
-  message.success('修改成功')
+  message.success('修改成功');
 };
 const handleSetPort = async (index: number) => {
   await setDevPortConfig({
@@ -251,7 +267,7 @@ const handleSetPort = async (index: number) => {
       };
     }),
   });
-  message.success('修改成功')
+  message.success('修改成功');
 };
 const handleSetFreq = async (index: number) => {
   await setDevPortConfig({
@@ -265,7 +281,7 @@ const handleSetFreq = async (index: number) => {
       };
     }),
   });
-  message.success('修改成功')
+  message.success('修改成功');
 };
 const handleSetTime = async (index: number) => {
   await setDevPortConfig({
@@ -279,7 +295,7 @@ const handleSetTime = async (index: number) => {
       };
     }),
   });
-  message.success('修改成功')
+  message.success('修改成功');
 };
 </script>
 

@@ -5,10 +5,10 @@
       <div class="absolute left-4 z-10">
         <!--新建节点-->
         <Button type="primary" class="mt-[1rem] bg-blue" @click="handleCreateNode">新建节点</Button>
-        <Button type="primary" class="mt-[1rem] ml-10 bg-blue" @click="handlesetTopography">保存拓扑图</Button>
+        <Button type="primary" class="mt-[1rem] ml-10 bg-blue" @click="handleSaveTopography">保存拓扑图</Button>
       </div>
       <div class="h-[calc(100%-1rem)] overflow-hidden">
-        <Topology :nodes="state.nodes" :edges="state.edges" @delete="handleNodeDelete" @config="handleNodeConfig" @link="handleLink"></Topology>
+        <Topology :nodes="state.nodes" :edges="state.edges" @delete-edge="handleDeleteEdge" @dragfree="handleDrag" @delete="handleNodeDelete" @config="handleNodeConfig" @link="handleLink"></Topology>
       </div>
     </div>
     <div class="h-100% w-1px bg-black" />
@@ -48,9 +48,7 @@ enum EdgeType {
   a,
   b,
 }
-const handlesetTopography = async()=>{
-  // setTopography()
-}
+
 const updateTopography = async () => {
   const { data: dataDev } = await getTopography({ userName: globalStore.value.userName });
   state.value.nodes = ((dataDev.value as any)?.result?.deviceList || []).map((item: any) => {
@@ -61,15 +59,20 @@ const updateTopography = async () => {
       },
     };
   });
-  state.value.edges = ((dataDev.value as any)?.result?.linkList || []).map((item: any) => {
-    return {
-      data: {
-        id: item.object,
-        source: item.Dev1,
-        target: item.ConnectDev2,
-      },
-    };
-  });
+  const nodeIdList = state.value.nodes.map((n) => n.data.id);
+  state.value.edges = ((dataDev.value as any)?.result?.linkList || [])
+    .map((item: any) => {
+      return {
+        data: {
+          id: item.object,
+          source: item.Dev1,
+          target: item.ConnectDev2,
+        },
+      };
+    })
+    .filter((e: any) => {
+      return nodeIdList.includes(e.data.source) && nodeIdList.includes(e.data.target);
+    });
 };
 
 onMounted(async () => {
@@ -92,8 +95,14 @@ const options = [
 ];
 
 const state = ref({
-  nodes: [] as cytoscape.NodeDefinition[],
-  edges: [],
+  nodes: [] as { position: { x: number; y: number }; data: { id: string } }[],
+  edges: [] as {
+    data: {
+      id: string;
+      source: string;
+      target: string;
+    };
+  }[],
   currentNodeType: NodeType.a,
   currentEdgeType: EdgeType.a,
 });
@@ -116,7 +125,32 @@ const handleCreateNode = () => {
   });
 };
 
-const handleNodeDelete = (node: cytoscape.NodeSingular) => {
+const handleSaveTopography = async () => {
+  setTimeout(async () => {
+    await setTopography({
+      deviceList: state.value.nodes.map((n) => {
+        return {
+          nodeId: parseInt(n.data.id),
+          posX: n.position.x,
+          posY: n.position.y,
+        };
+      }),
+    });
+  }, 50);
+};
+// 移动更新节点
+const handleDrag = (node: any) => {
+  state.value.nodes = state.value.nodes.map((n) => {
+    if (n.data.id == node.data('id')) {
+      return { ...n, position: node.position() };
+    }
+    return n;
+  });
+};
+
+const handleNodeDelete = async (node: cytoscape.NodeSingular) => {
+  // @ts-ignore
+  await updateDev({ nodeId: parseInt(node.id()), type: 'delete' });
   node.remove();
 };
 
@@ -132,18 +166,36 @@ const handleDataDownload = () => {
 const handleLink = async ({ sourceNode, targetNode }) => {
   setTimeout(async () => {
     try {
+      // @ts-ignore
       await updateLink({
-       type: 'add',
-       Dev1: parseInt(sourceNode.data('id')) ,
-       ConnectDev2: parseInt(targetNode.data('id')),
-       object: '12',
-       linkType: 12,
-     });
-     message.success('更新成功')
-      
-    } catch (error) {
-      
-    }
+        type: 'add',
+        Dev1: parseInt(sourceNode.data('id')),
+        ConnectDev2: parseInt(targetNode.data('id')),
+        linkType: 12,
+      });
+      message.success('更新成功');
+      updateTopography();
+    } catch (error) {}
+  }, 1);
+};
+const handleDeleteEdge = (node: any) => {
+  setTimeout(async () => {
+    try {
+      const id = node.id();
+      const edge = state.value.edges.find((e) => e.data.id === id);
+      if (!edge) return;
+      console.log(edge);
+      //@ts-ignore
+      await updateLink({
+        type: 'delete',
+        object: edge.data.id,
+        Dev1: parseInt(edge.data.source),
+        ConnectDev2: parseInt(edge.data.target),
+        linkType: 12,
+      });
+      message.success('更新成功');
+      updateTopography();
+    } catch (error) {}
   }, 1);
 };
 </script>
