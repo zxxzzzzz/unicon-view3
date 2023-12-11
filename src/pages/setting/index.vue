@@ -72,6 +72,7 @@ const columns: TableProps<UserItem>['columns'] = [
   {
     title: '操作',
     customRender({ record }) {
+      let data: any = void 0;
       return [
         h(
           Button,
@@ -87,20 +88,23 @@ const columns: TableProps<UserItem>['columns'] = [
                     userName: record.userName,
                     authority: record.authority,
                     position: record.position.split('/'),
-                    async onChange(data) {
-                      try {
-                        await setUserAuthority({
-                          userList: [
-                            {
-                              userName: data.userName,
-                              password: data.password,
-                              authority: data.authority,
-                            },
-                          ],
-                        });
-                      } catch (error) {}
+                    async onChange(_data) {
+                      data = _data;
                     },
                   });
+                },
+                async onOk() {
+                  try {
+                    await setUserAuthority({
+                      userList: [
+                        {
+                          userName: data.userName,
+                          password: data.password,
+                          authority: data.authority,
+                        },
+                      ],
+                    });
+                  } catch (error) {}
                 },
               });
             },
