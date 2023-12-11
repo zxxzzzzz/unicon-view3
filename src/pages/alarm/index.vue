@@ -51,12 +51,13 @@ import { RangePicker } from 'ant-design-vue';
 import { getAlarmCalc, getAlarmParam, delay, alarmConfirm, alarmClear } from '@/api/index';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
+// const data = alarmClear({id:'8',clearTime:'2023-12-11'})
+// console.log(data);
 
 type RangeValue = [Dayjs, Dayjs];
 const dateRange = ref<RangeValue>([dayjs().startOf('M'), dayjs()]);
 const alarmList = ref([]);
 const alarmCalc = ref<any>({});
-
 onMounted(async () => {
   const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
   alarmList.value = res.data.value?.result?.alarmList || [];
@@ -82,7 +83,7 @@ const columns: TableProps['columns'] = [
     dataIndex: 'confirmTime',
     title: '确认时间',
     customRender({ record }) {
-      return record?.confirmTime === '0000-00-00 00:00:00'
+      return record?.confirmTime === '2000-01-01 00:00:00'
         ? h(
             Button,
             {
@@ -101,7 +102,7 @@ const columns: TableProps['columns'] = [
     dataIndex: 'clearTime',
     title: '清除时间',
     customRender({ record }) {
-      return record?.confirmTime === '0000-00-00 00:00:00'
+      return record?.clearTime === '2000-01-01 00:00:00'
         ? h(
             Button,
             {
@@ -113,11 +114,30 @@ const columns: TableProps['columns'] = [
             },
             '清除',
           )
-        : record?.confirmTime;
+        : record?.clearTime;
     },
   },
 ];
 
+watch(alarmCalc, () => {
+  var myChart = echarts.init(document.getElementById('errorPieChart'), null);
+  const timeList = [
+    alarmCalc.value?.alarmTimeRate
+  ].map((item) => {
+    return (item || '').split(':');
+  });
+  const lv1 = timeList.map((e) => e?.[0] || 0);
+  const lv2 = timeList.map((e) => e?.[1] || 0);
+  const lv3 = timeList.map((e) => e?.[2] || 0);
+  pieOptions.series[0].data = [
+    { value: lv1.reduce((a, b) => a + b), name: '等级一' },
+    { value: lv2.reduce((a, b) => a + b), name: '等级二' },
+    { value: lv3.reduce((a, b) => a + b), name: '等级三' },
+  ];
+  myChart.setOption(pieOptions);
+});
+
+//一周异常
 watch(alarmCalc, () => {
   var myChart = echarts.init(document.getElementById('errorBarChart'), null);
   const timeList = [
@@ -152,30 +172,6 @@ watch(alarmCalc, () => {
     },
   ];
   myChart.setOption(barOption);
-});
-
-watch(alarmCalc, () => {
-  var myChart = echarts.init(document.getElementById('errorPieChart'), null);
-  const timeList = [
-    alarmCalc.value?.weekAlarmTime?.mo,
-    alarmCalc.value?.weekAlarmTime?.tu,
-    alarmCalc.value?.weekAlarmTime?.we,
-    alarmCalc.value?.weekAlarmTime?.th,
-    alarmCalc.value?.weekAlarmTime?.fr,
-    alarmCalc.value?.weekAlarmTime?.sa,
-    alarmCalc.value?.weekAlarmTime?.su,
-  ].map((item) => {
-    return (item || '').split(':');
-  });
-  const lv1 = timeList.map((e) => e?.[0] || 0);
-  const lv2 = timeList.map((e) => e?.[1] || 0);
-  const lv3 = timeList.map((e) => e?.[2] || 0);
-  pieOptions.series[0].data = [
-    { value: lv1.reduce((a, b) => a + b), name: '等级一' },
-    { value: lv2.reduce((a, b) => a + b), name: '等级二' },
-    { value: lv3.reduce((a, b) => a + b), name: '等级三' },
-  ];
-  myChart.setOption(pieOptions);
 });
 
 // 故障时间

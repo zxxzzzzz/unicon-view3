@@ -13,8 +13,8 @@
       <Cascader class="w-[20rem]" v-model:value="state.location" :options="cityOptions" @change="handleChange"/>
     </div>
     <div class="flex mb-1rem">
-      <div class="w-6rem">status</div>
-      <Input v-model:value="state.status" @change="handleChange"></Input>
+      <div class="w-6rem">state</div>
+      <Input v-model:value="state.state" @change="handleChange"></Input>
     </div>
     <div class="flex">
       <div class="w-6rem">ip</div>
@@ -29,11 +29,11 @@ import { cityList } from '@/pages/registry/cityList';
 
 const emits = defineEmits(['change'])
 const state = ref({
-  type: 'delete',
+  type: 'add',
   nodeId: '',
   duty: '',
   location: [],
-  status: '',
+  state: '',
   ip: '',
 });
 //

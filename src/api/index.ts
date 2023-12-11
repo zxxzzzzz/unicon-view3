@@ -128,7 +128,7 @@ export const alarmConfirm = (data: { id: string; confirmTime: string }) => {
   return args;
 };
 export const alarmClear = (data: { id: string; clearTime: string }) => {
-  const args = useMyFetch('/alarmClear ').post(data).json();
+  const args = useMyFetch('/AlarmClear ').post(data).json();
   args.execute(true);
   return args;
 };
@@ -147,13 +147,13 @@ export const getAllDev = () => {
   args.execute(true);
   return args;
 };
-export const updateDev = (data: { type: string; nodeId: string; duty: string; location: string[]; status: string; ip: string }) => {
+export const updateDev = (data: { type: string; nodeId: string; duty: string; location: string[]; state: string; ip: string }) => {
   const args = useMyFetch('/UpdateDev').post(data).json();
   args.execute(true);
   return args;
 };
 
-export const updateLink = (data: { type: 'add' | 'delete'; object: string; linkType: string; Dev1: number; ConnectDev2: number }) => {
+export const updateLink = (data: { type: 'add' | 'delete'; object: string; linkType: number; Dev1: number; ConnectDev2: number }) => {
   const args = useMyFetch('/UpdateLink').post(data).json();
   args.execute(true);
   return args;
@@ -163,7 +163,21 @@ export const loginOut = async (data: { userName: string; endTime: string }) => {
   await args.execute(true);
   return args;
 };
-
+export const setTopography = async (data: { nodeId:number; posX:number; posY:number }) => {
+  const args = useMyFetch('/SetTopography').post(data);
+  await args.execute(true);
+  return args;
+};
+export const getData = async (data: {id:number;type:string;flag:number;name:string;startTime:string;endTime:string;}) => {
+  const args = useMyFetch('/GetData').post(data);
+  await args.execute(true);
+  return args;
+};
+export const getCsvFile = async (data: { type:string; col:string[]; startTime:string;endTime:string;dataType:string }) => {
+  const args = useMyFetch('/GetCsvFile').post(data);
+  await args.execute(true);
+  return args;
+};
 export const delay = (n: number) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {

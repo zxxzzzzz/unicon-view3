@@ -24,11 +24,11 @@ watch(
   { deep: true },
 );
 
-setInterval(async () => {
-  if (globalStore.value.token) {
-    const { data: curData } = await getDevCurConfig();
-    devCurConfig.value = curData.value?.result?.devList || [];
-  }
-}, 1000);
+// setInterval(async () => {
+//   if (globalStore.value.token) {
+//     const { data: curData } = await getDevCurConfig();
+//     devCurConfig.value = curData.value?.result?.devList || [];
+//   }
+// }, 1000);
 
 export const devCurConfig = ref<any[]>([]);

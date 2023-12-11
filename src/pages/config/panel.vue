@@ -17,14 +17,6 @@
           <div class="w-10rem">Duty</div>
           <div><Select class="w-186px" :options="dutyOptions"></Select></div>
         </div>
-        <div class="flex">
-          <div class="w-10rem">state</div>
-          <div><Input></Input></div>
-        </div>
-        <div class="flex">
-          <div class="w-10rem">ClockClass</div>
-          <div><Input></Input></div>
-        </div>
         <button @click="">确定</button>
       </div>
       <div v-if="tabState.currentTabName === TabName.板卡">

@@ -5,6 +5,7 @@
       <div class="absolute left-4 z-10">
         <!--新建节点-->
         <Button type="primary" class="mt-[1rem] bg-blue" @click="handleCreateNode">新建节点</Button>
+        <Button type="primary" class="mt-[1rem] ml-10 bg-blue" @click="handlesetTopography">保存拓扑图</Button>
       </div>
       <div class="h-[calc(100%-1rem)] overflow-hidden">
         <Topology :nodes="state.nodes" :edges="state.edges" @delete="handleNodeDelete" @config="handleNodeConfig" @link="handleLink"></Topology>
@@ -37,6 +38,7 @@ import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
 import { getTopography, updateDev, updateLink } from '@/api/index';
 import NodePop from './nodePop.vue';
+import { setTopography } from '@/api/index';
 
 enum NodeType {
   a,
@@ -46,7 +48,9 @@ enum EdgeType {
   a,
   b,
 }
-
+const handlesetTopography = async()=>{
+  // setTopography()
+}
 const updateTopography = async () => {
   const { data: dataDev } = await getTopography({ userName: globalStore.value.userName });
   state.value.nodes = ((dataDev.value as any)?.result?.deviceList || []).map((item: any) => {
@@ -133,7 +137,7 @@ const handleLink = async ({ sourceNode, targetNode }) => {
        Dev1: parseInt(sourceNode.data('id')) ,
        ConnectDev2: parseInt(targetNode.data('id')),
        object: '12',
-       linkType: '12',
+       linkType: 12,
      });
      message.success('更新成功')
       

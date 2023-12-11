@@ -9,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+import { updateDev } from '@/api';
 const emits = defineEmits(['delete', 'config'])
 const handleDelete = ()=>{
   emits('delete')
