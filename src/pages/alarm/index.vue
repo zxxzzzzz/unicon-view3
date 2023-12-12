@@ -32,11 +32,12 @@
         </div>
       </div>
       <div class="flex">
-        <Button type="primary">下载</Button>
+        <Button type="primary" @click="handleAlarmType">告警等级</Button>
         <div class="w-55% ml-a">
           <RangePicker v-model:value="dateRange" show-time />
         </div>
         <Button type="primary" @click="handleAlarmTime">确认</Button>
+        <Button type="primary">下载</Button>
       </div>
       <Table :columns="columns" :data-source="alarmList" :pagination="{ pageSize: 4 }"></Table>
     </div>
@@ -45,12 +46,13 @@
 
 <script setup lang="ts">
 import * as echarts from 'echarts';
-import { Table, Card, Statistic, TableProps, Button, Select, SelectProps } from 'ant-design-vue';
+import { Table, Card, Statistic, TableProps, Button,Modal, Select, SelectProps } from 'ant-design-vue';
 import { pieOptions, barOption, bar2Option } from './options';
 import { RangePicker } from 'ant-design-vue';
-import { getAlarmCalc, getAlarmParam, delay, alarmConfirm, alarmClear } from '@/api/index';
+import { getAlarmCalc, getAlarmParam, delay, alarmConfirm, alarmClear, getAlarmType,setAlarmType } from '@/api/index';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
+import { AlarmType } from './alarmtype/alarmType.vue';
 // const data = alarmClear({id:'8',clearTime:'2023-12-11'})
 // console.log(data);
 
@@ -59,21 +61,43 @@ const dateRange = ref<RangeValue>([dayjs().startOf('M'), dayjs()]);
 const alarmList = ref([]);
 const alarmCalc = ref<any>({});
 onMounted(async () => {
-  const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
+  const res = await getAlarmParam({ startTime: '2001-01-01', endTime: '2001-01-01' });
   alarmList.value = res.data.value?.result?.alarmList || [];
   await delay(500);
-  const res2 = await getAlarmCalc({ startTime: '2023-11-01', endTime: '2023-11-18' });
+  const res2 = await getAlarmCalc({ startTime: '2001-01-01', endTime: '2001-01-01' });
   alarmCalc.value = res2.data.value?.result || {};
 });
 
 const handleAlarmTime = async () => {
   const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
   alarmList.value = res.data.value?.result?.alarmList || [];
-};
-
+  const res2 = await getAlarmCalc({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD')});
+  alarmCalc.value = res2.data.value?.result || {};
+}
+// // const data = getAlarmType();
+const handleAlarmType = ()=>{
+  // let state: any = {};
+  // Modal.confirm({
+  //   title: '故障等级',
+  //   content: () => {
+  //     return h(AlarmType, {
+  //       onChange(v) {
+  //         state = v;
+  //       },
+  //     });
+  //   },
+  //   async onOk() {
+  //     await setAlarmType({...state, nodeId: parseInt(state?.nodeId || '0'), location: (state?.location || []).join('/') });
+  //   },
+  // });
+}
 const columns: TableProps['columns'] = [
   { dataIndex: 'id', title: '告警Id' },
-  { dataIndex: 'devId', title: '网元Id' },
+  { dataIndex: 'devId', title: '网元Id',
+  //   customRender({record}){
+  //     if(record.)
+  // }
+},
   { dataIndex: 'alarmLevel', title: '告警等级' },
   { dataIndex: 'alarmModule', title: '告警源' },
   { dataIndex: 'alarmDesc', title: '告警描述' },
@@ -118,6 +142,7 @@ const columns: TableProps['columns'] = [
     },
   },
 ];
+
 
 watch(alarmCalc, () => {
   var myChart = echarts.init(document.getElementById('errorPieChart'), null);

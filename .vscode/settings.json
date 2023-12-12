@@ -1,5 +1,22 @@
 {
-  "cSpell.words": ["Vitesse", "Vite", "unocss", "vitest", "vueuse", "pinia", "demi", "antfu", "iconify", "intlify", "vitejs", "unplugin", "pnpm", "cytoscape","edgehandles"],
+  "cSpell.words": [
+    "alarmtype",
+    "antfu",
+    "cytoscape",
+    "demi",
+    "edgehandles",
+    "iconify",
+    "intlify",
+    "pinia",
+    "pnpm",
+    "unocss",
+    "unplugin",
+    "Vite",
+    "vitejs",
+    "Vitesse",
+    "vitest",
+    "vueuse"
+  ],
   "files.associations": {
     "*.css": "postcss"
   },

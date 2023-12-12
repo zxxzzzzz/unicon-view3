@@ -21,6 +21,7 @@ import type { TableProps } from 'ant-design-vue';
 import { computed, h, onMounted } from 'vue';
 import { getUserInformation, setUserAuthority, getUserLogin, getUserOperation } from '@/api';
 import Edit from './component/edit.vue';
+import { globalStore } from '~/stores';
 // defineProps<{  }>();
 type UserItem = {
   authority: string;
@@ -55,6 +56,7 @@ onMounted(async () => {
   globalStore.value.userInfoList = data.value?.result?.userList || [];
 });
 
+
 const columns: TableProps<UserItem>['columns'] = [
   { dataIndex: 'userName', title: '用户名称' },
   {
@@ -72,6 +74,7 @@ const columns: TableProps<UserItem>['columns'] = [
   {
     title: '操作',
     customRender({ record }) {
+      if(globalStore.value.userInfoList[0].authority=='1'){
       let data: any = void 0;
       return [
         h(
@@ -103,7 +106,7 @@ const columns: TableProps<UserItem>['columns'] = [
                           authority: data.authority,
                         },
                       ],
-                    });
+                    });window.location.reload();
                   } catch (error) {}
                 },
               });
@@ -112,8 +115,11 @@ const columns: TableProps<UserItem>['columns'] = [
           '编辑',
         ),
       ];
+        }return ['暂无权限'];
     },
+    
   },
+  
 ];
 
 const loginColumns: TableProps<UserItem>['columns'] = [

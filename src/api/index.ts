@@ -30,7 +30,7 @@ const useMyFetch = createFetch({
       }
       const data = typeof ctx.data === 'string' ? JSON.parse(ctx.data) : ctx.data;
       if (data && data?.body?.code !== 200) {
-        const msg = data?.body?.message;
+        const msg = data?.message;
         message.error(msg || '网络错误');
         return ctx;
       }
@@ -176,6 +176,16 @@ export const getData = async (data: { id: number; type: string; flag: number; na
 };
 export const getCsvFile = async (data: { type: string; col: string[]; startTime: string; endTime: string; dataType: string }) => {
   const args = useMyFetch('/GetCsvFile').post(data);
+  await args.execute(true);
+  return args;
+};
+export const getAlarmType = async () => {
+  const args = useMyFetch('/GetAlarmType').post();
+  await args.execute(true);
+  return args;
+};
+export const setAlarmType = async (data:{alarmTypeList:string[]}) => {
+  const args = useMyFetch('/SetAlarmType').post();
   await args.execute(true);
   return args;
 };

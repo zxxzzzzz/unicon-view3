@@ -50,6 +50,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { globalStore } from '@/stores/index';
 import { loginOut } from '@/api/index';
 import dayjs from 'dayjs';
+import { genBaseStyle } from 'ant-design-vue/es/alert/style';
 
 const route = useRoute();
 const router = useRouter();
@@ -106,6 +107,9 @@ const items = reactive([
     title: '系统管理',
   },
 ]);
+  if(currentAuthority.value!='1'){
+  items.splice(2,1);
+  };
 const handleUserClick = () => {
   router.push('/setting');
 };

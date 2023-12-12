@@ -152,6 +152,7 @@ const handleNodeDelete = async (node: cytoscape.NodeSingular) => {
   // @ts-ignore
   await updateDev({ nodeId: parseInt(node.id()), type: 'delete' });
   node.remove();
+  updateTopography();
 };
 
 const handleNodeConfig = (node: any) => {

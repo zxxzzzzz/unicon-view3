@@ -280,7 +280,8 @@ export const barOption = {
     trigger: 'item'
   },
   yAxis: {
-    type: 'value'
+    type: 'value',
+    name:'个数'
   },
   series: [
     {
@@ -312,7 +313,8 @@ export const bar2Option = {
     data: ['1', '2', '3']
   },
   yAxis: {
-    type: 'value'
+    type: 'value',
+    name:'时间(秒)'
   },
   series: [
     {
