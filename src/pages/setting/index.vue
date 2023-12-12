@@ -9,7 +9,7 @@
           <Table :columns="loginColumns" :data-source="loginList" />
         </TabPane>
         <TabPane key="3" tab="操作日志">
-          <Table :columns="operationColumns" :data-source="operationList" />
+          <Table :columns="operationColumns" :data-source="operationList" :scroll="{ y: 600 }" />
         </TabPane>
       </Tabs>
     </Card>
@@ -56,7 +56,6 @@ onMounted(async () => {
   globalStore.value.userInfoList = data.value?.result?.userList || [];
 });
 
-
 const columns: TableProps<UserItem>['columns'] = [
   { dataIndex: 'userName', title: '用户名称' },
   {
@@ -74,52 +73,52 @@ const columns: TableProps<UserItem>['columns'] = [
   {
     title: '操作',
     customRender({ record }) {
-      if(globalStore.value.userInfoList[0].authority=='1'){
-      let data: any = void 0;
-      return [
-        h(
-          Button,
-          {
-            onClick() {
-              Modal.confirm({
-                title: '编辑',
-                okText: '保存',
-                cancelText: '取消',
-                icon: null,
-                content: () => {
-                  return h(Edit, {
-                    userName: record.userName,
-                    authority: record.authority,
-                    position: record.position.split('/'),
-                    async onChange(_data) {
-                      data = _data;
-                    },
-                  });
-                },
-                async onOk() {
-                  try {
-                    await setUserAuthority({
-                      userList: [
-                        {
-                          userName: data.userName,
-                          password: data.password,
-                          authority: data.authority,
-                        },
-                      ],
-                    });window.location.reload();
-                  } catch (error) {}
-                },
-              });
+      if (globalStore.value.userInfoList[0].authority == '1') {
+        let data: any = void 0;
+        return [
+          h(
+            Button,
+            {
+              onClick() {
+                Modal.confirm({
+                  title: '编辑',
+                  okText: '保存',
+                  cancelText: '取消',
+                  icon: null,
+                  content: () => {
+                    return h(Edit, {
+                      userName: record.userName,
+                      authority: record.authority,
+                      position: record.position.split('/'),
+                      async onChange(_data) {
+                        data = _data;
+                      },
+                    });
+                  },
+                  async onOk() {
+                    try {
+                      await setUserAuthority({
+                        userList: [
+                          {
+                            userName: data.userName,
+                            password: data.password,
+                            authority: data.authority,
+                          },
+                        ],
+                      });
+                      window.location.reload();
+                    } catch (error) {}
+                  },
+                });
+              },
             },
-          },
-          '编辑',
-        ),
-      ];
-        }return ['暂无权限'];
+            '编辑',
+          ),
+        ];
+      }
+      return ['暂无权限'];
     },
-    
   },
-  
 ];
 
 const loginColumns: TableProps<UserItem>['columns'] = [

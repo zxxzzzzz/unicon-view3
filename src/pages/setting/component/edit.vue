@@ -2,7 +2,7 @@
   <div>
     <div class="flex my-2">
       <div class="w-4rem">用户名</div>
-      <Input v-model:value="state.userName" @change="handleChange"></Input>
+      <div>{{ state.userName }}</div>
     </div>
     <div class="flex my-2">
       <div class="w-4rem">密码</div>

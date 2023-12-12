@@ -11,7 +11,7 @@
       <div v-if="tabState.currentTabName === TabName.网元">
         <div class="flex">
           <div class="w-10rem">NodeId</div>
-          <div><Input v-model:value="nodeId"></Input></div>
+          <div>{{ nodeId }}</div>
         </div>
         <div class="flex">
           <div class="w-10rem">Duty</div>

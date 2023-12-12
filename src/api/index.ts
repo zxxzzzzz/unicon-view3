@@ -147,7 +147,7 @@ export const getAllDev = () => {
   args.execute(true);
   return args;
 };
-export const updateDev = (data: { type: 'add'|'delete'; nodeId: number; duty: string; location: string[]; state: string; ip: string }) => {
+export const updateDev = (data: { type: 'add' | 'delete'; nodeId: number; duty: string; location: string[]; state: string; ip: string }) => {
   const args = useMyFetch('/UpdateDev').post(data).json();
   args.execute(true);
   return args;
@@ -179,14 +179,21 @@ export const getCsvFile = async (data: { type: string; col: string[]; startTime:
   await args.execute(true);
   return args;
 };
-export const getAlarmType = async () => {
-  const args = useMyFetch('/GetAlarmType').post();
-  await args.execute(true);
+export const getAlarmType = () => {
+  const args = useMyFetch('/GetAlarmType').post().json();
+  args.execute(true);
   return args;
 };
-export const setAlarmType = async (data:{alarmTypeList:string[]}) => {
-  const args = useMyFetch('/SetAlarmType').post();
-  await args.execute(true);
+export const setAlarmType = async (data: {
+  alarmTypeList: {
+    suggestLevel: number;
+    typeDesc: string;
+    typeLevel: number;
+    typeName: string;
+  }[];
+}) => {
+  const args = useMyFetch('/SetAlarmType').post(data).json();
+  args.execute(true);
   return args;
 };
 export const delay = (n: number) => {

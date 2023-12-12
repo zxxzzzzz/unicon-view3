@@ -9,7 +9,18 @@ import { render } from 'vue';
 export const initLink = (cy: cytoscape.Core) => {
   // example code for making your own handles -- customise events and presentation where fitting
   // var popper;
-  let eh = cy.edgehandles();
+  let eh = cy.edgehandles({
+    snap:true,
+    canConnect: function (sourceNode, targetNode) {
+      if (sourceNode.same(targetNode)) {
+        return false;
+      }
+      if (sourceNode.neighborhood().contains(targetNode)) {
+        return false;
+      }
+      return true;
+    },
+  });
   var popperNode: cytoscape.NodeSingular | null;
   var popper: ReturnType<Popper.getPopperInstance<HTMLDivElement>> | null;
   var popperDiv: HTMLDivElement | null;

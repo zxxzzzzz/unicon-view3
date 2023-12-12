@@ -46,18 +46,18 @@
 
 <script setup lang="ts">
 import * as echarts from 'echarts';
-import { Table, Card, Statistic, TableProps, Button,Modal, Select, SelectProps } from 'ant-design-vue';
+import { Table, Statistic, TableProps, Button, Modal } from 'ant-design-vue';
 import { pieOptions, barOption, bar2Option } from './options';
 import { RangePicker } from 'ant-design-vue';
-import { getAlarmCalc, getAlarmParam, delay, alarmConfirm, alarmClear, getAlarmType,setAlarmType } from '@/api/index';
+import { getAlarmCalc, getAlarmParam, delay, alarmConfirm, alarmClear } from '@/api/index';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import { AlarmType } from './alarmtype/alarmType.vue';
+import AlarmTypeCom from './component/alarmType.vue';
 // const data = alarmClear({id:'8',clearTime:'2023-12-11'})
 // console.log(data);
 
 type RangeValue = [Dayjs, Dayjs];
-const dateRange = ref<RangeValue>([dayjs().startOf('M'), dayjs()]);
+const dateRange = ref<RangeValue>([dayjs().subtract(7, 'days'), dayjs()]);
 const alarmList = ref([]);
 const alarmCalc = ref<any>({});
 onMounted(async () => {
@@ -71,33 +71,28 @@ onMounted(async () => {
 const handleAlarmTime = async () => {
   const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
   alarmList.value = res.data.value?.result?.alarmList || [];
-  const res2 = await getAlarmCalc({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD')});
+  const res2 = await getAlarmCalc({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
   alarmCalc.value = res2.data.value?.result || {};
-}
+};
 // // const data = getAlarmType();
-const handleAlarmType = ()=>{
-  // let state: any = {};
-  // Modal.confirm({
-  //   title: '故障等级',
-  //   content: () => {
-  //     return h(AlarmType, {
-  //       onChange(v) {
-  //         state = v;
-  //       },
-  //     });
-  //   },
-  //   async onOk() {
-  //     await setAlarmType({...state, nodeId: parseInt(state?.nodeId || '0'), location: (state?.location || []).join('/') });
-  //   },
-  // });
-}
+const handleAlarmType = () => {
+  Modal.info({
+    title: '故障等级',
+    width: '80%',
+    content: () => {
+      return h(AlarmTypeCom);
+    },
+  });
+};
 const columns: TableProps['columns'] = [
   { dataIndex: 'id', title: '告警Id' },
-  { dataIndex: 'devId', title: '网元Id',
-  //   customRender({record}){
-  //     if(record.)
-  // }
-},
+  {
+    dataIndex: 'devId',
+    title: '网元Id',
+    //   customRender({record}){
+    //     if(record.)
+    // }
+  },
   { dataIndex: 'alarmLevel', title: '告警等级' },
   { dataIndex: 'alarmModule', title: '告警源' },
   { dataIndex: 'alarmDesc', title: '告警描述' },
@@ -143,12 +138,9 @@ const columns: TableProps['columns'] = [
   },
 ];
 
-
 watch(alarmCalc, () => {
   var myChart = echarts.init(document.getElementById('errorPieChart'), null);
-  const timeList = [
-    alarmCalc.value?.alarmTimeRate
-  ].map((item) => {
+  const timeList = [alarmCalc.value?.alarmTimeRate].map((item) => {
     return (item || '').split(':');
   });
   const lv1 = timeList.map((e) => e?.[0] || 0);

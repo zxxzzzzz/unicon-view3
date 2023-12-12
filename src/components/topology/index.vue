@@ -167,15 +167,12 @@ watch(
           message.error((error as Error).message, 10);
         }
         if (cy) {
-          console.log(cy.edgehandles);
           cy.edgehandles({
             snap:true,
             canConnect: function (sourceNode, targetNode) {
-              console.log(12311111111111111111111111111111111);
               if (sourceNode.same(targetNode)) {
                 return false;
               }
-              console.log(123, sourceNode.neighborhood(), 234, targetNode);
               if (sourceNode.neighborhood().contains(targetNode)) {
                 return false;
               }
