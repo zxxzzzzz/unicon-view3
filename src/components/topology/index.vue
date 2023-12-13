@@ -84,34 +84,22 @@ watch(
                 },
               },
               {
-                selector: 'node.ATN950B',
+                selector: 'node.faulty',
                 style: {
-                  width: 50,
-                  height: 36.5,
-                  'background-image': img.atn950b,
-                  'background-fit': 'contain',
-                  'background-opacity': 0,
+                  'background-color': 'red',
                 },
               },
               // convergence
               {
-                selector: `node.${formatType('CX600-X16-DO(V8)')}`,
+                selector: `node.normal`,
                 style: {
-                  width: 50,
-                  height: 36.3,
-                  'background-image': img.cx600x16,
-                  'background-fit': 'contain',
-                  'background-opacity': 0,
+                  'background-color': 'green',
                 },
               },
               {
-                selector: `node.${formatType('CX600-X16A-DO(V8)')}`,
+                selector: `node.offline`,
                 style: {
-                  width: 50,
-                  height: 35.7,
-                  'background-image': img.cx600x16a,
-                  'background-fit': 'contain',
-                  'background-opacity': 0,
+                  'background-color': 'gray',
                 },
               },
               {
@@ -168,7 +156,7 @@ watch(
         }
         if (cy) {
           cy.edgehandles({
-            snap:true,
+            snap: true,
             canConnect: function (sourceNode, targetNode) {
               if (sourceNode.same(targetNode)) {
                 return false;

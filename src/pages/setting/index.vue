@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="containerDomRef" class="h-full">
     <Card>
       <Tabs v-model:active-key="activeKey">
         <TabPane key="1" tab="用户">
@@ -9,7 +9,7 @@
           <Table :columns="loginColumns" :data-source="loginList" />
         </TabPane>
         <TabPane key="3" tab="操作日志">
-          <Table :columns="operationColumns" :data-source="operationList" :scroll="{ y: 600 }" />
+          <Table :columns="operationColumns" :data-source="operationList" :scroll="{ y: tableHeight }" />
         </TabPane>
       </Tabs>
     </Card>
@@ -22,12 +22,20 @@ import { computed, h, onMounted } from 'vue';
 import { getUserInformation, setUserAuthority, getUserLogin, getUserOperation } from '@/api';
 import Edit from './component/edit.vue';
 import { globalStore } from '~/stores';
+import { useElementSize } from '@vueuse/core';
 // defineProps<{  }>();
 type UserItem = {
   authority: string;
   position: string;
   userName: string;
 };
+
+const containerDomRef = ref<HTMLDivElement>();
+const { height } = useElementSize(containerDomRef);
+const tableHeight = computed(() => {
+  return height.value - 250;
+});
+
 const activeKey = ref('1');
 
 const userList = computed(() => {

@@ -2,11 +2,11 @@
 <template>
   <div class="w-full h-full bg-cover bg-no-repeat flex bg-[rgba(214,218,234,1)]">
     <div class="w-50%">
-      <div id="errorPieChart" class="border border-solid border-gray my-2 h-33%"></div>
-      <div id="errorBarChart" class="border border-solid border-gray my-2 h-33%"></div>
-      <div id="errorTimeBarChart" class="border border-solid border-gray mt-2 h-34%"></div>
+      <div id="errorPieChart" class="border border-solid border-gray my-2 h-32%"></div>
+      <div id="errorBarChart" class="border border-solid border-gray my-2 h-32%"></div>
+      <div id="errorTimeBarChart" class="border border-solid border-gray mt-2 h-32%"></div>
     </div>
-    <div class="w-50%">
+    <div class="w-50%" ref="containerDomRef">
       <div class="h-26% my-2 border border-solid border-gray">
         <div class="flex justify-center items-center h-full flex-wrap w-full">
           <Statistic title="网元" :value="alarmCalc.devNum" suffix="个" :value-style="{ color: '#3f8600' }" style="margin-right: 50px">
@@ -39,7 +39,7 @@
         <Button type="primary" @click="handleAlarmTime">确认</Button>
         <Button type="primary">下载</Button>
       </div>
-      <Table :columns="columns" :data-source="alarmList" :pagination="{ pageSize: 4 }"></Table>
+      <Table :columns="columns" :data-source="alarmList" :scroll="{ x: '100%', y: tableHeight }"></Table>
     </div>
   </div>
 </template>
@@ -49,17 +49,22 @@ import * as echarts from 'echarts';
 import { Table, Statistic, TableProps, Button, Modal } from 'ant-design-vue';
 import { pieOptions, barOption, bar2Option } from './options';
 import { RangePicker } from 'ant-design-vue';
-import { getAlarmCalc, getAlarmParam, delay, alarmConfirm, alarmClear } from '@/api/index';
+import { getAlarmCalc, getAlarmParam, delay, alarmConfirm, alarmClear, setAlarmType } from '@/api/index';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import AlarmTypeCom from './component/alarmType.vue';
-// const data = alarmClear({id:'8',clearTime:'2023-12-11'})
-// console.log(data);
+import { useElementSize } from '@vueuse/core';
 
+const containerDomRef = ref<HTMLDivElement>();
+const { height } = useElementSize(containerDomRef);
+const tableHeight = computed(() => {
+  return height.value - height.value * 0.26 - 32 - 162;
+});
 type RangeValue = [Dayjs, Dayjs];
 const dateRange = ref<RangeValue>([dayjs().subtract(7, 'days'), dayjs()]);
 const alarmList = ref([]);
 const alarmCalc = ref<any>({});
+
 onMounted(async () => {
   const res = await getAlarmParam({ startTime: '2000-01-01', endTime: '2000-01-01' });
   alarmList.value = res.data.value?.result?.alarmList || [];
@@ -76,26 +81,34 @@ const handleAlarmTime = async () => {
 };
 // // const data = getAlarmType();
 const handleAlarmType = () => {
-  Modal.info({
+  let data: any[] = [];
+  Modal.confirm({
     title: '故障等级',
     width: '80%',
     content: () => {
-      return h(AlarmTypeCom);
-
+      return h(AlarmTypeCom, {
+        onChange(v) {
+          data = v;
+        },
+      });
+    },
+    onOk() {
+      setAlarmType({ alarmTypeList: data });
     },
   });
 };
 const columns: TableProps['columns'] = [
-  { dataIndex: 'id', title: '告警Id' },
-  { dataIndex: 'devId',title: '网元Id',},
-  { dataIndex: 'alarmLevel', title: '告警等级' },
-  { dataIndex: 'alarmModule', title: '告警源' },
-  { dataIndex: 'alarmDesc', title: '告警描述' },
-  { dataIndex: 'alarmState', title: '告警状态' },
-  { dataIndex: 'alarmTime', title: '告警时间' },
+  { dataIndex: 'id', title: '告警Id1', width: 100 },
+  { dataIndex: 'devId', title: '网元Id', width: 100 },
+  { dataIndex: 'alarmLevel', title: '告警等级', width: 100 },
+  { dataIndex: 'alarmModule', title: '告警源', width: 100 },
+  { dataIndex: 'alarmDesc', title: '告警描述', width: 100 },
+  { dataIndex: 'alarmState', title: '告警状态', width: 100 },
+  { dataIndex: 'alarmTime', title: '告警时间', width: 100 },
   {
     dataIndex: 'confirmTime',
     title: '确认时间',
+    width: 100,
     customRender({ record }) {
       return record?.confirmTime === '2000-01-01 00:00:00'
         ? h(
@@ -115,6 +128,7 @@ const columns: TableProps['columns'] = [
   {
     dataIndex: 'clearTime',
     title: '清除时间',
+    width: 100,
     customRender({ record }) {
       return record?.clearTime === '2000-01-01 00:00:00'
         ? h(

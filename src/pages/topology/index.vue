@@ -36,7 +36,7 @@ import { openWindow } from '@/utils';
 import { ref } from 'vue';
 import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
-import { getTopography, updateDev, updateLink } from '@/api/index';
+import { getTopography, updateDev, updateLink, getDevCurConfig } from '@/api/index';
 import NodePop from './nodePop.vue';
 import { setTopography } from '@/api/index';
 
@@ -51,12 +51,16 @@ enum EdgeType {
 
 const updateTopography = async () => {
   const { data: dataDev } = await getTopography({ userName: globalStore.value.userName });
+  const { data: curData } = await getDevCurConfig();
   state.value.nodes = ((dataDev.value as any)?.result?.deviceList || []).map((item: any) => {
+    const cur = (curData.value?.result?.devList || []).find((dev:any) => dev.nodeId === item.object);
     return {
       position: { x: item.posX, y: item.posY },
       data: {
         id: item.object,
+        state: cur?.state || 'normal',
       },
+      classes:[cur?.state || 'normal']
     };
   });
   const nodeIdList = state.value.nodes.map((n) => n.data.id);
@@ -185,7 +189,6 @@ const handleDeleteEdge = (node: any) => {
       const id = node.id();
       const edge = state.value.edges.find((e) => e.data.id === id);
       if (!edge) return;
-      console.log(edge);
       //@ts-ignore
       await updateLink({
         type: 'delete',

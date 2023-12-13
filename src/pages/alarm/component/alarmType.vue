@@ -6,11 +6,16 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { getAlarmType, setAlarmType } from '@/api/index';
+import { getAlarmType } from '@/api/index';
 import { TableProps, Table, Select } from 'ant-design-vue';
-const { data,execute } = getAlarmType();
+const data = ref<any>();
+const emits = defineEmits(['change']);
 const dataSource = computed(() => {
   return (data.value as any)?.result || [];
+});
+onMounted(async () => {
+  const { data: _data } = await getAlarmType();
+  data.value = _data.value;
 });
 const options = [
   { value: 1, label: '1' },
@@ -24,14 +29,19 @@ const columns: TableProps['columns'] = [
   {
     dataIndex: 'typeLevel',
     title: '类型等级',
-    customRender({ record }) {
+    customRender({ record, index }) {
       return h(Select, {
         value: record.typeLevel,
         options,
         style: { width: '80px' },
         async onChange(v) {
-          await setAlarmType({ alarmTypeList: [{ ...record, typeLevel: v }] });
-          execute(true)
+          data.value.result = (data.value?.result || []).map((re: any, i: number) => {
+            if (i === index) {
+              return { ...re, typeLevel: v };
+            }
+            return re;
+          });
+          emits('change', data.value?.result || [])
         },
       });
     },
