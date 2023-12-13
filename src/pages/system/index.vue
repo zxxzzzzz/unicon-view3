@@ -2,7 +2,7 @@
   <div class="p-2 bg-[rgba(214,218,234,1)]">
     <Tabs v-model:activeKey="state.currentTabName">
       <TabPane key="系统" tab="系统">
-        <Table :columns="alarmColumns"></Table>
+        <Table :columns="alarmColumns" :data-source="alarmDataSource"></Table>
       </TabPane>
       <TabPane key="日志" tab="日志" force-render>
         <Table :columns="systemColumns"></Table>
@@ -23,32 +23,30 @@ const state = ref({
 });
 
 const { data: alarmData } = getSystemAlarm();
+const alarmDataSource = computed(() => {
+  return alarmData.value?.result?.alarmList || []
+})
 
 const alarmColumns: TableProps['columns'] = [
   {
-    title: '告警IP',
-    dataIndex: 'devId',
-    key: 'devId',
+    title: '告警描述',
+    dataIndex: 'alarmDesc',
+    key: 'alarmDesc',
   },
   {
     title: '告警模块',
-    dataIndex: 'devName',
-    key: 'devName',
-  },
-  {
-    title: '告警描述',
-    dataIndex: 'alarmLevel',
-    key: 'alarmLevel',
-  },
-  {
-    title: '告警时间',
     dataIndex: 'alarmModule',
     key: 'alarmModule',
   },
   {
+    title: '告警时间',
+    dataIndex: 'alarmTime',
+    key: 'alarmTime',
+  },
+  {
     title: '清除时间',
-    dataIndex: 'alarmDesc',
-    key: 'alarmDesc',
+    dataIndex: 'clearTime',
+    key: 'clearTime',
   },
 ];
 const systemColumns: TableProps['columns'] = [

@@ -37,7 +37,7 @@
           <RangePicker v-model:value="dateRange" show-time />
         </div>
         <Button type="primary" @click="handleAlarmTime">确认</Button>
-        <Button type="primary">下载</Button>
+        <Button type="primary" @click="handleDownload">下载</Button>
       </div>
       <Table :columns="columns" :data-source="alarmList" :scroll="{ x: '100%', y: tableHeight }"></Table>
     </div>
@@ -49,7 +49,7 @@ import * as echarts from 'echarts';
 import { Table, Statistic, TableProps, Button, Modal } from 'ant-design-vue';
 import { pieOptions, barOption, bar2Option } from './options';
 import { RangePicker } from 'ant-design-vue';
-import { getAlarmCalc, getAlarmParam, delay, alarmConfirm, alarmClear, setAlarmType } from '@/api/index';
+import { getAlarmCalc, getAlarmParam, delay, alarmConfirm, alarmClear, setAlarmType, getCsvFile } from '@/api/index';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import AlarmTypeCom from './component/alarmType.vue';
@@ -235,6 +235,23 @@ watch(alarmCalc, () => {
 
   myChart.setOption(bar2Option);
 });
+
+const handleDownload = async () => {
+  const { data } = await getCsvFile({
+    type: 'alarm',
+    col: ['id', 'nodeId', 'alarmLevel', 'state', 'alarmTime'],
+    startTime: dateRange.value[0].format('YYYY-MM-DD'),
+    endTime: dateRange.value[1].format('YYYY-MM-DD'),
+    dataType: 'string',
+  });
+  if (data.value?.result?.filebody) {
+    const url = URL.createObjectURL(new Blob([data.value?.result?.filebody]));
+    const linkDom = document.createElement('a')
+    linkDom.href = url
+    linkDom.download = 'text.csv'
+    linkDom.click()
+  }
+};
 
 onMounted(() => {});
 </script>

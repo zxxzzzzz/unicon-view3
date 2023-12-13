@@ -9,15 +9,18 @@
     </div>
     <div class="flex-1">
       <div v-if="tabState.currentTabName === TabName.网元">
-        <div class="flex">
-          <div class="w-10rem">NodeId</div>
-          <div>{{ nodeId }}</div>
-        </div>
-        <div class="flex">
-          <div class="w-10rem">Duty</div>
-          <div><Select v-model:value="duty" class="w-186px" :options="dutyOptions"></Select></div>
-        </div>
-        <button @click="">确定</button>
+        <Tabs v-model:activeKey="tabState.currentDevTabName">
+          <TabPane v-for="(dev, index) in devList" :key="dev.tabName" :tab="dev.tabName">
+            <div v-for="item in dev.itemList" class="flex mb-1rem">
+              <div class="w-10rem">{{ item.title }}</div>
+              <div>
+                <Select v-model:value="devListState[index][item.title]" v-if="item.type === 'select'" class="w-186px" :options="item.options"></Select>
+                <Input v-else  :disabled="item.readonly" class="w-186px" v-model:value.number="devListState[index][item.title]"></Input>
+              </div>
+            </div>
+            <Button @click="handleSetModule(index)">确定</Button>
+          </TabPane>
+        </Tabs>
       </div>
       <div v-if="tabState.currentTabName === TabName.板卡">
         <Tabs v-model:activeKey="tabState.currentModuleTabName">
@@ -88,10 +91,22 @@ const { data } = getDevConfigParam();
 
 const route = useRoute();
 
-const dutyOptions = computed(() => {
-  return (data.value?.result?.devList?.[0]?.property?.duty || []).map((v: string) => ({ label: v, value: v }));
+const devList = computed(() => {
+  return (data.value?.result?.devList?.[0]?.property?.devList || []).map((port: any) => {
+    return {
+      tabName: port.object,
+      itemList: Object.entries(port.property).map(([key, value]) => {
+        const type = Array.isArray(value) ? 'select' : value;
+        return {
+          title: key,
+          readonly: key === 'nodeId',
+          type: type,
+          options: type === 'select' ? (value as any).flat().map((v: string) => ({ label: v, value: v })) : [],
+        };
+      }),
+    };
+  });
 });
-
 const moduleList = computed(() => {
   return (data.value?.result?.devList?.[0]?.property?.moduleList || []).map((port: any) => {
     return {
@@ -164,20 +179,21 @@ enum TabName {
 
 const tabState = ref<{
   currentTabName: TabName;
+  currentDevTabName: string;
   currentModuleTabName: string;
   currentPortTabName: string;
   currentFrequencyTabName: string;
   currentTimeTabName: string;
 }>({
   currentTabName: TabName.网元,
+  currentDevTabName: '',
   currentModuleTabName: '',
   currentPortTabName: '',
   currentFrequencyTabName: '',
   currentTimeTabName: '',
 });
 
-const duty = ref('');
-const nodeId = ref('');
+const devListState = ref<{ [key: string]: any }>({});
 const moduleListState = ref<{ [key: string]: any }>({});
 const portListState = ref<{ [key: string]: any }>({});
 const freqListState = ref<{ [key: string]: any }>({});
@@ -188,14 +204,18 @@ watch(data, async () => {
   const d = (curData.value?.result?.devList || []).find((item: any) => {
     return item.nodeId == route.query.id;
   });
-  duty.value = d.duty;
-  nodeId.value = d.nodeId;
   nextTick(() => {
+    tabState.value.currentDevTabName = devList.value?.[0]?.tabName || '';
     tabState.value.currentModuleTabName = moduleList.value?.[0]?.tabName || '';
     tabState.value.currentPortTabName = portList.value?.[0]?.tabName || '';
     tabState.value.currentFrequencyTabName = freqList.value?.[0]?.tabName || '';
     tabState.value.currentTimeTabName = timeList.value?.[0]?.tabName || '';
 
+    devListState.value = (devList.value as any[]).map((item) => {
+      return item.itemList.reduce((re: any, e: any) => {
+        return { ...re, [e.title]: '' };
+      }, {});
+    });
     moduleListState.value = (moduleList.value as any[]).map((item) => {
       return item.itemList.reduce((re: any, e: any) => {
         return { ...re, [e.title]: '' };
@@ -216,6 +236,10 @@ watch(data, async () => {
         return { ...re, [e.title]: '' };
       }, {});
     });
+    if (d.duty) {
+      devListState.value[0]['duty'] = d.duty;
+      devListState.value[0]['nodeId'] = d.nodeId;
+    }
     if (d.moduleList) {
       moduleListState.value = d.moduleList;
     }

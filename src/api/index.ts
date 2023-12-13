@@ -174,9 +174,9 @@ export const getData = async (data: { id: number; type: string; flag: number; na
   await args.execute(true);
   return args;
 };
-export const getCsvFile = async (data: { type: string; col: string[]; startTime: string; endTime: string; dataType: string }) => {
-  const args = useMyFetch('/GetCsvFile').post(data);
-  await args.execute(true);
+export const getCsvFile = async (data: { type: 'alarm' | 'time' | 'freq'; col: string[]; startTime: string; endTime: string; dataType: string }) => {
+  const args = useMyFetch('/GetCsvFile').post(data).json();
+  args.execute(true);
   return args;
 };
 export const getAlarmType = () => {
