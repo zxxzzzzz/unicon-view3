@@ -61,10 +61,10 @@ const dateRange = ref<RangeValue>([dayjs().subtract(7, 'days'), dayjs()]);
 const alarmList = ref([]);
 const alarmCalc = ref<any>({});
 onMounted(async () => {
-  const res = await getAlarmParam({ startTime: '2001-01-01', endTime: '2001-01-01' });
+  const res = await getAlarmParam({ startTime: '2000-01-01', endTime: '2000-01-01' });
   alarmList.value = res.data.value?.result?.alarmList || [];
   await delay(500);
-  const res2 = await getAlarmCalc({ startTime: '2001-01-01', endTime: '2001-01-01' });
+  const res2 = await getAlarmCalc({ startTime: '2000-01-01', endTime: '2000-01-01' });
   alarmCalc.value = res2.data.value?.result || {};
 });
 
@@ -81,18 +81,13 @@ const handleAlarmType = () => {
     width: '80%',
     content: () => {
       return h(AlarmTypeCom);
+
     },
   });
 };
 const columns: TableProps['columns'] = [
   { dataIndex: 'id', title: '告警Id' },
-  {
-    dataIndex: 'devId',
-    title: '网元Id',
-    //   customRender({record}){
-    //     if(record.)
-    // }
-  },
+  { dataIndex: 'devId',title: '网元Id',},
   { dataIndex: 'alarmLevel', title: '告警等级' },
   { dataIndex: 'alarmModule', title: '告警源' },
   { dataIndex: 'alarmDesc', title: '告警描述' },

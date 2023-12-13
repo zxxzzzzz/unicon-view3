@@ -8,9 +8,7 @@
 import { computed } from 'vue';
 import { getAlarmType, setAlarmType } from '@/api/index';
 import { TableProps, Table, Select } from 'ant-design-vue';
-
 const { data,execute } = getAlarmType();
-
 const dataSource = computed(() => {
   return (data.value as any)?.result || [];
 });
@@ -19,7 +17,6 @@ const options = [
   { value: 2, label: '2' },
   { value: 3, label: '3' },
 ];
-
 const columns: TableProps['columns'] = [
   { dataIndex: 'typeName', title: '类型名称' },
   { dataIndex: 'typeDesc', title: '类型描述' },

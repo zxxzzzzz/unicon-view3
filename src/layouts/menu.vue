@@ -45,10 +45,10 @@
 
 <script setup lang="ts">
 import { Layout, LayoutContent, LayoutHeader, LayoutSider, Menu, Avatar, Dropdown, MenuItem } from 'ant-design-vue';
-import { UserOutlined } from '@ant-design/icons-vue';
+import { GithubFilled, UserOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { globalStore } from '@/stores/index';
-import { loginOut } from '@/api/index';
+import { loginOut,getUserInformation } from '@/api/index';
 import dayjs from 'dayjs';
 import { genBaseStyle } from 'ant-design-vue/es/alert/style';
 
@@ -107,9 +107,12 @@ const items = reactive([
     title: '系统管理',
   },
 ]);
-  if(currentAuthority.value!='1'){
-  items.splice(2,1);
-  };
+;
+
+if(globalStore.value.authority!='1'){
+    items.splice(2,1);
+};
+  
 const handleUserClick = () => {
   router.push('/setting');
 };

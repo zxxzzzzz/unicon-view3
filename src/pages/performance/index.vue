@@ -128,7 +128,6 @@ const handleCreateNode = () => {
 
 const handleDoubleClick = () => {
   openWindow("/config/panel");
-  console.log("dbbbb");
 };
 
 const handleNodeTypeClick = (v: NodeType) => {

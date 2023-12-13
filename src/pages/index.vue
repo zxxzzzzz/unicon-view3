@@ -27,6 +27,8 @@ import { useRouter, useRoute } from 'vue-router';
 import { login } from '@/api/index';
 import { onMounted } from 'vue';
 import { globalStore } from '@/stores/index';
+import { valHooks } from 'cypress/types/jquery';
+import { values } from 'cypress/types/lodash';
 
 const router = useRouter();
 const route = useRoute();
@@ -46,7 +48,8 @@ onMounted(() => {
 const handleLogin = async () => {
   try {
     const { data } = await login({ userName: state.value.username, password: state.value.password });
-    globalStore.value = { ...globalStore.value, token: data.value?.result?.token || '', userName: state.value.username };
+    globalStore.value = { ...globalStore.value,authority:data.value?.result?.authority, token: data.value?.result?.token || '', userName: state.value.username };
+    
     router.push({ path: '/topology' });
   } catch (error) {
     console.log(error, 'error');
