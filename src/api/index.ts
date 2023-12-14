@@ -170,8 +170,8 @@ export const setTopography = async (data: { deviceList: { nodeId: number; posX: 
   return args;
 };
 export const getData = async (data: { id: number;flag: number; name: string; startTime: string; endTime: string }) => {
-  const args = useMyFetch('/GetData').post(data);
-  await args.execute(true);
+  const args = useMyFetch('/GetData').post(data).json();
+  args.execute(true);
   return args;
 };
 export const getCsvFile = async (data: { type: 'alarm' | 'time' | 'freq'; col: string[]; startTime: string; endTime: string; dataType: string }) => {

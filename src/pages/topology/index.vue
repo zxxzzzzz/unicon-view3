@@ -8,11 +8,23 @@
         <Button type="primary" class="mt-[1rem] ml-10 bg-blue" @click="handleSaveTopography">保存拓扑图</Button>
       </div>
       <div class="h-[calc(100%-1rem)] overflow-hidden">
-        <Topology :nodes="state.nodes" :edges="state.edges" @delete-edge="handleDeleteEdge" @dragfree="handleDrag" @delete="handleNodeDelete" @config="handleNodeConfig" @link="handleLink"></Topology>
+        <Topology
+          :nodes="state.nodes"
+          :edges="state.edges"
+          @select="handleSelect"
+          @delete-edge="handleDeleteEdge"
+          @dragfree="handleDrag"
+          @delete="handleNodeDelete"
+          @config="handleNodeConfig"
+          @link="handleLink"
+        ></Topology>
       </div>
     </div>
     <div class="h-100% w-1px bg-black" />
     <div class="w-% h-100% flex flex-col">
+      <div>
+        <RangePicker v-model:value="dateRange" show-time />
+      </div>
       <div class="flex m-auto p-8">
         <CheckboxGroup :options="options" />&nbsp; <Tag color="pink" class="mr-2">10</Tag>&nbsp; MTIE:+ <Tag color="pink" class="ml-2">10</Tag>&nbsp;
         <div>
@@ -30,43 +42,55 @@
 
 <script setup lang="ts">
 import Topology from '@/components/topology/index.vue';
-import { Button, CheckboxGroup, Tag, Modal, message } from 'ant-design-vue';
+import { Button, CheckboxGroup, Tag, Modal, message, RangePicker } from 'ant-design-vue';
 import cytoscape from 'cytoscape';
 import { openWindow } from '@/utils';
 import { ref } from 'vue';
 import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
-import { getTopography, updateDev, updateLink, getDevCurConfig ,getCsvFile,setTopography, getData} from '@/api/index';
+import { getTopography, updateDev, updateLink, getDevCurConfig, getCsvFile, setTopography, getData } from '@/api/index';
 import NodePop from './nodePop.vue';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import CsvFile from './component/csvfile.vue';
-import { json } from 'stream/consumers';
-import { data } from 'cypress/types/jquery';
 type RangeValue = [Dayjs, Dayjs];
+
+const options = [
+  { label: 'TIE', value: 'TIE' },
+  { label: 'Δf/f', value: 'Δf/f' },
+];
+
+const state = ref({
+  nodes: [] as { position: { x: number; y: number }; data: { id: string } }[],
+  edges: [] as {
+    data: {
+      id: string;
+      source: string;
+      target: string;
+    };
+  }[],
+  selectedNode: void 0 as { position: { x: number; y: number }; data: { id: string } } | undefined,
+});
 const dateRange = ref<RangeValue>([dayjs().subtract(7, 'days'), dayjs()]);
 
-enum NodeType {
-  a,
-  b,
-}
-enum EdgeType {
-  a,
-  b,
-}
+const timeId = 0;
+
+onUnmounted(() => {
+  clearInterval(timeId);
+});
 
 const updateTopography = async () => {
   const { data: dataDev } = await getTopography({ userName: globalStore.value.userName });
   const { data: curData } = await getDevCurConfig();
   state.value.nodes = ((dataDev.value as any)?.result?.deviceList || []).map((item: any) => {
-    const cur = (curData.value?.result?.devList || []).find((dev:any) => dev.nodeId === item.object);
+    const cur = (curData.value?.result?.devList || []).find((dev: any) => dev.nodeId === item.object);
     return {
       position: { x: item.posX, y: item.posY },
       data: {
         id: item.object,
         state: cur?.state || 'normal',
       },
-      classes:[cur?.state || 'normal']
+      classes: [cur?.state || 'normal'],
     };
   });
   const nodeIdList = state.value.nodes.map((n) => n.data.id);
@@ -85,39 +109,38 @@ const updateTopography = async () => {
     });
 };
 
-onMounted(async () => {
-  updateTopography();
-  // getTimeData();
-  // getFreqData();
-  // getTdevData();
-});
-
 // 基于准备好的dom，初始化echarts实例
 onMounted(() => {
-  var myChart = echarts.init(document.getElementById('timeLineChart'), null);
-  myChart.setOption(timeOption);
-  var myChart = echarts.init(document.getElementById('hzLineChart'), null);
-  myChart.setOption(hzOption);
-  var myChart = echarts.init(document.getElementById('tdevLineChart'), null);
-  myChart.setOption(tdevOption);
-});
+  updateTopography();
+  const timeChart = echarts.init(document.getElementById('timeLineChart'), null);
+  timeChart.setOption(timeOption);
+  const hzChart = echarts.init(document.getElementById('hzLineChart'), null);
+  hzChart.setOption(hzOption);
+  const tdevChart = echarts.init(document.getElementById('tdevLineChart'), null);
+  tdevChart.setOption(tdevOption);
 
-const options = [
-  { label: 'TIE', value: 'TIE' },
-  { label: 'Δf/f', value: 'Δf/f' },
-];
-
-const state = ref({
-  nodes: [] as { position: { x: number; y: number }; data: { id: string } }[],
-  edges: [] as {
-    data: {
-      id: string;
-      source: string;
-      target: string;
-    };
-  }[],
-  currentNodeType: NodeType.a,
-  currentEdgeType: EdgeType.a,
+  setInterval(async () => {
+    const selectedNode = state.value.selectedNode ? state.value.selectedNode : state.value.nodes[0];
+    const { data } = await getData({
+      id: parseInt(selectedNode.data.id),
+      flag: 0,
+      name: 'node',
+      startTime: dateRange.value[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: dateRange.value[1].format('YYYY-MM-DD HH:mm:ss'),
+    });
+    const time = [...timeOption.series[0].data.map(d => d[0]),  ...((data.value?.result?.time as any[]) || [])];
+    const timeValueList = [...timeOption.series[0].data.map(d => d[1]), ...((data.value?.result?.timeValue as any[]) || [])];
+    timeOption.series[0].data = time.map((t, index) => {
+      return [t, timeValueList[index]];
+    });
+    timeChart.setOption(timeOption);
+    
+    const freqValueList = [...hzOption.series[0].data.map(d => d[1]), ...((data.value?.result?.freqValue as any[]) || [])];
+    hzOption.series[0].data = time.map((t, index) => {
+      return [t, freqValueList[index]];
+    });
+    hzChart.setOption(hzOption);
+  }, 1000);
 });
 
 const handleCreateNode = () => {
@@ -175,10 +198,10 @@ const handleNodeConfig = (node: any) => {
 
 const handleDataDownload = () => {
   Modal.info({
-    title:'下载',
-    width:'40%',
-    content:()=>{
-      return h(CsvFile)
+    title: '下载',
+    width: '70%',
+    content: () => {
+      return h(CsvFile);
     },
   });
 };
@@ -219,11 +242,18 @@ const handleDeleteEdge = (node: any) => {
   }, 1);
 };
 
+const handleSelect = (node: any) => {
+  const selectedNode = state.value.nodes.find((n) => n.data.id === node.id());
+  if (selectedNode) {
+    state.value.selectedNode = selectedNode;
+  }
+};
+
 // const getTimeData= async()=> {
-//   const {data:dataList}=await getData({ 
+//   const {data:dataList}=await getData({
 //       id: 1,
-//       flag: 0, 
-//       name: 'time', 
+//       flag: 0,
+//       name: 'time',
 //       startTime: dateRange.value[0].format('YYYY-MM-DD'),
 //       endTime: dateRange.value[1].format('YYYY-MM-DD')
 //   })
@@ -231,10 +261,10 @@ const handleDeleteEdge = (node: any) => {
 //   return dataTime;
 // }
 // const getFreqData= async()=> {
-//   const {data:dataList}=await getData({ 
+//   const {data:dataList}=await getData({
 //       id: 1,
-//       flag: 0, 
-//       name: 'freq', 
+//       flag: 0,
+//       name: 'freq',
 //       startTime: dateRange.value[0].format('YYYY-MM-DD'),
 //       endTime: dateRange.value[1].format('YYYY-MM-DD')
 //   })
@@ -242,10 +272,10 @@ const handleDeleteEdge = (node: any) => {
 //   return dataFreq;
 // }
 // const getTdevData= async()=> {
-//   const {data:dataList}=await getData({ 
+//   const {data:dataList}=await getData({
 //       id: 1,
 //       flag: 0, //0为全量，1为单量
-//       name: 'tdev', 
+//       name: 'tdev',
 //       startTime: dateRange.value[0].format('YYYY-MM-DD'),
 //       endTime: dateRange.value[1].format('YYYY-MM-DD')
 //   })
