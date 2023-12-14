@@ -3,10 +3,10 @@
     <Card>
       <Tabs v-model:active-key="activeKey">
         <TabPane key="1" tab="用户">
-          <Table :columns="columns" :data-source="userList" />
+          <Table :columns="columns" :data-source="userList"  :scroll="{ y: tableHeight }"/>
         </TabPane>
         <TabPane key="2" tab="登录日志">
-          <Table :columns="loginColumns" :data-source="loginList" />
+          <Table :columns="loginColumns" :data-source="loginList" :scroll="{ y: tableHeight }" />
         </TabPane>
         <TabPane key="3" tab="操作日志">
           <Table :columns="operationColumns" :data-source="operationList" :scroll="{ y: tableHeight }" />

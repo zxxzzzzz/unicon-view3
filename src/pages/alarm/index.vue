@@ -98,17 +98,17 @@ const handleAlarmType = () => {
   });
 };
 const columns: TableProps['columns'] = [
-  { dataIndex: 'id', title: '告警Id1', width: 100 },
-  { dataIndex: 'devId', title: '网元Id', width: 100 },
-  { dataIndex: 'alarmLevel', title: '告警等级', width: 100 },
+  { dataIndex: 'id', title: '告警Id', width: 60 },
+  { dataIndex: 'devId', title: '网元Id', width: 60 },
+  { dataIndex: 'alarmLevel', title: '告警等级', width: 60 },
   { dataIndex: 'alarmModule', title: '告警源', width: 100 },
   { dataIndex: 'alarmDesc', title: '告警描述', width: 100 },
   { dataIndex: 'alarmState', title: '告警状态', width: 100 },
-  { dataIndex: 'alarmTime', title: '告警时间', width: 100 },
+  { dataIndex: 'alarmTime', title: '告警时间', width: 120 },
   {
     dataIndex: 'confirmTime',
     title: '确认时间',
-    width: 100,
+    width: 120,
     customRender({ record }) {
       return record?.confirmTime === '2000-01-01 00:00:00'
         ? h(
@@ -128,7 +128,7 @@ const columns: TableProps['columns'] = [
   {
     dataIndex: 'clearTime',
     title: '清除时间',
-    width: 100,
+    width: 120,
     customRender({ record }) {
       return record?.clearTime === '2000-01-01 00:00:00'
         ? h(

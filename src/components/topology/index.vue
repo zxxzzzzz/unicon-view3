@@ -238,6 +238,7 @@ defineExpose({
   height: 20px;
   background: red;
   border-radius: 20px;
-  z-index: 9999;
+  z-index: 1;
+
 }
 </style>

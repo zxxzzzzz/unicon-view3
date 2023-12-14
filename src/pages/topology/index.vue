@@ -36,9 +36,15 @@ import { openWindow } from '@/utils';
 import { ref } from 'vue';
 import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
-import { getTopography, updateDev, updateLink, getDevCurConfig } from '@/api/index';
+import { getTopography, updateDev, updateLink, getDevCurConfig ,getCsvFile,setTopography, getData} from '@/api/index';
 import NodePop from './nodePop.vue';
-import { setTopography } from '@/api/index';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import CsvFile from './component/csvfile.vue';
+import { json } from 'stream/consumers';
+import { data } from 'cypress/types/jquery';
+type RangeValue = [Dayjs, Dayjs];
+const dateRange = ref<RangeValue>([dayjs().subtract(7, 'days'), dayjs()]);
 
 enum NodeType {
   a,
@@ -81,6 +87,9 @@ const updateTopography = async () => {
 
 onMounted(async () => {
   updateTopography();
+  // getTimeData();
+  // getFreqData();
+  // getTdevData();
 });
 
 // 基于准备好的dom，初始化echarts实例
@@ -163,10 +172,17 @@ const handleNodeConfig = (node: any) => {
   const data = node.data();
   openWindow(`/config/panel?id=${data.id}`);
 };
+
 const handleDataDownload = () => {
-  //指向下载的一个地址
-  alert('数据下载中');
+  Modal.info({
+    title:'下载',
+    width:'40%',
+    content:()=>{
+      return h(CsvFile)
+    },
+  });
 };
+
 //@ts-ignore
 const handleLink = async ({ sourceNode, targetNode }) => {
   setTimeout(async () => {
@@ -202,6 +218,40 @@ const handleDeleteEdge = (node: any) => {
     } catch (error) {}
   }, 1);
 };
+
+// const getTimeData= async()=> {
+//   const {data:dataList}=await getData({ 
+//       id: 1,
+//       flag: 0, 
+//       name: 'time', 
+//       startTime: dateRange.value[0].format('YYYY-MM-DD'),
+//       endTime: dateRange.value[1].format('YYYY-MM-DD')
+//   })
+//   const dataTime = JSON.parse((dataList.value as any));
+//   return dataTime;
+// }
+// const getFreqData= async()=> {
+//   const {data:dataList}=await getData({ 
+//       id: 1,
+//       flag: 0, 
+//       name: 'freq', 
+//       startTime: dateRange.value[0].format('YYYY-MM-DD'),
+//       endTime: dateRange.value[1].format('YYYY-MM-DD')
+//   })
+//   const dataFreq = JSON.parse((dataList.value as any));
+//   return dataFreq;
+// }
+// const getTdevData= async()=> {
+//   const {data:dataList}=await getData({ 
+//       id: 1,
+//       flag: 0, //0为全量，1为单量
+//       name: 'tdev', 
+//       startTime: dateRange.value[0].format('YYYY-MM-DD'),
+//       endTime: dateRange.value[1].format('YYYY-MM-DD')
+//   })
+//   const dataTdev = JSON.parse((dataList.value as any));
+//   return dataTdev;
+// }
 </script>
 
 <route lang="yaml">
