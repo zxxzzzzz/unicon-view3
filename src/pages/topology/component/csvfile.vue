@@ -9,12 +9,12 @@
       <Select mode="multiple" :options="timeOption" class="w-20rem" v-model:value="state.timeColumn"></Select>
     </div>
     <div class="flex mt-5">
-      <div class="w-6rem">频率</div>
+      <div class="w-6rem text-1.5rem">频率</div>
       <Button type="primary" class="" @click="handleFreqDownload">下载</Button>
-      <Select mode="multiple" :options="freqOption" class="w-20rem"></Select>
+      <Select mode="multiple" :options="freqOption" class="w-20rem" v-model:value="state1.freqColumn"></Select>
     </div>
     <div class="flex mt-5">
-      <div class="w-6rem">TDEV</div>
+      <div class="w-6rem text-1.5rem" >TDEV</div>
       <Button type="primary" class="" @click="handleFreqDownload">下载</Button>
     </div>
   </div>
@@ -31,6 +31,9 @@ type RangeValue = [Dayjs, Dayjs];
 const dateRange = ref<RangeValue>([dayjs().subtract(7, 'days'), dayjs()]);
 const state = ref({
   timeColumn:[] as string[]
+});
+const state1 = ref({
+    freqColumn:[]as string[]
 })
 const timeOption = ['nodeId', 'name', 'tab', 'tba', 'td', 'delta', 'error', 'createdTime'].map((v) => ({ value: v, label: v }));
 const freqOption = [
@@ -59,7 +62,7 @@ const handleTimeDownload = async () => {
 const handleFreqDownload = async () => {
   const { data } = await getCsvFile({
     type: 'freq',
-    col: ['nodeId', 'name', 'value', 'createdTime'],
+    col: state1.value.freqColumn,
     startTime: '2023-11-01',
     endTime: '2023-12-14',
     dataType: 'string',

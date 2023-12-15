@@ -23,9 +23,8 @@ const useMyFetch = createFetch({
       return { options };
     },
     onFetchError(ctx) {
-      console.log(ctx);
       if (!ctx.data) {
-        message.error('网络错误');
+        // message.error('网络错误'); 
         return ctx;
       }
       const data = typeof ctx.data === 'string' ? JSON.parse(ctx.data) : ctx.data;

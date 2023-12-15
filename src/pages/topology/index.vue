@@ -23,8 +23,10 @@
     <div class="h-100% w-1px bg-black" />
     <div class="w-% h-100% flex flex-col">
       <div>
-        <RangePicker v-model:value="dateRange" show-time />
+        <RangePicker v-model:value="dateRange" show-time class="w-90" />
+        <Button type="primary" class="ml-2" @click="handleData">确认</Button>
       </div>
+      
       <div class="flex m-auto p-8">
         <CheckboxGroup :options="options" />&nbsp; <Tag color="pink" class="mr-2">10</Tag>&nbsp; MTIE:+ <Tag color="pink" class="ml-2">10</Tag>&nbsp;
         <div>
@@ -72,7 +74,6 @@ const state = ref({
   selectedNode: void 0 as { position: { x: number; y: number }; data: { id: string } } | undefined,
 });
 const dateRange = ref<RangeValue>([dayjs().subtract(7, 'days'), dayjs()]);
-
 const timeId = 0;
 
 onUnmounted(() => {
@@ -140,8 +141,20 @@ onMounted(() => {
       return [t, freqValueList[index]];
     });
     hzChart.setOption(hzOption);
-  }, 1000);
+  }, 5000);
 });
+const handleData = async()=>{
+  const selectedNode = state.value.selectedNode ? state.value.selectedNode : state.value.nodes[0];
+  const { data } = await getData({
+      id: parseInt(selectedNode.data.id),
+      flag: 0,
+      name: 'node',
+      startTime: dateRange.value[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: dateRange.value[1].format('YYYY-MM-DD HH:mm:ss'),
+    });
+    console.log(data);
+    
+}
 
 const handleCreateNode = () => {
   let state: any = {};
@@ -199,7 +212,7 @@ const handleNodeConfig = (node: any) => {
 const handleDataDownload = () => {
   Modal.info({
     title: '下载',
-    width: '70%',
+    width: '40%',
     content: () => {
       return h(CsvFile);
     },
@@ -248,40 +261,7 @@ const handleSelect = (node: any) => {
     state.value.selectedNode = selectedNode;
   }
 };
-
-// const getTimeData= async()=> {
-//   const {data:dataList}=await getData({
-//       id: 1,
-//       flag: 0,
-//       name: 'time',
-//       startTime: dateRange.value[0].format('YYYY-MM-DD'),
-//       endTime: dateRange.value[1].format('YYYY-MM-DD')
-//   })
-//   const dataTime = JSON.parse((dataList.value as any));
-//   return dataTime;
-// }
-// const getFreqData= async()=> {
-//   const {data:dataList}=await getData({
-//       id: 1,
-//       flag: 0,
-//       name: 'freq',
-//       startTime: dateRange.value[0].format('YYYY-MM-DD'),
-//       endTime: dateRange.value[1].format('YYYY-MM-DD')
-//   })
-//   const dataFreq = JSON.parse((dataList.value as any));
-//   return dataFreq;
-// }
-// const getTdevData= async()=> {
-//   const {data:dataList}=await getData({
-//       id: 1,
-//       flag: 0, //0为全量，1为单量
-//       name: 'tdev',
-//       startTime: dateRange.value[0].format('YYYY-MM-DD'),
-//       endTime: dateRange.value[1].format('YYYY-MM-DD')
-//   })
-//   const dataTdev = JSON.parse((dataList.value as any));
-//   return dataTdev;
-// }
+  
 </script>
 
 <route lang="yaml">
