@@ -47,8 +47,8 @@ const handleTimeDownload = async () => {
   const { data } = await getCsvFile({
     type: 'time',
     col: state.value.timeColumn,
-    startTime: '2023-11-01',
-    endTime: '2023-12-14',
+    startTime: dateRange.value[0].format('YYYY-MM-DD HH:mm:ss'),
+    endTime: dateRange.value[1].format('YYYY-MM-DD HH:mm:ss'),
     dataType: 'string',
   });
   if (data.value?.result?.filebody) {
@@ -63,8 +63,8 @@ const handleFreqDownload = async () => {
   const { data } = await getCsvFile({
     type: 'freq',
     col: state1.value.freqColumn,
-    startTime: '2023-11-01',
-    endTime: '2023-12-14',
+    startTime: dateRange.value[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: dateRange.value[1].format('YYYY-MM-DD HH:mm:ss'),
     dataType: 'string',
   });
   if (data.value?.result?.filebody) {
