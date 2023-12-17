@@ -168,8 +168,13 @@ export const setTopography = async (data: { deviceList: { nodeId: number; posX: 
   args.execute(true);
   return args;
 };
-export const getData = async (data: { id: number;flag: number; name: string; startTime: string; endTime: string }) => {
+export const getData = async (data: { nodeId: number;flag: number; name: string; startTime: string; endTime: string }) => {
   const args = useMyFetch('/GetData').post(data).json();
+  args.execute(true);
+  return args;
+};
+export const getNodeState = async () => {
+  const args = useMyFetch('/GetNodeState').post().json();
   args.execute(true);
   return args;
 };

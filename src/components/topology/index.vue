@@ -8,7 +8,6 @@
 import cytoscape from 'cytoscape';
 import { ref, watch, nextTick } from 'vue';
 import { message } from 'ant-design-vue';
-import img from './img';
 import edgehandles from 'cytoscape-edgehandles';
 import Popper from 'cytoscape-popper';
 import { initEdgeDelete, initLink, initNodeDelete, useDevPop } from './utils';
@@ -31,9 +30,6 @@ const emits = defineEmits<{
   (event: 'config', node: cytoscape.CollectionReturnValue): void;
   (event: 'link', data: { sourceNode: cytoscape.CollectionReturnValue; targetNode: cytoscape.CollectionReturnValue }): void;
 }>();
-const formatType = (s: string) => {
-  return s.replace(/[()-]+/g, '');
-};
 
 let destroyHandleList: (() => void)[] = [];
 onUnmounted(() => {
@@ -84,42 +80,28 @@ watch(
                 },
               },
               {
-                selector: 'node.faulty',
+                selector: `[state = 'faulty']`,
                 style: {
                   'background-color': 'red',
                 },
               },
               // convergence
               {
-                selector: `node.normal`,
+                selector: `[state = 'normal']`,
                 style: {
                   'background-color': 'green',
                 },
               },
               {
-                selector: `node.offline`,
+                selector: `[state = 'offline']`,
                 style: {
                   'background-color': 'gray',
                 },
               },
               {
-                selector: `node.${formatType('CX600-X8-DO(V8)')}`,
+                selector: 'node:selected',
                 style: {
-                  width: 50,
-                  height: 35.7,
-                  'background-image': img.cx600x8,
-                  'background-fit': 'contain',
-                  'background-opacity': 0,
-                },
-              },
-              {
-                selector: 'node.Service',
-                style: {
-                  width: 50,
-                  height: 35.7,
-                  'background-image': img.service,
-                  'background-fit': 'contain',
-                  'background-opacity': 0,
+                  'background-color': 'blue',
                 },
               },
               {
@@ -128,26 +110,7 @@ watch(
                   'curve-style': 'bezier',
                 },
               },
-              {
-                selector: 'edge.ptp',
-                style: {
-                  'line-style': 'dashed',
-                  'target-arrow-shape': 'triangle',
-                  'line-dash-pattern': [10, 3],
-                  'target-arrow-color': 'blue',
-                  'line-color': 'blue',
-                },
-              },
-              {
-                selector: 'edge.syncE',
-                style: {
-                  'line-style': 'dashed',
-                  'target-arrow-shape': 'triangle',
-                  'line-dash-pattern': [10, 3],
-                  'line-color': 'red',
-                  'target-arrow-color': 'red',
-                },
-              },
+              
             ],
             wheelSensitivity: 0.1,
           });
@@ -239,6 +202,5 @@ defineExpose({
   background: red;
   border-radius: 20px;
   z-index: 1;
-
 }
 </style>

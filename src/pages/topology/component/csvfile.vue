@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { Button, Select, RangePicker } from 'ant-design-vue';
-import { ref, watch, watchEffect, computed } from 'vue';
+import { ref } from 'vue';
 import { getCsvFile } from '@/api/index';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
@@ -35,7 +35,7 @@ const state = ref({
 const state1 = ref({
     freqColumn:[]as string[]
 })
-const timeOption = ['nodeId', 'name', 'tab', 'tba', 'td', 'delta', 'error', 'createdTime'].map((v) => ({ value: v, label: v }));
+const timeOption = ['nodeId', 'name', 'tab', 'tba', 'td', 'deltaT', 'errorT', 'createdTime'].map((v) => ({ value: v, label: v }));
 const freqOption = [
   { label: 'nodeId', value: 'nodeId' },
   { label: 'name', value: 'name' },

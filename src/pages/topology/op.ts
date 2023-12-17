@@ -4,7 +4,8 @@ export const timeOption = {
   },
   xAxis: {
     type: 'time',
-    data: [] as any[],
+    splitNumber: 5,
+    minInterval: 10 * 1000,
   },
   yAxis: {
     type: 'value',
@@ -13,7 +14,7 @@ export const timeOption = {
     {
       data: [] as any[],
       type: 'line',
-      showSymbol:false,
+      showSymbol: false,
       smooth: true,
     },
   ],
@@ -24,6 +25,8 @@ export const hzOption = {
   },
   xAxis: {
     type: 'time',
+    splitNumber: 5,
+    minInterval: 10 * 1000,
   },
   yAxis: {
     type: 'value',
@@ -32,7 +35,7 @@ export const hzOption = {
     {
       data: [] as any[],
       type: 'line',
-      showSymbol:false,
+      showSymbol: false,
       smooth: true,
     },
   ],
@@ -43,15 +46,16 @@ export const tdevOption = {
   },
   xAxis: {
     type: 'category',
-    data: ['10', '10²', '10³', '10⁴', '10⁵'],
+    data: [],
   },
   yAxis: {
     type: 'value',
   },
   series: [
     {
-      data: [820, 932, 1290, 1330, 1320],
+      data: [],
       type: 'line',
+      showSymbol: false,
       smooth: true,
     },
   ],
