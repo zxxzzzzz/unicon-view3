@@ -1,12 +1,12 @@
 <!-- 告警管理 -->
 <template>
   <div class="w-full h-full bg-cover bg-no-repeat flex bg-[rgba(214,218,234,1)]">
-    <div class="w-50%">
+    <div class="w-33%">
       <div id="errorPieChart" class="border border-solid border-gray my-2 h-32%"></div>
       <div id="errorBarChart" class="border border-solid border-gray my-2 h-32%"></div>
       <div id="errorTimeBarChart" class="border border-solid border-gray mt-2 h-32%"></div>
     </div>
-    <div class="w-50%" ref="containerDomRef">
+    <div class="w-67%" ref="containerDomRef">
       <div class="h-26% my-2 border border-solid border-gray">
         <div class="flex justify-center items-center h-full flex-wrap w-full">
           <Statistic title="网元" :value="alarmCalc.devNum" suffix="个" :value-style="{ color: '#3f8600' }" style="margin-right: 50px">
@@ -100,8 +100,20 @@ const handleAlarmType = () => {
 const columns: TableProps['columns'] = [
   { dataIndex: 'id', title: '告警Id', width: 60 },
   { dataIndex: 'devId', title: '网元Id', width: 60 },
-  { dataIndex: 'alarmLevel', title: '告警等级', width: 60 },
-  { dataIndex: 'alarmModule', title: '告警源', width: 100 },
+  { dataIndex: 'alarmLevel',
+   title: '告警等级', 
+   width: 60 ,
+  //  customRender({record}){
+  //   if(record?.alarmLevel==='1'){
+  //     return{
+  //       style:{
+  //         backgroundColor:'red',
+  //       }
+  //     }
+  //  }
+  // }
+},
+  { dataIndex: 'alarmModule', title: '故障类型', width: 100 },
   { dataIndex: 'alarmDesc', title: '告警描述', width: 100 },
   { dataIndex: 'alarmState', title: '告警状态', width: 100 },
   { dataIndex: 'alarmTime', title: '告警时间', width: 120 },
@@ -116,6 +128,7 @@ const columns: TableProps['columns'] = [
             {
               async onClick() {
                 await alarmConfirm({ id: record.id, confirmTime: record.confirmTime });
+                // window.location.reload();
                 const res = await getAlarmParam({ startTime: dateRange.value[0].format('YYYY-MM-DD'), endTime: dateRange.value[1].format('YYYY-MM-DD') });
                 alarmList.value = res.data.value?.result?.alarmList || [];
               },

@@ -17,9 +17,9 @@
                 <MenuItem>
                   <div @click="handleUserClick">用户信息</div>
                 </MenuItem>
-                <MenuItem v-if="currentAuthority === '1'">
+                <!-- <MenuItem v-if="currentAuthority === '1'">
                   <div @click="appearUser">权限管理</div>
-                </MenuItem>
+                </MenuItem> -->
                 <MenuItem>
                   <div @click="handleLoginOut">登出</div>
                 </MenuItem>
@@ -116,9 +116,9 @@ if(globalStore.value.authority!='1'){
 const handleUserClick = () => {
   router.push('/setting');
 };
-const appearUser = () => {
-  alert('正在开发中');
-};
+// const appearUser = () => {
+//   alert('正在开发中');
+// };
 const handleLoginOut = async () => {
   try {
     await loginOut({

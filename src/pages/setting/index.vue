@@ -79,7 +79,7 @@ const columns: TableProps<UserItem>['columns'] = [
     },
   },
   {
-    title: '操作',
+    title: ' ',
     customRender({ record }) {
       if (globalStore.value.userInfoList[0].authority == '1') {
         let data: any = void 0;

@@ -123,6 +123,7 @@ const moduleList = computed(() => {
   });
 });
 
+
 const portList = computed(() => {
   return (data.value?.result?.devList?.[0]?.property?.portList || []).map((port: any) => {
     return {
@@ -200,7 +201,7 @@ const freqListState = ref<{ [key: string]: any }>({});
 const timeListState = ref<{ [key: string]: any }>({});
 
 watch(data, async () => {
-  const { data: curData } = await getDevCurConfig();
+  const { data: curData } = await getDevCurConfig();  
   const d = (curData.value?.result?.devList || []).find((item: any) => {
     return item.nodeId == route.query.id;
   });
@@ -221,6 +222,9 @@ watch(data, async () => {
         return { ...re, [e.title]: '' };
       }, {});
     });
+
+    
+    
     portListState.value = (portList.value as any[]).map((item) => {
       return item.itemList.reduce((re: any, e: any) => {
         return { ...re, [e.title]: '' };
@@ -242,6 +246,8 @@ watch(data, async () => {
     }
     if (d.moduleList) {
       moduleListState.value = d.moduleList;
+      console.log(moduleListState.value);
+      
     }
     if (d.portList) {
       portListState.value = d.portList;
@@ -271,6 +277,7 @@ const handleSetModule = async (index: number) => {
     type: 'module',
     name: tabState.value.currentModuleTabName,
     paramList: Object.entries(moduleListState.value[index] as any).map(([key, value]) => {
+      
       return {
         paramName: key,
         value: value as any,

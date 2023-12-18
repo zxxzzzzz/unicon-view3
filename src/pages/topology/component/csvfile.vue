@@ -13,10 +13,10 @@
       <Button type="primary" class="" @click="handleFreqDownload">下载</Button>
       <Select mode="multiple" :options="freqOption" class="w-20rem" v-model:value="state1.freqColumn"></Select>
     </div>
-    <div class="flex mt-5">
+    <!-- <div class="flex mt-5">
       <div class="w-6rem text-1.5rem" >TDEV</div>
       <Button type="primary" class="" @click="handleFreqDownload">下载</Button>
-    </div>
+    </div> -->
   </div>
 </template>
 

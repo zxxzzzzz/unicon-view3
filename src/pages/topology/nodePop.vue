@@ -9,17 +9,19 @@
       <Select class="w-[20rem]" :options="dutyOptions" v-model:value="state.duty" @change="handleChange"></Select>
     </div>
     <div class="flex mb-1rem">
+      <div class="w-6rem">masterId</div>
+      <Input v-model:value="state.master" @change="handleChange"></Input>
+    </div>
+    <div class="flex mb-1rem">
       <div class="w-6rem">location</div>
       <Cascader class="w-[20rem]" v-model:value="state.location" :options="cityOptions" @change="handleChange"/>
     </div>
-    <div class="flex mb-1rem">
-      <div class="w-6rem">state</div>
-      <Input v-model:value="state.state" @change="handleChange"></Input>
-    </div>
+
+    <!--
     <div class="flex">
       <div class="w-6rem">ip</div>
       <Input v-model:value="state.ip" @change="handleChange"></Input>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -33,8 +35,8 @@ const state = ref({
   nodeId: '',
   duty: '',
   location: [],
-  state: '',
-  ip: '',
+  master: '',
+  // ip: '',
 });
 //
 const dutyOptions = [

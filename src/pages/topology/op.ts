@@ -9,6 +9,7 @@ export const timeOption = {
   },
   yAxis: {
     type: 'value',
+    name: '单位(纳秒)'
   },
   series: [
     {
