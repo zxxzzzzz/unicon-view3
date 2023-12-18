@@ -10,7 +10,7 @@
     </div>
     <div class="flex mb-1rem">
       <div class="w-6rem">masterId</div>
-      <Input v-model:value="state.master" @change="handleChange"></Input>
+      <Input v-model:value="state.master"  :disabled="state.duty === 'master'" @change="handleChange"></Input>
     </div>
     <div class="flex mb-1rem">
       <div class="w-6rem">location</div>

@@ -292,6 +292,7 @@ export const useDevPop = (cy: cytoscape.Core) => {
     popper = node.popper({
       content: () => {
         const _popperDiv = document.createElement('div');
+        _popperDiv.style.zIndex = '10'
         render(
           h(DevPop, {
             id
@@ -328,10 +329,10 @@ export const useDevPop = (cy: cytoscape.Core) => {
     }
   }
 
-  cy.on('select', 'node', function (e) {
+  cy.on('mouseover', 'node', function (e) {
     setHandleOn(e.target);
   });
-  cy.on('unselect', 'node', function (e) {
+  cy.on('mouseout', 'node', function (e) {
     removeHandle();
   });
 

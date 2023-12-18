@@ -22,6 +22,7 @@ const emits = defineEmits<{
   (event: 'tap', node: cytoscape.CollectionReturnValue): void;
   (event: 'select', node: cytoscape.CollectionReturnValue): void;
   (event: 'unselect', node: cytoscape.CollectionReturnValue): void;
+  (event: 'hover', node: cytoscape.CollectionReturnValue): void;
   (event: 'drag', node: cytoscape.CollectionReturnValue): void;
   (event: 'dragfree', node: cytoscape.CollectionReturnValue): void;
   (event: 'dblclick', node: cytoscape.CollectionReturnValue): void;
@@ -99,7 +100,7 @@ watch(
                 },
               },
               {
-                selector: 'node:selected',
+                selector: `[?selected]`,
                 style: {
                   'background-color': 'blue',
                 },
@@ -162,6 +163,10 @@ watch(
           cy.on('tap', 'node', function (evt) {
             var node = evt.target;
             emits('tap', node);
+          });
+          cy.on('mouseover', 'node', function (evt) {
+            var node = evt.target;
+            emits('hover', node);
           });
           cy.on('cxttap', 'node', function (evt) {
             var node = evt.target;

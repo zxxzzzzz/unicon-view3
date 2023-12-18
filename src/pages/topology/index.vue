@@ -28,10 +28,12 @@
       </div>
 
       <div class="flex m-auto p-8">
-        <CheckboxGroup :options="options" />
+        <CheckboxGroup :options="options.slice(0, 1)" />
+        <Tag color="pink" class="mr-2">{{ TIE.toFixed(2) }}</Tag>
+        <CheckboxGroup :options="options.slice(1, 2)" />
         <Tag color="pink" class="mr-2">{{ DELF }}</Tag>
         MTIE:+
-        <Tag color="pink" class="ml-2">{{ MTIE }}</Tag>
+        <Tag color="pink" class="ml-2">{{ MTIE.toFixed(5) }}</Tag>
         <div>
           <Button type="primary" class="bg-blue border h-5" style="line-height: 0.7" @click="handleDataDownload">数据下载</Button>
         </div>
@@ -50,7 +52,7 @@ import Topology from '@/components/topology/index.vue';
 import { Button, CheckboxGroup, Tag, Modal, message, RangePicker } from 'ant-design-vue';
 import cytoscape from 'cytoscape';
 import { openWindow } from '@/utils';
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
 import { getTopography, updateDev, updateLink, getDevCurConfig, setTopography, getData, getNodeState } from '@/api/index';
@@ -67,7 +69,7 @@ const options = [
 ];
 
 const state = ref({
-  nodes: [] as { position: { x: number; y: number }; data: { id: string; state: string } }[],
+  nodes: [] as { position: { x: number; y: number }; data: { id: string; state: string; selected: boolean } }[],
   edges: [] as {
     data: {
       id: string;
@@ -77,11 +79,19 @@ const state = ref({
   }[],
   selectedNode: void 0 as { position: { x: number; y: number }; data: { id: string } } | undefined,
 });
+const selectedNode = computed(() => {
+  const node = state.value.nodes.find((n) => n.data.selected);
+  if (node) {
+    return node;
+  }
+  return state.value.nodes[0];
+});
 const dateRange = ref<RangeValue>([dayjs().subtract(7, 'days'), dayjs()]);
 let timeId: any = 0;
 let stateTimeId: any = 0;
 const DELF = ref(0);
 const MTIE = ref(0);
+const TIE = ref(0);
 
 let timeChart: ReturnType<typeof echarts.init> | undefined = void 0;
 let freqChart: ReturnType<typeof echarts.init> | undefined = void 0;
@@ -109,11 +119,13 @@ const updateState = async () => {
         data: {
           ...node.data,
           state: _dev.state,
+          selected: _dev.state === 'faulty' ? false : node.data.selected,
         },
       };
     }
-    return node
+    return node;
   });
+  await nextTick();
 };
 
 const updateTopography = async () => {
@@ -155,6 +167,7 @@ const updateChart = async (id: string) => {
   });
   MTIE.value = data.value?.result?.MTIE;
   DELF.value = data.value?.result?.DELF;
+  TIE.value = data.value?.result?.TIE;
   const timeList = [...((data.value?.result?.time as any[]) || [])];
   const timeValueList = [...((data.value?.result?.timeValue as any[]) || [])];
   timeOption.series[0].data = uniqBy(
@@ -199,6 +212,7 @@ const partUpdateChart = async (id: string) => {
   });
   MTIE.value = data.value?.result?.MTIE;
   DELF.value = data.value?.result?.DELF;
+  TIE.value = data.value?.result?.TIE;
   const time = [...timeOption.series[0].data.map((d) => d[0]), ...((data.value?.result?.time as any[]) || []).map((t) => dayjs(t, 'YYYY-MM-DD HH:mm:ss').valueOf())];
   const timeValueList = [...timeOption.series[0].data.map((d) => d[1]), ...((data.value?.result?.timeValue as any[]) || [])];
   timeOption.series[0].data = uniqBy(
@@ -243,8 +257,7 @@ onMounted(async () => {
   await updateTopography();
   clearInterval(timeId);
   timeId = setInterval(async () => {
-    const selectedNode = state.value.selectedNode ? state.value.selectedNode : state.value.nodes[0];
-    partUpdateChart(selectedNode.data.id);
+    partUpdateChart(selectedNode.value.data.id);
   }, 5000);
   clearInterval(stateTimeId);
   stateTimeId = setInterval(async () => {
@@ -252,17 +265,16 @@ onMounted(async () => {
   }, 5000);
 });
 const handleData = async () => {
-  const selectedNode = state.value.selectedNode ? state.value.selectedNode : state.value.nodes[0];
   clearInterval(timeId);
   if (dateRange.value[1].format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {
     timeId = setInterval(async () => {
-      partUpdateChart(selectedNode.data.id);
+      partUpdateChart(selectedNode.value.data.id);
     }, 5000);
     return;
   }
-  if (selectedNode?.data?.id) {
-    updateChart(selectedNode.data.id);
-  } 
+  if (selectedNode.value?.data?.id) {
+    updateChart(selectedNode.value.data.id);
+  }
 };
 
 const handleCreateNode = () => {
@@ -365,15 +377,14 @@ const handleDeleteEdge = (node: any) => {
 };
 
 const handleSelect = (node: any) => {
-  const selectedNode = state.value.nodes.find((n) => n.data.id === node.id());
-  if (selectedNode) {
-    state.value.selectedNode = selectedNode;
-    timeOption.series[0].data = []
-    hzOption.series[0].data = []
-    tdevOption.xAxis.data = []
-    tdevOption.series[0].data = []
-    
-  }
+  state.value.nodes = state.value.nodes.map((n: any) => {
+    if (n.data.id === node.id()) return { ...n, data: { ...n.data, selected: true } };
+    return { ...n, data: { ...n.data, selected: false } };
+  });
+  timeOption.series[0].data = [];
+  hzOption.series[0].data = [];
+  tdevOption.xAxis.data = [];
+  tdevOption.series[0].data = [];
 };
 </script>
 

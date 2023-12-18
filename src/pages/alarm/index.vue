@@ -39,7 +39,7 @@
         <Button type="primary" @click="handleAlarmTime">确认</Button>
         <Button type="primary" @click="handleDownload">下载</Button>
       </div>
-      <Table :columns="columns" :data-source="alarmList" :scroll="{ x: '100%', y: tableHeight }"></Table>
+      <Table :columns="columns" :data-source="alarmList" :scroll="{ x: '100%', y: tableHeight }" :rowClassName="rowClassName"></Table>
     </div>
   </div>
 </template>
@@ -97,22 +97,26 @@ const handleAlarmType = () => {
     },
   });
 };
+
+const rowClassName = (record: any) => {
+  if (record?.clearTime !== '2000-01-01 00:00:00') {
+    return '';
+  }
+  if (record.alarmLevel === '1') {
+    return 'bg-[#ff552b]';
+  }
+  if (record.alarmLevel === '2') {
+    return 'bg-[#ff9f82]';
+  }
+  if (record.alarmLevel === '3') {
+    return 'bg-[#ffffde]';
+  }
+  return '';
+};
 const columns: TableProps['columns'] = [
   { dataIndex: 'id', title: '告警Id', width: 60 },
   { dataIndex: 'devId', title: '网元Id', width: 60 },
-  { dataIndex: 'alarmLevel',
-   title: '告警等级', 
-   width: 60 ,
-  //  customRender({record}){
-  //   if(record?.alarmLevel==='1'){
-  //     return{
-  //       style:{
-  //         backgroundColor:'red',
-  //       }
-  //     }
-  //  }
-  // }
-},
+  { dataIndex: 'alarmLevel', title: '告警等级', width: 60 },
   { dataIndex: 'alarmModule', title: '故障类型', width: 100 },
   { dataIndex: 'alarmDesc', title: '告警描述', width: 100 },
   { dataIndex: 'alarmState', title: '告警状态', width: 100 },
@@ -259,10 +263,10 @@ const handleDownload = async () => {
   });
   if (data.value?.result?.filebody) {
     const url = URL.createObjectURL(new Blob([data.value?.result?.filebody]));
-    const linkDom = document.createElement('a')
-    linkDom.href = url
-    linkDom.download = 'text.csv'
-    linkDom.click()
+    const linkDom = document.createElement('a');
+    linkDom.href = url;
+    linkDom.download = 'text.csv';
+    linkDom.click();
   }
 };
 

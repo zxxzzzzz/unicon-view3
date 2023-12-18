@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="z-10">
     <div class="bg-white rounded-8px relative" :style="{ boxShadow: '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)' }">
       <div class="w-15rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
         <div class="w-6rem">创建时间</div>
@@ -25,7 +25,6 @@
         <div class="w-6rem">swVersion:</div>
         <div>{{ state.swVersion }}</div>
       </div>
-      <div class="absolute w-1rem h-1rem -left-1rem top-[calc(50%-0.5rem)] bg-white" :style="{ clipPath: 'polygon(100% 0, 0% 50% , 100% 100% )' }"></div>
     </div>
   </div>
 </template>

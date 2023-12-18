@@ -14,7 +14,8 @@ export const timeOption = {
   series: [
     {
       data: [] as any[],
-      type: 'line',
+      type: 'scatter',
+      symbolSize: 5,
       showSymbol: false,
       smooth: true,
     },
@@ -35,7 +36,8 @@ export const hzOption = {
   series: [
     {
       data: [] as any[],
-      type: 'line',
+      type: 'scatter',
+      symbolSize: 5,
       showSymbol: false,
       smooth: true,
     },
