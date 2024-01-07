@@ -29,6 +29,7 @@ const emits = defineEmits<{
   (event: 'delete', node: cytoscape.CollectionReturnValue): void;
   (event: 'deleteEdge', node: cytoscape.CollectionReturnValue): void;
   (event: 'config', node: cytoscape.CollectionReturnValue): void;
+  (event: 'performance', node: cytoscape.CollectionReturnValue): void;
   (event: 'link', data: { sourceNode: cytoscape.CollectionReturnValue; targetNode: cytoscape.CollectionReturnValue }): void;
 }>();
 
@@ -143,6 +144,10 @@ watch(
           cy.on('config ', 'node', (evt) => {
             var node = evt.target;
             emits('config', node);
+          });
+          cy.on('performance ', 'node', (evt) => {
+            var node = evt.target;
+            emits('performance', node);
           });
           cy.on('select ', 'edge', (evt) => {
             const node = evt.target;
