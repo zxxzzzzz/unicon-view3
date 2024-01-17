@@ -3,7 +3,8 @@ import { message } from 'ant-design-vue';
 import { globalStore } from '@/stores/index';
 
 const useMyFetch = createFetch({
-  baseUrl: 'http://60.163.13.247:8888',
+  // @ts-ignore
+  baseUrl: window._baseUrl_,
   options: {
     immediate: false,
     async beforeFetch({ options }) {
