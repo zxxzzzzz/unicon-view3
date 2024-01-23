@@ -16,7 +16,6 @@
           @dragfree="handleDrag"
           @delete="handleNodeDelete"
           @config="handleNodeConfig"
-          @performance="handlePerformance"
           @link="handleLink"
         ></Topology>
       </div>
@@ -56,13 +55,12 @@ import { openWindow } from '@/utils';
 import { ref, nextTick } from 'vue';
 import * as echarts from 'echarts';
 import { timeOption, hzOption, tdevOption } from './op';
-import { getTopography, updateDev, updateLink, getDevCurConfig, setTopography, getData, getNodeState, getPortPerformance } from '@/api/index';
+import { getTopography, updateDev, updateLink, getDevCurConfig, setTopography, getData, getNodeState } from '@/api/index';
 import NodePop from './nodePop.vue';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import CsvFile from './component/csvfile.vue';
 import { uniqBy } from 'lodash';
-import PerformancePop from './component/performance.vue';
 
 type RangeValue = [Dayjs, Dayjs];
 const options = [
@@ -277,17 +275,6 @@ const handleData = async () => {
   if (selectedNode.value?.data?.id) {
     updateChart(selectedNode.value.data.id);
   }
-};
-const handlePerformance = async (node: cytoscape.NodeSingular) => {
-  node
-  const { data } = await getPortPerformance(parseInt(node.id()));
-  message.info({
-    content: () => {
-      return h(PerformancePop, {
-        ...(data.value?.result || {}),
-      });
-    },
-  });
 };
 
 const handleCreateNode = () => {
