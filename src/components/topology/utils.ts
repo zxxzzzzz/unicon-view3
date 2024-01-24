@@ -221,6 +221,10 @@ export const initNodeDelete = (cy: cytoscape.Core) => {
               removeHandle();
               node.emit('config');
             },
+            onPerformance(){
+              removeHandle();
+              node.emit('performance');
+            }
           }),
           _popperDiv,
         );

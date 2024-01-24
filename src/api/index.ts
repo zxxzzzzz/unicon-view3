@@ -25,7 +25,7 @@ const useMyFetch = createFetch({
     },
     onFetchError(ctx) {
       if (!ctx.data) {
-        // message.error('网络错误'); 
+        // message.error('网络错误');
         return ctx;
       }
       const data = typeof ctx.data === 'string' ? JSON.parse(ctx.data) : ctx.data;
@@ -169,13 +169,18 @@ export const setTopography = async (data: { deviceList: { nodeId: number; posX: 
   args.execute(true);
   return args;
 };
-export const getData = async (data: { nodeId: number;flag: number; name: string; startTime: string; endTime: string }) => {
+export const getData = async (data: { nodeId: number; flag: number; name: string; startTime: string; endTime: string }) => {
   const args = useMyFetch('/GetData').post(data).json();
   args.execute(true);
   return args;
 };
 export const getNodeState = async () => {
   const args = useMyFetch('/GetNodeState').post().json();
+  args.execute(true);
+  return args;
+};
+export const getPortPerformance = async (nodeId: number) => {
+  const args = useMyFetch('/GetPortPerformance').post({ nodeId }).json();
   args.execute(true);
   return args;
 };
