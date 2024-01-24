@@ -138,7 +138,7 @@ const updateTopography = async () => {
       data: {
         id: item.object,
         state: cur?.state || 'normal',
-        duty:cur?.duty || 'relay'
+        duty: cur?.duty || 'relay',
       },
     };
   });
@@ -290,7 +290,7 @@ const handleCreateNode = () => {
       });
     },
     async onOk() {
-      await updateDev({ ...state, nodeId: parseInt(state?.nodeId || '0'), location: (state?.location || []).join('/') });
+      await updateDev({ ...state, state: 'normal', nodeId: parseInt(state?.nodeId || '0'), location: (state?.location || []).join('/') });
       updateTopography();
     },
   });
