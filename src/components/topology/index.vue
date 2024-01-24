@@ -11,6 +11,7 @@ import { message } from 'ant-design-vue';
 import edgehandles from 'cytoscape-edgehandles';
 import Popper from 'cytoscape-popper';
 import { initEdgeDelete, initLink, initNodeDelete, useDevPop } from './utils';
+import img from './img';
 
 cytoscape.use(Popper);
 cytoscape.use(edgehandles);
@@ -81,28 +82,124 @@ watch(
                 },
               },
               {
-                selector: `[state = 'faulty']`,
+                selector: `[state = 'faulty'][duty = 'master']`,
                 style: {
-                  'background-color': 'red',
+                  width: 50,
+                  height: 35.7,
+                  'background-image': img.masterFaluty,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
+                },
+              },
+              {
+                selector: `[state = 'faulty'][duty = 'relay']`,
+                style: {
+                  width: 50,
+                  height: 35.7,
+                  'background-image': img.relayFaluty,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
+                },
+              },
+              {
+                selector: `[state = 'faulty'][duty = 'slave']`,
+                style: {
+                  width: 50,
+                  height: 35.7,
+                  'background-image': img.slaveFaluty,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
                 },
               },
               // convergence
               {
-                selector: `[state = 'normal']`,
+                selector: `[state = 'normal'][duty = 'slave']`,
                 style: {
-                  'background-color': 'green',
+                  width: 50,
+                  height: 35.7,
+                  'background-image': img.salveNormal,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
                 },
               },
               {
-                selector: `[state = 'offline']`,
+                selector: `[state = 'normal'][duty = 'relay']`,
                 style: {
-                  'background-color': 'gray',
+                  width: 50,
+                  height: 35.7,
+                  'background-image': img.relayNormal,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
                 },
               },
               {
-                selector: `[?selected]`,
+                selector: `[state = 'normal'][duty = 'master']`,
                 style: {
-                  'background-color': 'blue',
+                  width: 50,
+                  height: 35.7,
+                  'background-image': img.masterNormal,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
+                },
+              },
+              {
+                selector: `[state = 'offline'][duty = 'relay']`,
+                style: {
+                  width: 50,
+                  height: 35.7,
+                  'background-image': img.relayOffline,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
+                },
+              },
+              {
+                selector: `[state = 'offline'][duty = 'master']`,
+                style: {
+                  width: 50,
+                  height: 35.7,
+                  'background-image': img.masterOffline,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
+                },
+              },
+              {
+                selector: `[state = 'offline'][duty = 'salve']`,
+                style: {
+                  width: 50,
+                  height: 35.7,
+                  'background-image': img.salveOffline,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
+                },
+              },
+              {
+                selector: `[?selected][duty = 'salve']`,
+                style: {
+                   width: 50,
+                  height: 35.7,
+                  'background-image': img.salveSelected,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
+                },
+              },
+              {
+                selector: `[?selected][duty = 'master']`,
+                style: {
+                   width: 50,
+                  height: 35.7,
+                  'background-image': img.masterSelected,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
+                },
+              },
+              {
+                selector: `[?selected][duty = 'relay']`,
+                style: {
+                   width: 50,
+                  height: 35.7,
+                  'background-image': img.relaySelected,
+                  'background-fit': 'contain',
+                  'background-opacity': 0,
                 },
               },
               {
@@ -111,7 +208,6 @@ watch(
                   'curve-style': 'bezier',
                 },
               },
-              
             ],
             wheelSensitivity: 0.1,
           });

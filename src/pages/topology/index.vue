@@ -138,6 +138,7 @@ const updateTopography = async () => {
       data: {
         id: item.object,
         state: cur?.state || 'normal',
+        duty:cur?.duty || 'relay'
       },
     };
   });
@@ -327,7 +328,7 @@ const handleNodeDelete = async (node: cytoscape.NodeSingular) => {
 
 const handleNodeConfig = (node: any) => {
   const data = node.data();
-  openWindow(`/config/panel?id=${data.id}`);
+  openWindow(`#/config/panel?id=${data.id}`);
 };
 
 const handleDataDownload = () => {

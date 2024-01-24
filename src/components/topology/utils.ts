@@ -329,7 +329,7 @@ export const useDevPop = (cy: cytoscape.Core) => {
     }
   }
 
-  cy.on('mouseover', 'node', function (e) {
+  cy.on('select', 'node', function (e) {
     setHandleOn(e.target);
   });
   cy.on('mouseout', 'node', function (e) {
