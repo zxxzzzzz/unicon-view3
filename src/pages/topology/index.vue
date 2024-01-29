@@ -1,7 +1,7 @@
 <!-- 设备管理 -->
 <template>
   <div class="flex h-full bg-[rgba(214,218,234,1)]">
-    <div class="h-full relative overflow-auto flex-1">
+    <div class="h-full relative overflow-auto flex-1 w-[50%]">
       <div class="absolute left-4 z-10">
         <!--新建节点-->
         <Button type="primary" class="mt-[1rem] bg-blue" @click="handleCreateNode">新建节点</Button>
@@ -17,24 +17,27 @@
           @delete="handleNodeDelete"
           @config="handleNodeConfig"
           @performance="handlePerformance"
+          @info="handleInfo"
           @link="handleLink"
         ></Topology>
       </div>
     </div>
     <div class="h-100% w-1px bg-black" />
-    <div class="w-% h-100% flex flex-col">
+    <div class="w-% h-100% flex flex-col w-[49%]">
       <div>
         <RangePicker v-model:value="dateRange" class="w-90" :format="dataFormat" />
         <Button type="primary" class="ml-2" @click="handleData">确认</Button>
       </div>
 
       <div class="flex m-auto p-8">
+        <div :style="{ backgroundImage: `url(${selectedNodeBg})` }" class="w-4 h-4 rounded-full bg-no-repeat bg-contain bg-center mr-2"></div>
+
         <CheckboxGroup :options="options.slice(0, 1)" />
-        <Tag color="pink" class="mr-2">{{ TIE.toFixed(2) }}</Tag>
+        <Tag color="pink" class="mr-2">{{ TIE?.toFixed?.(2) }}</Tag>
         <CheckboxGroup :options="options.slice(1, 2)" />
         <Tag color="pink" class="mr-2">{{ DELF }}</Tag>
         MTIE:+
-        <Tag color="pink" class="ml-2">{{ MTIE.toFixed(5) }}</Tag>
+        <Tag color="pink" class="ml-2">{{ MTIE?.toFixed?.(5) }}</Tag>
         <div>
           <Button type="primary" class="bg-blue border h-5" style="line-height: 0.7" @click="handleDataDownload">数据下载</Button>
         </div>
@@ -63,6 +66,8 @@ import dayjs from 'dayjs';
 import CsvFile from './component/csvfile.vue';
 import { uniqBy } from 'lodash';
 import PerformancePop from './component/performance.vue';
+import InfoPop from './component/info.vue';
+import imgUrl from '@/components/topology/img';
 
 type RangeValue = [Dayjs, Dayjs];
 const options = [
@@ -71,7 +76,7 @@ const options = [
 ];
 
 const state = ref({
-  nodes: [] as { position: { x: number; y: number }; data: { id: string; state: string; selected: boolean } }[],
+  nodes: [] as { position: { x: number; y: number }; data: { id: string; state: string; duty: string; selected: boolean } }[],
   edges: [] as {
     data: {
       id: string;
@@ -79,7 +84,6 @@ const state = ref({
       target: string;
     };
   }[],
-  selectedNode: void 0 as { position: { x: number; y: number }; data: { id: string } } | undefined,
 });
 const selectedNode = computed(() => {
   const node = state.value.nodes.find((n) => n.data.selected);
@@ -88,6 +92,41 @@ const selectedNode = computed(() => {
   }
   return state.value.nodes[0];
 });
+
+const selectedNodeBg = computed(() => {
+  if (!selectedNode.value) {
+    return '';
+  }
+  if (selectedNode.value.data.state === 'normal' && selectedNode.value.data.duty === 'master') {
+    return imgUrl.masterNormal;
+  }
+  if (selectedNode.value.data.state === 'faluty' && selectedNode.value.data.duty === 'master') {
+    return imgUrl.masterFaluty;
+  }
+  if (selectedNode.value.data.state === 'offline' && selectedNode.value.data.duty === 'master') {
+    return imgUrl.masterOffline;
+  }
+  if (selectedNode.value.data.state === 'normal' && selectedNode.value.data.duty === 'relay') {
+    return imgUrl.relayNormal;
+  }
+  if (selectedNode.value.data.state === 'faluty' && selectedNode.value.data.duty === 'relay') {
+    return imgUrl.relayFaluty;
+  }
+  if (selectedNode.value.data.state === 'offline' && selectedNode.value.data.duty === 'relay') {
+    return imgUrl.relayOffline;
+  }
+  if (selectedNode.value.data.state === 'normal' && selectedNode.value.data.duty === 'slave') {
+    return imgUrl.slaveNormal;
+  }
+  if (selectedNode.value.data.state === 'faluty' && selectedNode.value.data.duty === 'slave') {
+    return imgUrl.slaveFaluty;
+  }
+  if (selectedNode.value.data.state === 'offline' && selectedNode.value.data.duty === 'slave') {
+    return imgUrl.slaveOffline;
+  }
+  return '';
+});
+
 const dateRange = ref<RangeValue>([dayjs().subtract(7, 'days'), dayjs()]);
 let timeId: any = 0;
 let stateTimeId: any = 0;
@@ -280,12 +319,24 @@ const handleData = async () => {
   }
 };
 const handlePerformance = async (node: cytoscape.NodeSingular) => {
-  node
+  node;
   const { data } = await getPortPerformance(parseInt(node.id()));
   message.info({
+    duration: 5,
     content: () => {
       return h(PerformancePop, {
         ...(data.value?.result || {}),
+      });
+    },
+  });
+};
+const handleInfo = async (node: cytoscape.NodeSingular) => {
+  node;
+  message.info({
+    duration: 5,
+    content: () => {
+      return h(InfoPop, {
+        id: node.data()?.id,
       });
     },
   });
@@ -391,6 +442,9 @@ const handleDeleteEdge = (node: any) => {
 };
 
 const handleSelect = (node: any) => {
+  if (node.isEdge()) {
+    return;
+  }
   state.value.nodes = state.value.nodes.map((n: any) => {
     if (n.data.id === node.id()) return { ...n, data: { ...n.data, selected: true } };
     return { ...n, data: { ...n.data, selected: false } };

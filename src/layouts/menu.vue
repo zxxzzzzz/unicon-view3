@@ -30,7 +30,7 @@
       </LayoutHeader>
       <Layout>
         <LayoutSider>
-          <Menu v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark" :inline-collapsed="state.collapsed" :items="items"></Menu>
+          <Menu class="text-20px font-bold" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark" :inline-collapsed="state.collapsed" :items="items"></Menu>
         </LayoutSider>
         <LayoutContent>
           <div class="h-[calc(100vh-64px)] bg-[rgba(214,218,234,1)]">
@@ -66,7 +66,7 @@ watch(
   () => {
     const km: { [k: string]: string } = {
       '/topology': '设备管理',
-      '/system': '系统管理',
+      '/system': '系统管理平台',
       '/alarm': '告警管理',
     };
     const name = km[route.path];
@@ -82,7 +82,7 @@ watch(
     const km: { [k: string]: string } = {
       设备管理: '/topology',
       告警管理: '/alarm',
-      系统管理: '/system',
+      系统管理平台: '/system',
     };
     router.push({ path: km[state.selectedKeys[0]] });
   },
@@ -101,10 +101,10 @@ const items = reactive([
     title: '告警管理',
   },
   {
-    key: '系统管理',
+    key: '系统管理平台',
     // icon: () => h(InboxOutlined),
-    label: '系统管理',
-    title: '系统管理',
+    label: '系统管理平台',
+    title: '系统管理平台',
   },
 ]);
 ;

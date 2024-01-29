@@ -1,7 +1,7 @@
 <template>
   <div class="h-[calc(100%-2px)]">
     <div ref="canvas" class="h-full border border-dark-50" style="background: linear-gradient(rgba(214, 218, 234, 1) 33%, rgba(214, 218, 234, 1) 33%, rgba(214, 218, 234, 1) 33%)"></div>
-    <!-- <Legend class="right-0 absolute mr-2 mt-2 top-0" /> -->
+    <Legend class="right-0 absolute mr-2 mt-2 top-0" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -10,8 +10,9 @@ import { ref, watch, nextTick } from 'vue';
 import { message } from 'ant-design-vue';
 import edgehandles from 'cytoscape-edgehandles';
 import Popper from 'cytoscape-popper';
-import { initEdgeDelete, initLink, initNodeDelete, useDevPop } from './utils';
+import { initEdgeDelete, initLink, initNodeDelete } from './utils';
 import img from './img';
+import Legend from './legend.vue';
 
 cytoscape.use(Popper);
 cytoscape.use(edgehandles);
@@ -31,6 +32,7 @@ const emits = defineEmits<{
   (event: 'deleteEdge', node: cytoscape.CollectionReturnValue): void;
   (event: 'config', node: cytoscape.CollectionReturnValue): void;
   (event: 'performance', node: cytoscape.CollectionReturnValue): void;
+  (event: 'info', node: cytoscape.CollectionReturnValue): void;
   (event: 'link', data: { sourceNode: cytoscape.CollectionReturnValue; targetNode: cytoscape.CollectionReturnValue }): void;
 }>();
 
@@ -85,8 +87,8 @@ watch(
               {
                 selector: `[state = 'faulty'][duty = 'master']`,
                 style: {
-                  width: 50,
-                  height: 35.7,
+                  width: 35,
+                  height: 25,
                   'background-image': img.masterFaluty,
                   'background-fit': 'contain',
                   'background-opacity': 0,
@@ -95,8 +97,8 @@ watch(
               {
                 selector: `[state = 'faulty'][duty = 'relay']`,
                 style: {
-                  width: 50,
-                  height: 35.7,
+                  width: 35,
+                  height: 25,
                   'background-image': img.relayFaluty,
                   'background-fit': 'contain',
                   'background-opacity': 0,
@@ -105,8 +107,8 @@ watch(
               {
                 selector: `[state = 'faulty'][duty = 'slave']`,
                 style: {
-                  width: 50,
-                  height: 35.7,
+                  width: 35,
+                  height: 25,
                   'background-image': img.slaveFaluty,
                   'background-fit': 'contain',
                   'background-opacity': 0,
@@ -116,9 +118,9 @@ watch(
               {
                 selector: `[state = 'normal'][duty = 'slave']`,
                 style: {
-                  width: 50,
-                  height: 35.7,
-                  'background-image': img.salveNormal,
+                  width: 35,
+                  height: 25,
+                  'background-image': img.slaveNormal,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
@@ -126,8 +128,8 @@ watch(
               {
                 selector: `[state = 'normal'][duty = 'relay']`,
                 style: {
-                  width: 50,
-                  height: 35.7,
+                  width: 35,
+                  height: 25,
                   'background-image': img.relayNormal,
                   'background-fit': 'contain',
                   'background-opacity': 0,
@@ -136,8 +138,8 @@ watch(
               {
                 selector: `[state = 'normal'][duty = 'master']`,
                 style: {
-                  width: 50,
-                  height: 35.7,
+                  width: 35,
+                  height: 25,
                   'background-image': img.masterNormal,
                   'background-fit': 'contain',
                   'background-opacity': 0,
@@ -146,8 +148,8 @@ watch(
               {
                 selector: `[state = 'offline'][duty = 'relay']`,
                 style: {
-                  width: 50,
-                  height: 35.7,
+                  width: 35,
+                  height: 25,
                   'background-image': img.relayOffline,
                   'background-fit': 'contain',
                   'background-opacity': 0,
@@ -156,48 +158,48 @@ watch(
               {
                 selector: `[state = 'offline'][duty = 'master']`,
                 style: {
-                  width: 50,
-                  height: 35.7,
+                  width: 35,
+                  height: 25,
                   'background-image': img.masterOffline,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
               },
               {
-                selector: `[state = 'offline'][duty = 'salve']`,
+                selector: `[state = 'offline'][duty = 'slave']`,
                 style: {
-                  width: 50,
-                  height: 35.7,
-                  'background-image': img.salveOffline,
+                  width: 35,
+                  height: 25,
+                  'background-image': img.slaveOffline,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
               },
               {
-                selector: `[?selected][duty = 'salve']`,
+                selector: `[id][?selected][duty = 'slave']`,
                 style: {
-                   width: 50,
-                  height: 35.7,
-                  'background-image': img.salveSelected,
+                   width: 35,
+                  height: 25,
+                  'background-image': img.slaveSelected,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
               },
               {
-                selector: `[?selected][duty = 'master']`,
+                selector: `[id][?selected][duty = 'master']`,
                 style: {
-                   width: 50,
-                  height: 35.7,
+                   width: 35,
+                  height: 25,
                   'background-image': img.masterSelected,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
               },
               {
-                selector: `[?selected][duty = 'relay']`,
+                selector: `[id][?selected][duty = 'relay']`,
                 style: {
-                   width: 50,
-                  height: 35.7,
+                   width: 35,
+                  height: 25,
                   'background-image': img.relaySelected,
                   'background-fit': 'contain',
                   'background-opacity': 0,
@@ -228,7 +230,7 @@ watch(
               return true;
             },
           });
-          destroyHandleList = [initLink(cy), initEdgeDelete(cy), initNodeDelete(cy), useDevPop(cy)];
+          destroyHandleList = [initLink(cy), initEdgeDelete(cy), initNodeDelete(cy)];
           cy.on('select ', 'node', (evt) => {
             var node = evt.target;
             emits('select', node);
@@ -244,6 +246,10 @@ watch(
           cy.on('performance ', 'node', (evt) => {
             var node = evt.target;
             emits('performance', node);
+          });
+          cy.on('info ', 'node', (evt) => {
+            var node = evt.target;
+            emits('info', node);
           });
           cy.on('select ', 'edge', (evt) => {
             const node = evt.target;

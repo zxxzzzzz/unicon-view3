@@ -1,13 +1,13 @@
 <!-- 告警管理 -->
 <template>
   <div class="w-full h-full bg-cover bg-no-repeat flex bg-[rgba(214,218,234,1)]">
-    <div class="w-33%">
+    <div class="w-43%">
       <div id="errorPieChart" class="border border-solid border-gray my-2 h-32%"></div>
       <div id="errorBarChart" class="border border-solid border-gray my-2 h-32%"></div>
       <div id="errorTimeBarChart" class="border border-solid border-gray mt-2 h-32%"></div>
     </div>
-    <div class="w-67%" ref="containerDomRef">
-      <div class="h-26% my-2 border border-solid border-gray">
+    <div class="w-57%" ref="containerDomRef">
+      <div class="h-16% my-2 border border-solid border-gray">
         <div class="flex justify-center items-center h-full flex-wrap w-full">
           <Statistic title="网元" :value="alarmCalc.devNum" suffix="个" :value-style="{ color: '#3f8600' }" style="margin-right: 50px">
             <template #prefix>
@@ -202,16 +202,20 @@ watch(alarmCalc, () => {
       type: 'bar',
       name: '等级一',
       data: lv1,
+      barGap:'0%',
+      
     },
     {
       type: 'bar',
       name: '等级二',
       data: lv2,
+      barGap:'0%',
     },
     {
       type: 'bar',
       name: '等级三',
       data: lv3,
+      barGap:'0%',
     },
   ];
   myChart.setOption(barOption);
@@ -224,7 +228,8 @@ watch(alarmCalc, () => {
     .map((item: any) => {
       return item?.devId || '';
     })
-    .filter((d: any) => d);
+    .filter((d: any) => d)
+    .map((d: string) => `节点${d}`);
   bar2Option.xAxis.data = xAxis;
   const lvList = xAxis.map((x: any) => {
     return (alarmCalc.value?.devAlarmTime || []).find((item: any) => item?.devId === x)?.time?.split?.(':') || [0, 0, 0];
@@ -236,14 +241,17 @@ watch(alarmCalc, () => {
     {
       type: 'bar',
       name: '等级一',
+      barGap: '0%',
       data: lv1,
     },
     {
       type: 'bar',
+      barGap: '0%',
       name: '等级二',
       data: lv2,
     },
     {
+      barGap: '0%',
       type: 'bar',
       name: '等级三',
       data: lv3,

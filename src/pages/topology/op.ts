@@ -1,6 +1,10 @@
 export const timeOption = {
   title: {
-    text: '时间',
+    text: '钟差',
+    textStyle: {
+      fontSize: 16,
+      fontWeight: 'bolder',
+    },
   },
   xAxis: {
     type: 'time',
@@ -9,7 +13,7 @@ export const timeOption = {
   },
   yAxis: {
     type: 'value',
-    name: '单位(纳秒)'
+    name: 'ps',
   },
   series: [
     {
@@ -23,7 +27,11 @@ export const timeOption = {
 };
 export const hzOption = {
   title: {
-    text: '频率',
+    text: '频差',
+    textStyle: {
+      fontSize: 16,
+      fontWeight: 'bolder',
+    },
   },
   xAxis: {
     type: 'time',
@@ -32,6 +40,7 @@ export const hzOption = {
   },
   yAxis: {
     type: 'value',
+    name: 'MHz',
   },
   series: [
     {
@@ -46,6 +55,10 @@ export const hzOption = {
 export const tdevOption = {
   title: {
     text: 'TDEV',
+    textStyle: {
+      fontSize: 16,
+      fontWeight: 'bolder',
+    },
   },
   xAxis: {
     type: 'category',
@@ -53,6 +66,7 @@ export const tdevOption = {
   },
   yAxis: {
     type: 'value',
+    name: 'ps',
   },
   series: [
     {

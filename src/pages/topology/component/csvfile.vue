@@ -35,7 +35,7 @@ const state = ref({
 const state1 = ref({
     freqColumn:[]as string[]
 })
-const timeOption = ['nodeId', 'name', 'tab', 'tba', 'td', 'deltaT', 'errorT', 'createdTime'].map((v) => ({ value: v, label: v }));
+const timeOption = [['节点id', 'nodeId'], ['Name','name'], ['Tab','tab'], ['Tba','tba'], ['Td','td'], ['DeltaT','deltaT'], ['ErrorT','errorT'], ['CreatedTime','createdTime']].map((v) => ({ value: v[1], label: v[0] }));
 const freqOption = [
   { label: 'nodeId', value: 'nodeId' },
   { label: 'name', value: 'name' },

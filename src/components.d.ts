@@ -7,7 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    DevPop: typeof import('./components/topology/devPop.vue')['default']
     Legend: typeof import('./components/topology/legend.vue')['default']
     Pop: typeof import('./components/topology/pop.vue')['default']
     README: typeof import('./components/README.md')['default']

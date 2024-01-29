@@ -1,9 +1,6 @@
 import cytoscape from 'cytoscape';
 import Popper from 'cytoscape-popper';
 import Pop from './pop.vue';
-import DevPop from './devPop.vue';
-import { getAllDev } from '@/api/index';
-import { globalStore } from '@/stores/index';
 import { render } from 'vue';
 
 export const initLink = (cy: cytoscape.Core) => {
@@ -176,6 +173,7 @@ export const initEdgeDelete = (cy: cytoscape.Core) => {
   }
 
   cy.on('select', 'edge', function (e) {
+    console.log('edge', 'select', e);
     setHandleOn(e.target);
   });
   cy.on('unselect', 'edge', function (e) {
@@ -224,6 +222,10 @@ export const initNodeDelete = (cy: cytoscape.Core) => {
             onPerformance(){
               removeHandle();
               node.emit('performance');
+            },
+            onInfo(){
+              removeHandle();
+              node.emit('info');
             }
           }),
           _popperDiv,
@@ -281,76 +283,6 @@ export const initNodeDelete = (cy: cytoscape.Core) => {
 
   window.addEventListener('mouseup', function (e) {
     stop();
-  });
-  return removeHandle;
-};
-
-export const useDevPop = (cy: cytoscape.Core) => {
-  var popper: ReturnType<Popper.getPopperInstance<HTMLDivElement>> | null;
-  var popperDiv: HTMLDivElement | null;
-
-  async function setHandleOn(node: cytoscape.NodeSingular) {
-    removeHandle(); // rm old handle
-    const id = node.data().id;
-    
-    popper = node.popper({
-      content: () => {
-        const _popperDiv = document.createElement('div');
-        _popperDiv.style.zIndex = '10'
-        render(
-          h(DevPop, {
-            id
-          }),
-          _popperDiv,
-        );
-        popperDiv = _popperDiv;
-        document.body.appendChild(popperDiv);
-        return _popperDiv;
-      },
-      popper: {
-        strategy: 'absolute',
-        placement: 'top',
-        modifiers: [
-          {
-            name: 'offset',
-            options: {
-              offset: [80, -50],
-            },
-          },
-        ],
-      },
-    });
-  }
-
-  function removeHandle() {
-    if (popper) {
-      popper.destroy();
-      popper = null;
-    }
-    if (popperDiv) {
-      document.body.removeChild(popperDiv);
-      popperDiv = null;
-    }
-  }
-
-  cy.on('select', 'node', function (e) {
-    setHandleOn(e.target);
-  });
-  cy.on('mouseout', 'node', function (e) {
-    removeHandle();
-  });
-
-  cy.on('grab', 'node', function () {
-    removeHandle();
-  });
-
-  cy.on('tap', function (e) {
-    if (e.target === cy) {
-      removeHandle();
-    }
-  });
-  cy.on('zoom pan', function () {
-    removeHandle();
   });
   return removeHandle;
 };

@@ -1,10 +1,10 @@
 <template>
   <div class="p-2 bg-[rgba(214,218,234,1)]">
     <Tabs v-model:activeKey="state.currentTabName">
-      <TabPane key="系统" tab="系统">
+      <TabPane key="系统故障" tab="系统故障">
         <Table :columns="alarmColumns" :data-source="alarmDataSource"></Table>
       </TabPane>
-      <TabPane key="日志" tab="日志" force-render>
+      <TabPane key="日志管理" tab="日志管理" force-render>
         <Table :columns="systemColumns"></Table>
       </TabPane>
     </Tabs>
@@ -19,7 +19,7 @@ import { ref } from 'vue';
 import { getSystemAlarm } from '@/api/index';
 
 const state = ref({
-  currentTabName: '系统',
+  currentTabName: '系统故障',
 });
 
 const { data: alarmData } = getSystemAlarm();
