@@ -37,10 +37,10 @@ const state1 = ref({
 })
 const timeOption = [['节点id', 'nodeId'], ['Name','name'], ['Tab','tab'], ['Tba','tba'], ['Td','td'], ['DeltaT','deltaT'], ['ErrorT','errorT'], ['CreatedTime','createdTime']].map((v) => ({ value: v[1], label: v[0] }));
 const freqOption = [
-  { label: 'nodeId', value: 'nodeId' },
-  { label: 'name', value: 'name' },
-  { label: 'value', value: 'value' },
-  { label: 'createdTime', value: 'createdTime' },
+  { label: '节点id', value: 'nodeId' },
+  { label: 'Name', value: 'name' },
+  { label: 'Value', value: 'value' },
+  { label: 'CreatedTime', value: 'createdTime' },
 ];
 
 const handleTimeDownload = async () => {

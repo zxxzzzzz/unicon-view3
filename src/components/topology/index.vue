@@ -89,7 +89,7 @@ watch(
                 style: {
                   width: 35,
                   height: 25,
-                  'background-image': img.masterFaluty,
+                  'background-image': img.legendFaluty,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
@@ -99,7 +99,7 @@ watch(
                 style: {
                   width: 35,
                   height: 25,
-                  'background-image': img.relayFaluty,
+                  'background-image': img.legendFaluty,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
@@ -109,7 +109,7 @@ watch(
                 style: {
                   width: 35,
                   height: 25,
-                  'background-image': img.slaveFaluty,
+                  'background-image': img.legendFaluty,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
@@ -120,7 +120,7 @@ watch(
                 style: {
                   width: 35,
                   height: 25,
-                  'background-image': img.slaveNormal,
+                  'background-image': img.legendOtherNormal,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
@@ -130,7 +130,7 @@ watch(
                 style: {
                   width: 35,
                   height: 25,
-                  'background-image': img.relayNormal,
+                  'background-image': img.legendOtherNormal,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
@@ -140,7 +140,7 @@ watch(
                 style: {
                   width: 35,
                   height: 25,
-                  'background-image': img.masterNormal,
+                  'background-image': img.legendMasterNormal,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
@@ -150,7 +150,7 @@ watch(
                 style: {
                   width: 35,
                   height: 25,
-                  'background-image': img.relayOffline,
+                  'background-image': img.legendOffline,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
@@ -160,7 +160,7 @@ watch(
                 style: {
                   width: 35,
                   height: 25,
-                  'background-image': img.masterOffline,
+                  'background-image': img.legendOffline,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },
@@ -170,37 +170,7 @@ watch(
                 style: {
                   width: 35,
                   height: 25,
-                  'background-image': img.slaveOffline,
-                  'background-fit': 'contain',
-                  'background-opacity': 0,
-                },
-              },
-              {
-                selector: `[id][?selected][duty = 'slave']`,
-                style: {
-                   width: 35,
-                  height: 25,
-                  'background-image': img.slaveSelected,
-                  'background-fit': 'contain',
-                  'background-opacity': 0,
-                },
-              },
-              {
-                selector: `[id][?selected][duty = 'master']`,
-                style: {
-                   width: 35,
-                  height: 25,
-                  'background-image': img.masterSelected,
-                  'background-fit': 'contain',
-                  'background-opacity': 0,
-                },
-              },
-              {
-                selector: `[id][?selected][duty = 'relay']`,
-                style: {
-                   width: 35,
-                  height: 25,
-                  'background-image': img.relaySelected,
+                  'background-image': img.legendOffline,
                   'background-fit': 'contain',
                   'background-opacity': 0,
                 },

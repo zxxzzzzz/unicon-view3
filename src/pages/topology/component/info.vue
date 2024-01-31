@@ -1,5 +1,8 @@
 <template>
   <div class="z-10">
+    <div class="flex justify-end">
+      <div class="hover:to-blue-400" @click="handleClose">关闭</div>
+    </div>
     <div class="bg-white rounded-8px relative" :style="{ boxShadow: '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)' }">
       <div class="w-15rem py-2 px-2 rounded-8px hover:bg-gray-2 cursor-pointer flex">
         <div class="w-6rem">创建时间</div>
@@ -32,6 +35,7 @@
 <script setup lang="ts">
 import { getAllDev } from '@/api';
 import {devCurConfig} from '@/stores';
+import { message } from 'ant-design-vue';
 
 const props = defineProps<{
   id: string;
@@ -65,6 +69,9 @@ onMounted(async () => {
     }
   }, 300);
 });
+const handleClose = ()=>{
+  message.destroy()
+}
 </script>
 
 <style scoped></style>
