@@ -33,7 +33,7 @@ export const barOption = {
   xAxis: {
     type: 'category',
     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    axisTick: { length: 100, inside: true, lineStyle: { color: 'red' } },
+    axisTick: { length: 100, inside: true, lineStyle: { color: 'white' } },
   },
   tooltip: {
     trigger: 'item',
@@ -73,7 +73,7 @@ export const bar2Option = {
   xAxis: {
     type: 'category',
     data: ['1', '2', '3'],
-    axisTick: { length: 100, inside: true, lineStyle: { color: 'red' } },
+    axisTick: { length: 100, inside: true, lineStyle: { color: 'white' } },
   },
   yAxis: {
     type: 'value',

@@ -31,12 +31,13 @@
 
       <div class="flex m-auto p-8">
         <div class="mr-2">id:{{ selectedNode?.data?.id || '-' }}</div>
-        <div :style="{ backgroundImage: `url(${selectedNodeBg})` }" class="w-8 h-8 rounded-full bg-no-repeat bg-contain bg-center mr-2"></div>
         <CheckboxGroup :options="options.slice(0, 1)" />
         <Tag color="pink" class="mr-2 text-base">{{ TIE?.toFixed?.(2) }}</Tag>
         <CheckboxGroup :options="options.slice(1, 2)" />
         <Tag color="pink" class="mr-2 text-base">{{ DELF }}</Tag>
-        MTIE:+
+        <div class="h-8 leading-8">
+          MTIE:+
+        </div>
         <Tag color="pink" class="ml-2 text-base">{{ MTIE?.toFixed?.(5) }}</Tag>
         <div>
           <Button type="primary" class="bg-blue border h-5" style="line-height: 0.7" @click="handleDataDownload">数据下载</Button>

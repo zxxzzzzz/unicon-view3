@@ -70,6 +70,7 @@ watch(
                 selector: 'node',
                 style: {
                   label: 'data(id)',
+                  'font-size':16
                 },
               },
               {
@@ -279,8 +280,8 @@ defineExpose({
 </script>
 <style>
 .popper-handle {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   background: red;
   border-radius: 20px;
   z-index: 1;
