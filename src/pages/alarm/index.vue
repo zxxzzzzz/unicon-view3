@@ -229,8 +229,7 @@ watch(alarmCalc, () => {
       return item?.devId || '';
     })
     .filter((d: any) => d)
-    .map((d: string) => `节点${d}`);
-  bar2Option.xAxis.data = xAxis;
+  bar2Option.xAxis.data = xAxis.map((d: string) => `节点${d}`)
   const lvList = xAxis.map((x: any) => {
     return (alarmCalc.value?.devAlarmTime || []).find((item: any) => item?.devId === x)?.time?.split?.(':') || [0, 0, 0];
   });
